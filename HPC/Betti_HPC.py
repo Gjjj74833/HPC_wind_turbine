@@ -841,10 +841,10 @@ def run_simulations_parallel(n_simulations, params):
     
     # Initial condition selection
     first_wind = genWind(params[1], 3000, 0.01)
-    first_results = main(30, params[1], x0, first_wind)[1]
+    first_results = main(3000, params[1], x0, first_wind)[1]
     
     state = first_results[-1]
-    
+    print(state)
 
     state[4] = -np.deg2rad(state[4]) 
     state[5] = -np.deg2rad(state[5]) 
@@ -868,157 +868,6 @@ def run_simulations_parallel(n_simulations, params):
         results = p.map(run_simulation, all_params)
 
     return results
-
-
-def plot_quantiles(results, end_time):
-    
-    t = results[0][0]
-    
-    # Only take the states part to analyze
-    state = np.stack([t[1] for t in results], axis=2)
-    wind_speed = np.stack([t[2] for t in results], axis=1)
-    wave_eta = np.stack([t[3] for t in results], axis=1)
-    Q_t = np.stack([t[4] for t in results], axis=1)
-    
-    
-    # Get the central 75% ####################
-    # States
-    percentile_87_5 = np.percentile(state, 87.5, axis=2)
-    percentile_12_5 = np.percentile(state, 12.5, axis=2)
-    
-    # Wind speed
-    wind_percentile_87_5 = np.percentile(wind_speed, 87.5, axis=1)
-    wind_percentile_12_5 = np.percentile(wind_speed, 12.5, axis=1)
-    
-    # Wave elevation
-    wave_percentile_87_5 = np.percentile(wave_eta, 87.5, axis=1)
-    wave_percentile_12_5 = np.percentile(wave_eta, 12.5, axis=1)
-    
-    # Tension force
-    Qt_percentile_87_5 = np.percentile(Q_t, 87.5, axis=1)
-    Qt_percentile_12_5 = np.percentile(Q_t, 12.5, axis=1)
-    
-    # Get the central 25% ####################
-    # States
-    percentile_62_5 = np.percentile(state, 62.5, axis=2)
-    percentile_37_5 = np.percentile(state, 37.5, axis=2)
-    
-    # Wind speed
-    wind_percentile_62_5 = np.percentile(wind_speed, 62.5, axis=1)
-    wind_percentile_37_5 = np.percentile(wind_speed, 37.5, axis=1)
-    
-    # Wave elevation
-    wave_percentile_62_5 = np.percentile(wave_eta, 62.5, axis=1)
-    wave_percentile_37_5 = np.percentile(wave_eta, 37.5, axis=1)
-    
-    # Tension force
-    Qt_percentile_62_5 = np.percentile(Q_t, 62.5, axis=1)
-    Qt_percentile_37_5 = np.percentile(Q_t, 37.5, axis=1)
-    
-    # Get the median (50%) ####################
-    # States
-    percentile_50 = np.percentile(state, 50, axis=2)
-    
-    # Wind speed
-    wind_percentile_50 = np.percentile(wind_speed, 50, axis=1)
-    
-    # Wave elevation
-    wave_percentile_50 = np.percentile(wave_eta, 50, axis=1)
-    
-    # Tension force
-    Qt_percentile_50 = np.percentile(Q_t, 50, axis=1)
-
-    
-    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
-                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor speed (rpm)']
-    
-    start_time = 0
-    
-    if end_time > 1000:
-        start_time = end_time - 1000
-        
-    # Plot wind speed
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, wind_percentile_12_5, wind_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, wind_percentile_37_5, wind_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, wind_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Wind Speed (m/s)')
-    plt.title('Time evolution of Wind Speed')
-    plt.grid(True)
-    plt.xlim(start_time, end_time)
-    plt.savefig('Wind_Speed.png', dpi=2000)
-
-    
-    # Plot wave_eta
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, wave_percentile_12_5, wave_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, wave_percentile_37_5, wave_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, wave_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Water Surface Elevation at x = 0 (m)')
-    plt.title('Time evolution of Wave Surface Elevation at x = 0')
-    plt.grid(True)
-    plt.xlim(start_time, end_time)
-    plt.savefig('Wave_Eta.png', dpi=2000)
-
-    
-    
-    # Plot all states
-    for i in range(7):
-        plt.figure(figsize=(12.8, 4.8))
-        plt.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
-        plt.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
-        plt.plot(t, percentile_50[:, i], color='r', linewidth=1) 
-        plt.xlabel('Time (s)')
-        plt.ylabel(f'{state_names[i]}')
-        plt.title(f'Time evolution of {state_names[i]}')
-        plt.grid(True)
-        plt.xlim(start_time, end_time)
-        safe_filename = state_names[i].replace('/', '_')  
-        plt.savefig(f'{safe_filename}.png', dpi=2000)  
-
-        
-        plt.figure(figsize=(12.8, 4.8))
-        plt.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
-        plt.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
-        plt.plot(t, percentile_50[:, i], color='r', linewidth=1) 
-        plt.xlabel('Time (s)')
-        plt.ylabel(f'{state_names[i]}')
-        plt.title(f'Time evolution of {state_names[i]}')
-        plt.grid(True)
-        plt.xlim(end_time - 30, end_time)
-        safe_filename = state_names[i].replace('/', '_')  
-        short = '_30s'
-        plt.savefig(f'{safe_filename + short}.png', dpi=2000)  
-
-        
-    # Plot average tension force on each rod
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, Qt_percentile_12_5, Qt_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, Qt_percentile_37_5, Qt_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, Qt_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Averga Tension Force Per Line (N)')
-    plt.title('Time evolution of Averga Tension Force Per Line')
-    plt.grid(True)
-    plt.xlim(start_time, end_time)
-    plt.savefig('Tension_force.png', dpi=2000)
-
-    
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, Qt_percentile_12_5, Qt_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, Qt_percentile_37_5, Qt_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, Qt_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Averga Tension Force Per Line')
-    plt.title('Time evolution of Averga Tension Force Per Line (N)')
-    plt.grid(True)
-    plt.xlim(end_time - 30, end_time)
-    plt.savefig('Tension_force_30s.png', dpi=2000)
-    
-    plt.show()
-    plt.close()
     
 def save_binaryfile(results):
     
@@ -1102,7 +951,7 @@ if __name__ == '__main__':
 
     v_w = 20
     end_time = 5
-    n_simulations = 2
+    n_simulations = 10
 
     params = [end_time, v_w]
     
