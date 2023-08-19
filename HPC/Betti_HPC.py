@@ -725,7 +725,7 @@ def rk4(Betti, x0, t0, tf, dt, beta, T_E, Cp_type, performance, v_w, v_wind):
         k3 = Betti(x[i] + 0.5 * dt * k2, t[i] + 0.5 * dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
         k4 = Betti(x[i] + dt * k3, t[i] + dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
         x[i + 1] = x[i] + dt * (k1 + 2*k2 + 2*k3 + k4) / 6
-        
+       
         Qt_list.append(Q_t)
         
     last_Qt = Betti(x[-1], t[-1], beta, T_E, Cp_type, performance, v_wind[-1], v_w, random_phases)[1]
@@ -737,8 +737,7 @@ def rk4(Betti, x0, t0, tf, dt, beta, T_E, Cp_type, performance, v_w, v_wind):
     x[:, 4] = -np.rad2deg(x[:, 4])
     x[:, 5] = -np.rad2deg(x[:, 5])
     x[:, 6] = (60 / (2*np.pi))*x[:, 6]
-    
-    x[:, 0] = -x[:, 0]
+   
     x[:, 0:4] = -x[:, 0:4]
     x[:, 2] += d_BS
 
@@ -834,27 +833,16 @@ def run_simulation(params):
 
 def run_simulations_parallel(n_simulations, params):
     
+      
 
-    x0 = np.array([-2, 0, 37.550, 0, 0, 0, 1])
-    
-    d_BS = 37.550 # (m) The position of center of weight of BS (platform and tower)
-    
-    # Initial condition selection
-    first_wind = genWind(params[1], 3000, 0.01)
-    first_results = main(3000, params[1], x0, first_wind)[1]
-    
-    state = first_results[-1]
-    print(state)
+    state = np.array([-2.61426271, 
+                 -0.00299848190, 
+                 37.5499264, 
+                 -0.0558194064,
+                 0.00147344971, 
+                 -0.000391112846, 
+                 1.26855822])
 
-    state[4] = -np.deg2rad(state[4]) 
-    state[5] = -np.deg2rad(state[5]) 
-    state[6] = ((2*np.pi) / 60) * state[6] 
-    
-    state[2] = -state[2] + d_BS 
-    state[0] = -state[0] 
-    state[1] = -state[1] 
-    state[3] = -state[3]
-    
     params.append(state)
 
     vWind = []
@@ -942,24 +930,19 @@ def save_binaryfile(results):
 
 ###############################################################################
 ###############################################################################
-#v_wind = genWind(20, 600, 0.01)
-#results = main(6, 20, np.array([-2, 0, 37.550, 0, 0, 0, 1]), v_wind)
 
 
 
 if __name__ == '__main__':
 
     v_w = 20
-    end_time = 5
-    n_simulations = 10
+    end_time = 600
+    n_simulations = 500
 
     params = [end_time, v_w]
     
     results = run_simulations_parallel(n_simulations, params)
 
     save_binaryfile(results)
-    #plot_quantiles(results, params[0])
+
     
-
-
-
