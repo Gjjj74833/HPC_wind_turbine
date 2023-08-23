@@ -1,0 +1,1050 @@
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.7597 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76088 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75952 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75746 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75776 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75958 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75724 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76243 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.7596 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75858 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75945 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76869 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76364 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76191 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.7625 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76511 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76029 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76767 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76029 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76062 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76226 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76046 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76414 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76487 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75983 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75952 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76236 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.76628 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.75891 CPU seconds used.
+
+  TurbSim terminated normally.
+
+
+ **************************************************************************************************
+ TurbSim
+
+ Copyright (C) 2023 National Renewable Energy Laboratory
+ Copyright (C) 2023 Envision Energy USA LTD
+
+ This program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.
+ See the "LICENSE" file distributed with this software for details.
+ **************************************************************************************************
+
+  Running TurbSim (from OpenFAST--128-NOTFOUND)
+
+
+  Reading the input file "./turbsim/TurbSim_20.inp".
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  WARNING:   The random number generator in use differs from the original code provided by NREL.
+  This pRNG uses 8 seeds instead of the 2 in the TurbSim input file.
+  Calculating the spectral and transfer function matrices:
+     u-component matrices (IEC coherence method)
+     v-component matrices (identity coherence)
+     w-component matrices (identity coherence)
+  Generating time series for all points:
+     u-component
+     v-component
+     w-component
+  Computing hub-height statistics
+  Writing statistics to summary file
+  Hub-height AeroDyn data were written to "./turbsim/TurbSim_20.hh"
+
+  Processing complete.  0.768 CPU seconds used.
+
+  TurbSim terminated normally.
+

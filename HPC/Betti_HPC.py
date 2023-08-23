@@ -190,7 +190,7 @@ def genWind(v_w, end_time, time_step):
     seed2 = np.random.randint(-2147483648, 2147483648)
     seed = [seed1, seed2]
     
-    path_inp = "./TurbSim.inp"
+    path_inp = f'./turbsim/TurbSim_{sys.argv[1]}.inp'
     
     
     # Open the inp file and overwrite with given parameters
@@ -230,7 +230,7 @@ def genWind(v_w, end_time, time_step):
     subprocess.run(command)
     
     # Read the output file
-    path_hh = "./TurbSim.hh"
+    path_hh = f'./turbsim/TurbSim_{sys.argv[1]}.hh'
     
     with open(path_hh, 'r') as file:
         lines = file.readlines()
@@ -851,7 +851,7 @@ def run_simulations_parallel(n_simulations, params):
         vWind.append(genWind(params[1], params[0], 0.01))
    
     
-    with Pool() as p:
+    with Pool(4) as p:
         
         all_params = [params + [vWind[i]] for i in range(n_simulations)]
         
@@ -871,7 +871,7 @@ def save_binaryfile(results):
     Q_t = np.stack([t[4] for t in results], axis=1)
    
 
-    np.savez(f'./results/{sys.argv[1]}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, Q_t=Q_t)
+    np.savez(f'./results/results_{sys.argv[1]}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, Q_t=Q_t)
    
 
 ###############################################################################
@@ -882,8 +882,8 @@ def save_binaryfile(results):
 if __name__ == '__main__':
 
     v_w = 20
-    end_time = 10
-    n_simulations = 10
+    end_time = 600
+    n_simulations = 30
 
     params = [end_time, v_w]
     
