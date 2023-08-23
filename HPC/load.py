@@ -11,30 +11,14 @@ import matplotlib.pyplot as plt
 def plot_quantiles():
     
     file_path = "./results/results.npz"
-    data = np.load(file_path)
-    
+    data = np.load(file_path)        
+
     # Access the arrays using the keys provided during saving
-    t = data['array_1']
-    percentile_87_5 = data['array_2']
-    percentile_12_5 = data['array_3']
-    wind_percentile_87_5 = data['array_4']
-    wind_percentile_12_5 = data['array_5']
-    wave_percentile_87_5 = data['array_6']
-    wave_percentile_12_5 = data['array_7']
-    Qt_percentile_87_5 = data['array_8']
-    Qt_percentile_12_5 = data['array_9']
-    percentile_62_5 = data['array_10']
-    percentile_37_5 = data['array_11']
-    wind_percentile_62_5 = data['array_12']
-    wind_percentile_37_5 = data['array_13']
-    wave_percentile_62_5 = data['array_14']
-    wave_percentile_37_5 = data['array_15']
-    Qt_percentile_62_5 = data['array_16']
-    Qt_percentile_37_5 = data['array_17']
-    percentile_50 = data['array_18']
-    wind_percentile_50 = data['array_19']
-    wave_percentile_50 = data['array_20']
-    Qt_percentile_50 = data['array_21']
+    state = data['state']
+    wind_speed = data['wind_speed]
+    wave_eta = wave_eta
+    Q_t = data['Q_t']
+    
     
     state_names = ['Surge_m', 'Surge_Velocity_m_s', 'Heave_m', 'Heave_Velocity_m_s', 
                    'Pitch_Angle_deg', 'Pitch_Rate_deg_s', 'Rotor_speed_rpm']

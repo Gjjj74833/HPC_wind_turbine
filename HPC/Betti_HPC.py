@@ -5,6 +5,7 @@ Betti model implementation
 @author: Yihan Liu
 @version (2023-06-24)
 """
+import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,7 +13,7 @@ import subprocess
 import bisect
 import time
 from multiprocessing import Pool
-
+from datetime import datetime
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):
     """
@@ -848,7 +849,8 @@ def run_simulations_parallel(n_simulations, params):
     vWind = []
     for i in range(n_simulations):
         vWind.append(genWind(params[1], params[0], 0.01))
-        
+   
+    
     with Pool() as p:
         
         all_params = [params + [vWind[i]] for i in range(n_simulations)]
@@ -867,66 +869,10 @@ def save_binaryfile(results):
     wind_speed = np.stack([t[2] for t in results], axis=1)
     wave_eta = np.stack([t[3] for t in results], axis=1)
     Q_t = np.stack([t[4] for t in results], axis=1)
-    
-    
-    # Get the central 75% ####################
-    # States
-    percentile_87_5 = np.percentile(state, 87.5, axis=2)
-    percentile_12_5 = np.percentile(state, 12.5, axis=2)
-    
-    # Wind speed
-    wind_percentile_87_5 = np.percentile(wind_speed, 87.5, axis=1)
-    wind_percentile_12_5 = np.percentile(wind_speed, 12.5, axis=1)
-    
-    # Wave elevation
-    wave_percentile_87_5 = np.percentile(wave_eta, 87.5, axis=1)
-    wave_percentile_12_5 = np.percentile(wave_eta, 12.5, axis=1)
-    
-    # Tension force
-    Qt_percentile_87_5 = np.percentile(Q_t, 87.5, axis=1)
-    Qt_percentile_12_5 = np.percentile(Q_t, 12.5, axis=1)
-    
-    # Get the central 25% ####################
-    # States
-    percentile_62_5 = np.percentile(state, 62.5, axis=2)
-    percentile_37_5 = np.percentile(state, 37.5, axis=2)
-    
-    # Wind speed
-    wind_percentile_62_5 = np.percentile(wind_speed, 62.5, axis=1)
-    wind_percentile_37_5 = np.percentile(wind_speed, 37.5, axis=1)
-    
-    # Wave elevation
-    wave_percentile_62_5 = np.percentile(wave_eta, 62.5, axis=1)
-    wave_percentile_37_5 = np.percentile(wave_eta, 37.5, axis=1)
-    
-    # Tension force
-    Qt_percentile_62_5 = np.percentile(Q_t, 62.5, axis=1)
-    Qt_percentile_37_5 = np.percentile(Q_t, 37.5, axis=1)
-    
-    # Get the median (50%) ####################
-    # States
-    percentile_50 = np.percentile(state, 50, axis=2)
-    
-    # Wind speed
-    wind_percentile_50 = np.percentile(wind_speed, 50, axis=1)
-    
-    # Wave elevation
-    wave_percentile_50 = np.percentile(wave_eta, 50, axis=1)
-    
-    # Tension force
-    Qt_percentile_50 = np.percentile(Q_t, 50, axis=1)
-    
-    np.savez('./results/results.npz',array_1 = t, array_2 = percentile_87_5, array_3 = percentile_12_5,
-                 array_4 = wind_percentile_87_5, array_5 = wind_percentile_12_5,
-                 array_6 = wave_percentile_87_5, array_7 = wave_percentile_12_5,
-                 array_8 = Qt_percentile_87_5, array_9 = Qt_percentile_12_5,
-                 array_10 = percentile_62_5, array_11 = percentile_37_5,
-                 array_12 = wind_percentile_62_5, array_13 = wind_percentile_37_5,
-                 array_14 = wave_percentile_62_5, array_15 = wave_percentile_37_5,
-                 array_16 = Qt_percentile_62_5, array_17 = Qt_percentile_37_5,
-                 array_18 = percentile_50, array_19 = wind_percentile_50,
-                 array_20 = wave_percentile_50, array_21 = Qt_percentile_50)
+   
 
+    np.savez(f'./results/{sys.argv[1]}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, Q_t=Q_t)
+   
 
 ###############################################################################
 ###############################################################################
@@ -936,8 +882,8 @@ def save_binaryfile(results):
 if __name__ == '__main__':
 
     v_w = 20
-    end_time = 600
-    n_simulations = 500
+    end_time = 10
+    n_simulations = 10
 
     params = [end_time, v_w]
     
