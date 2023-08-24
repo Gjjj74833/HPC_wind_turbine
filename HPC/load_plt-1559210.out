@@ -1,0 +1,6 @@
+t (50001,)
+wind_speed (50001, 1000)
+wave_eta (50001, 1000)
+state (50001, 7, 1000)
+Qt (50001, 1000)
+Detailed performance metrics for this job will be available at https://metrics.hpc.arizona.edu/#job_viewer?action=show&realm=SUPREMM&resource_id=4&local_job_id=1559210 by 8am on 2023/08/25.
