@@ -109,7 +109,7 @@ def plot_quantiles():
     plt.title('Time evolution of Wind Speed')
     plt.grid(True)
     plt.xlim(start_time, end_time)
-    plt.savefig('./results_figure/Wind_Speed_{time}.png')
+    plt.savefig(f'./results_figure/Wind_Speed_{time}.png')
 
     
     # Plot wave_eta
@@ -122,7 +122,7 @@ def plot_quantiles():
     plt.title('Time evolution of Wave Surface Elevation at x = 0')
     plt.grid(True)
     plt.xlim(start_time, end_time)
-    plt.savefig('./results_figure/Wave_Eta_{time}.png')
+    plt.savefig(f'./results_figure/Wave_Eta_{time}.png')
 
     
     
@@ -165,7 +165,7 @@ def plot_quantiles():
     plt.title('Time evolution of Averga Tension Force Per Line')
     plt.grid(True)
     plt.xlim(start_time, end_time)
-    plt.savefig('./results_figure/Tension_force_{time}.png')
+    plt.savefig(f'./results_figure/Tension_force_{time}.png')
 
     
     plt.figure(figsize=(12.8, 4.8))
@@ -177,7 +177,7 @@ def plot_quantiles():
     plt.title('Time evolution of Averga Tension Force Per Line (N)')
     plt.grid(True)
     plt.xlim(end_time - 30, end_time)
-    plt.savefig('./results_figure/Tension_force_30s_{time}.png')
+    plt.savefig(f'./results_figure/Tension_force_30s_{time}.png')
     
     
 plot_quantiles()
