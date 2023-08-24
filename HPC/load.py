@@ -5,20 +5,80 @@ Load the simulation results
 
 @author: Yihan Liu
 """
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
 def plot_quantiles():
     
-    file_path = "./results/results.npz"
-    data = np.load(file_path)        
-
-    # Access the arrays using the keys provided during saving
-    state = data['state']
-    wind_speed = data['wind_speed]
-    wave_eta = wave_eta
-    Q_t = data['Q_t']
+    directory = 'results'
     
+    # collect all data files
+    data_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.npz')]
+    
+    # load data from the files
+    datas = [np.load(file) for file in data_files]
+    
+    t = datas[0]['t']
+    
+    states = [data['state'] for data in datas]
+    wind_speeds = [data['wind_speed'] for data in datas]
+    wave_etas = [data['wave_eta'] for data in datas]
+    Q_ts = [data['Q_t'] for data in datas]
+    
+    # Concatenate all the collected data (only one concatenation operation per field)
+    state = np.concatenate(states, axis=2)
+    wind_speed = np.hstack(wind_speeds)
+    wave_eta = np.hstack(wave_etas)
+    Q_t = np.hstack(Q_ts)
+    
+    # Get the central 75% ####################
+    # States
+    percentile_87_5 = np.percentile(state, 87.5, axis=2)
+    percentile_12_5 = np.percentile(state, 12.5, axis=2)
+    
+    # Wind speed
+    wind_percentile_87_5 = np.percentile(wind_speed, 87.5, axis=1)
+    wind_percentile_12_5 = np.percentile(wind_speed, 12.5, axis=1)
+    
+    # Wave elevation
+    wave_percentile_87_5 = np.percentile(wave_eta, 87.5, axis=1)
+    wave_percentile_12_5 = np.percentile(wave_eta, 12.5, axis=1)
+    
+    # Tension force
+    Qt_percentile_87_5 = np.percentile(Q_t, 87.5, axis=1)
+    Qt_percentile_12_5 = np.percentile(Q_t, 12.5, axis=1)
+    
+    # Get the central 25% ####################
+    # States
+    percentile_62_5 = np.percentile(state, 62.5, axis=2)
+    percentile_37_5 = np.percentile(state, 37.5, axis=2)
+    
+    # Wind speed
+    wind_percentile_62_5 = np.percentile(wind_speed, 62.5, axis=1)
+    wind_percentile_37_5 = np.percentile(wind_speed, 37.5, axis=1)
+    
+    # Wave elevation
+    wave_percentile_62_5 = np.percentile(wave_eta, 62.5, axis=1)
+    wave_percentile_37_5 = np.percentile(wave_eta, 37.5, axis=1)
+    
+    # Tension force
+    Qt_percentile_62_5 = np.percentile(Q_t, 62.5, axis=1)
+    Qt_percentile_37_5 = np.percentile(Q_t, 37.5, axis=1)
+    
+    # Get the median (50%) ####################
+    # States
+    percentile_50 = np.percentile(state, 50, axis=2)
+    
+    # Wind speed
+    wind_percentile_50 = np.percentile(wind_speed, 50, axis=1)
+    
+    # Wave elevation
+    wave_percentile_50 = np.percentile(wave_eta, 50, axis=1)
+    
+    # Tension force
+    Qt_percentile_50 = np.percentile(Q_t, 50, axis=1)
+        
     
     state_names = ['Surge_m', 'Surge_Velocity_m_s', 'Heave_m', 'Heave_Velocity_m_s', 
                    'Pitch_Angle_deg', 'Pitch_Rate_deg_s', 'Rotor_speed_rpm']
