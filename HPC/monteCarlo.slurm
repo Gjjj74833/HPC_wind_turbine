@@ -30,8 +30,8 @@
 ### PART 2: Executes bash commands to run your job
 # --------------------------------------------------------------
 ### Load required modules/libraries if needed
-cp turbsim/TurbSim.inp turbsim/TurbSim_${SLURM_ARRAY_TASK_ID}.inp
+cp TurbSim.inp turbsim/TurbSim_${SLURM_ARRAY_TASK_ID}.inp
 module load python/3.9
 
-python3 Betti_HPC.py ${SLURM_ARRAY_TASK_ID}
+python3 Betti_HPC.py ${SLURM_ARRAY_TASK_ID} $1
 rm test*

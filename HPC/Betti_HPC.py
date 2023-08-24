@@ -869,9 +869,11 @@ def save_binaryfile(results):
     wind_speed = np.stack([t[2] for t in results], axis=1)
     wave_eta = np.stack([t[3] for t in results], axis=1)
     Q_t = np.stack([t[4] for t in results], axis=1)
-   
+    
+    now = datetime.now()
+    time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results/results_{sys.argv[1]}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, Q_t=Q_t)
+    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, Q_t=Q_t)
    
 
 ###############################################################################
@@ -882,8 +884,8 @@ def save_binaryfile(results):
 if __name__ == '__main__':
 
     v_w = 20
-    end_time = 600
-    n_simulations = 30
+    end_time = 6
+    n_simulations = int(sys.argv[2])
 
     params = [end_time, v_w]
     
@@ -891,4 +893,4 @@ if __name__ == '__main__':
 
     save_binaryfile(results)
 
-    
+ 
