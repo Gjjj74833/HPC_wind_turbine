@@ -12,7 +12,7 @@ from datetime import datetime
 
 def plot_quantiles():
     
-    directory = './results'
+    directory = 'results'
     
     # collect all data files
     data_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.npz')]
@@ -33,6 +33,12 @@ def plot_quantiles():
     wave_eta = np.hstack(wave_etas)
     Q_t = np.hstack(Q_ts)
     
+    print("t", t.shape)
+    print("wind_speed", wind_speed.shape)
+    print("wave_eta", wave_eta.shape)
+    print("state", state.shape)
+    print("Qt", Q_t.shape)
+
     # Get the central 75% ####################
     # States
     percentile_87_5 = np.percentile(state, 87.5, axis=2)
@@ -84,14 +90,14 @@ def plot_quantiles():
     state_names = ['Surge_m', 'Surge_Velocity_m_s', 'Heave_m', 'Heave_Velocity_m_s', 
                    'Pitch_Angle_deg', 'Pitch_Rate_deg_s', 'Rotor_speed_rpm']
     
-    now = datetime.now()
-    time = now.strftime('%Y-%m-%d_%H-%M-%S')    
-
     start_time = 0
     end_time = t[-1]
     
     if end_time > 1000:
         start_time = end_time - 1000
+    
+    now = datetime.now()
+    time = now.strftime('%Y-%m-%d_%H-%M-%S')    
         
     # Plot wind speed
     plt.figure(figsize=(12.8, 4.8))
@@ -103,7 +109,7 @@ def plot_quantiles():
     plt.title('Time evolution of Wind Speed')
     plt.grid(True)
     plt.xlim(start_time, end_time)
-    plt.savefig(f'./results_figure/Wind_Speed_{time}.png')
+    plt.savefig('./results_figure/Wind_Speed_{time}.png')
 
     
     # Plot wave_eta
@@ -116,7 +122,7 @@ def plot_quantiles():
     plt.title('Time evolution of Wave Surface Elevation at x = 0')
     plt.grid(True)
     plt.xlim(start_time, end_time)
-    plt.savefig(f'./results_figure/Wave_Eta_{time}.png')
+    plt.savefig('./results_figure/Wave_Eta_{time}.png')
 
     
     
@@ -159,7 +165,7 @@ def plot_quantiles():
     plt.title('Time evolution of Averga Tension Force Per Line')
     plt.grid(True)
     plt.xlim(start_time, end_time)
-    plt.savefig(f'./results_figure/Tension_force_{time}.png')
+    plt.savefig('./results_figure/Tension_force_{time}.png')
 
     
     plt.figure(figsize=(12.8, 4.8))
@@ -171,10 +177,11 @@ def plot_quantiles():
     plt.title('Time evolution of Averga Tension Force Per Line (N)')
     plt.grid(True)
     plt.xlim(end_time - 30, end_time)
-    plt.savefig(f'./results_figure/Tension_force_30s_{time}.png')
+    plt.savefig('./results_figure/Tension_force_30s_{time}.png')
     
     
 plot_quantiles()
 
 
     
+

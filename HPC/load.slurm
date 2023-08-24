@@ -4,7 +4,7 @@
 ### PART 1: Requests resources to run your job.
 # --------------------------------------------------------------
 ### Optional. Set the job name
-#SBATCH --job-name=test_test
+#SBATCH --job-name=load_plt
 ### Optional. Set the output filename.
 ### SLURM reads %x as the job name and %j as the job ID
 #SBATCH --output=%x-%j.out
@@ -17,21 +17,20 @@
 ### REQUIRED. Set the partition for your job.
 #SBATCH --partition=windfall
 ### REQUIRED. Set the number of cores that will be used for this job.
-#SBATCH --ntasks=10
+#SBATCH --ntasks=4
 ### REQUIRED. Set the number of nodes
 #SBATCH --nodes=1
 ### REQUIRED. Set the memory required for this job.
-#SBATCH --mem=32gb
+#SBATCH --mem=16gb
 ### REQUIRED. Specify the time required for this job, hhh:mm:ss
-#SBATCH --time=05:00:00
+#SBATCH --time=02:00:00
 
-#SBATCH --array=1-50 
+
 # --------------------------------------------------------------
 ### PART 2: Executes bash commands to run your job
 # --------------------------------------------------------------
 ### Load required modules/libraries if needed
-cp TurbSim.inp turbsim/TurbSim_${SLURM_ARRAY_TASK_ID}.inp
 module load python/3.9
-
-python3 Betti.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
-rm -f test*
+ 
+### Run your work
+python3 load.py

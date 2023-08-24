@@ -182,8 +182,8 @@ def genWind(v_w, end_time, time_step):
         A list of horizontal wind speed computed at each time step
 
     """
-    if end_time < 600:
-        end_time = 600
+    if end_time <= 600:
+        end_time = 601
         
     # Generate seeds for random wind model
     seed1 = np.random.randint(-2147483648, 2147483648)
@@ -851,7 +851,7 @@ def run_simulations_parallel(n_simulations, params):
         vWind.append(genWind(params[1], params[0], 0.01))
    
     
-    with Pool(4) as p:
+    with Pool(int(sys.argv[3])) as p:
         
         all_params = [params + [vWind[i]] for i in range(n_simulations)]
         
@@ -865,10 +865,10 @@ def save_binaryfile(results):
     t = results[0][0]
     
     # Only take the states part to analyze
-    state = np.stack([t[1] for t in results], axis=2)
-    wind_speed = np.stack([t[2] for t in results], axis=1)
-    wave_eta = np.stack([t[3] for t in results], axis=1)
-    Q_t = np.stack([t[4] for t in results], axis=1)
+    state = np.stack([s[1] for s in results], axis=2)
+    wind_speed = np.stack([s[2] for s in results], axis=1)
+    wave_eta = np.stack([s[3] for s in results], axis=1)
+    Q_t = np.stack([s[4] for s in results], axis=1)
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
@@ -884,7 +884,7 @@ def save_binaryfile(results):
 if __name__ == '__main__':
 
     v_w = 20
-    end_time = 600
+    end_time = int(sys.argv[4])
     n_simulations = int(sys.argv[2])
 
     params = [end_time, v_w]
