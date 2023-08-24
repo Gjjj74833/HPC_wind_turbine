@@ -23,7 +23,7 @@
 ### REQUIRED. Set the memory required for this job.
 #SBATCH --mem=10gb
 ### REQUIRED. Specify the time required for this job, hhh:mm:ss
-#SBATCH --time=02:00:00
+#SBATCH --time=05:00:00
 
 #SBATCH --array=1-20 
 # --------------------------------------------------------------
@@ -34,4 +34,4 @@ cp TurbSim.inp turbsim/TurbSim_${SLURM_ARRAY_TASK_ID}.inp
 module load python/3.9
 
 python3 Betti_HPC.py ${SLURM_ARRAY_TASK_ID} $1
-rm test*
+rm -f test*

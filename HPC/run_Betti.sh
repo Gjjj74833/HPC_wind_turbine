@@ -41,5 +41,5 @@ if [ "$(ls -A results)" ]; then
 fi
 
 
+# Submit the job and get the job ID
 sbatch monteCarlo.slurm $n_simulations
-
