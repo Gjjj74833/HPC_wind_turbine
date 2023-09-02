@@ -44,8 +44,8 @@ def plot_quantiles():
     percentile_87_5 = np.percentile(state, 87.5, axis=2)
     percentile_12_5 = np.percentile(state, 12.5, axis=2)
 
-    percentile_99_99 = np.percentile(state, 99.999, axis=2)
-    percentile_0_01 = np.percentile(state, 0.001, axis=2)
+    max_value = np.max(state, axis=2)
+    min_value = np.min(state, axis=2)
     
     # Wind speed
     wind_percentile_87_5 = np.percentile(wind_speed, 87.5, axis=1)
@@ -135,8 +135,8 @@ def plot_quantiles():
         plt.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
         plt.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
         plt.plot(t, percentile_50[:, i], color='r', linewidth=1) 
-        plt.plot(t, percentile_99_99[:, i], linewidth=1)
-        plt.plot(t, percentile_0_01[:, i], linewidth=1)
+        plt.plot(t, max_value[:, i], linewidth=1)
+        plt.plot(t, min_value[:, i], linewidth=1)
         plt.xlabel('Time (s)')
         plt.ylabel(f'{state_names[i]}')
         plt.title(f'Time evolution of {state_names[i]}')
@@ -184,6 +184,32 @@ def plot_quantiles():
     plt.xlim(end_time - 30, end_time)
     plt.savefig('./results_figure/Tension_force_30s_{time}.png')
     
+    max_index = np.argmax(state, axis=2)
+    min_index = np.argmin(state, axis=2)
+
+    # Flatten the indices and count occurrences
+    max_counts = np.bincount(max_index.ravel(), minlength=state.shape[2])
+    min_counts = np.bincount(min_index.ravel(), minlength=state.shape[2])
+
+    # Plotting
+    fig, ax = plt.subplots(2, 1, figsize=(10, 8))
+
+    # Plot for max occurrences
+    ax[0].bar(range(state.shape[2]), max_counts, color='b', alpha=0.7, label="Max occurrences")
+    ax[0].set_title("Number of occurrences for Max")
+    ax[0].set_xlabel("Simulation Index")
+    ax[0].set_ylabel("Occurrences")
+    ax[0].legend()
+
+    # Plot for min occurrences
+    ax[1].bar(range(state.shape[2]), min_counts, color='r', alpha=0.7, label="Min occurrences")
+    ax[1].set_title("Number of occurrences for Min")
+    ax[1].set_xlabel("Simulation Index")
+    ax[1].set_ylabel("Occurrences")
+    ax[1].legend()
+
+    plt.tight_layout()
+    plt.savefig("./results_figure/max_min_occurrences_histogram.png", dpi=600)
     
 plot_quantiles()
 
