@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Aug  4 16:16:33 2023
-Load the simulation results
+Load and visualize the simulation results
 
 @author: Yihan Liu
 """
@@ -294,6 +294,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
             ax[j+2].set_title(f'Time evolution of {state_names[j]}')
             ax[j+2].grid(True)
             ax[j+2].set_xlim(0, t[-1])
+            
+        ax[9].remove()
       
     
     # for 7 states:
@@ -350,6 +352,24 @@ def distribution(state):
     used_state = state.reshape(-1, 7)
     del state
     
+    state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
+                   'Pitch_Angle', 'Pitch_Rate', 'Rotor_speed']
+    
+    fig, ax = plt.subplots(4, 2, figsize=(15, 8.5))
+    fig.suptitle('The distribution for each state from last 500 time steps')
+    ax = ax.flatten()
+    
+    for i in range(7):
+        #make histogram plot for each state
+        ax[i].hist(used_state[:, i], bins=50, edgecolor='black') 
+        ax[i].set_title(f'{state_names[i]}')
+        ax[i].set_xlabel(f'{state_names[i]}')
+        
+
+    fig.delaxes(ax[7]) 
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+    plt.savefig(f'./results_figure/distribution_{used_state.shape[0]}.png', dpi=600)
+    plt.close(fig)
     
     
     
@@ -358,6 +378,7 @@ def distribution(state):
 t, state, wind_speed, wave_eta, Q_t = load_data()
 
 plot_trajectories(t, state, wind_speed, wave_eta)
+distribution(state)
 
 
     
