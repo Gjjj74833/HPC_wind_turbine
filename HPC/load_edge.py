@@ -99,10 +99,10 @@ def plot_quantiles():
     plt.close(fig)  
     
     print("The simulation that has the most occurrence of max is", max_occ_sim)
-    print("The simulation that has the most occurrence of max is", min_occ_sim)
+    print("The simulation that has the most occurrence of min is", min_occ_sim)
     
     print("On the entire time domain, the max occured at index of simulation", max_value_sim )
-    print("On the entire time domain, the max occured at index of simulation", min_value_sim )
+    print("On the entire time domain, the min occured at index of simulation", min_value_sim )
     
     # plot trajectories 
     
