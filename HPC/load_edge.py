@@ -348,20 +348,20 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     
 def distribution(state):
     
-    state = state[-500:]
+    state = state[-20,:,:]
     used_state = state.reshape(-1, 7)
     del state
     
     state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
                    'Pitch_Angle', 'Pitch_Rate', 'Rotor_speed']
     
-    fig, ax = plt.subplots(4, 2, figsize=(15, 8.5))
+    fig, ax = plt.subplots(2, 4, figsize=(15, 8.5))
     fig.suptitle('The distribution for each state from last 500 time steps')
     ax = ax.flatten()
     
     for i in range(7):
         #make histogram plot for each state
-        ax[i].hist(used_state[:, i], bins=50, edgecolor='black') 
+        ax[i].hist(used_state[:, i], bins=100, edgecolor='black') 
         ax[i].set_title(f'{state_names[i]}')
         ax[i].set_xlabel(f'{state_names[i]}')
         
@@ -375,9 +375,9 @@ def distribution(state):
     
     
 
-t, state, wind_speed, wave_eta, Q_t = load_data()
+state = load_data()[1]
 
-plot_trajectories(t, state, wind_speed, wave_eta)
+
 distribution(state)
 
 
