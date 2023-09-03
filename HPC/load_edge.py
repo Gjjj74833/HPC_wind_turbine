@@ -31,18 +31,37 @@ def plot_quantiles():
     state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
                    'Pitch_Angle', 'Pitch_Rate', 'Rotor_speed']
 
-    # Create one large subplot grid: 7 rows x 2 columns for 7 states
+    # Create one large subplot for max and min occurrences for each state
     fig, ax = plt.subplots(7, 2, figsize=(15, 30))
     ax = ax.flatten()  # Flatten to easily index
     
+    max_occ_sim = []
+    min_occ_sim = []
+    
+    max_value_sim = []
+    min_value_sim = []
+    
     for i in range(7):
         state_i = state[:, i, :]
+        
+        max_value = np.argmax(state_i, axis=1)
+        mmin_value = np.argmin(state_i, axis=1)
+        
+ 
+        
         max_index = np.argmax(state_i, axis=1)
         min_index = np.argmin(state_i, axis=1)
+        
+        print(f'shape max index {i}', max_index.shape)
         
         # Count occurrences
         max_counts = np.bincount(max_index, minlength=state_i.shape[1])
         min_counts = np.bincount(min_index, minlength=state_i.shape[1])
+        
+        print(f'shape max counts {i}', max_counts.shape)
+        
+        max_occ_sim.append(np.argmax(max_counts))
+        min_occ_sim.append(np.argmax(min_counts))
 
         # Plot for max occurrences
         ax[2*i].bar(range(state_i.shape[1]), max_counts, color='b', alpha=0.7, label="Max occurrences")
@@ -61,6 +80,9 @@ def plot_quantiles():
     plt.tight_layout()
     plt.savefig("./results_figure/max_min_occurrences_histogram_all_states.png", dpi=600)
     plt.close(fig)  
+    
+    print("The simulation that has the most occurrence of max is", max_occ_sim)
+    print("The simulation that has the most occurrence of max is", min_occ_sim)
     
 plot_quantiles()
 
