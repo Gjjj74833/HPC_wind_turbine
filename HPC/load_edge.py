@@ -349,7 +349,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
 def distribution(state):
     
     state = state[-20,:,:]
-    del state
+
     
     state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
                    'Pitch_Angle', 'Pitch_Rate', 'Rotor_speed']
