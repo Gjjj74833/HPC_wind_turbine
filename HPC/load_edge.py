@@ -8,7 +8,7 @@ Load the simulation results
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from datetime import datetime
+
 
 def plot_quantiles():
     
@@ -39,177 +39,39 @@ def plot_quantiles():
     print("state", state.shape)
     print("Qt", Q_t.shape)
 
-    # Get the central 75% ####################
-    # States
-    percentile_87_5 = np.percentile(state, 87.5, axis=2)
-    percentile_12_5 = np.percentile(state, 12.5, axis=2)
-
-    max_value = np.max(state, axis=2)
-    min_value = np.min(state, axis=2)
-    
-    # Wind speed
-    wind_percentile_87_5 = np.percentile(wind_speed, 87.5, axis=1)
-    wind_percentile_12_5 = np.percentile(wind_speed, 12.5, axis=1)
-    
-    # Wave elevation
-    wave_percentile_87_5 = np.percentile(wave_eta, 87.5, axis=1)
-    wave_percentile_12_5 = np.percentile(wave_eta, 12.5, axis=1)
-    
-    # Tension force
-    Qt_percentile_87_5 = np.percentile(Q_t, 87.5, axis=1)
-    Qt_percentile_12_5 = np.percentile(Q_t, 12.5, axis=1)
-    
-    # Get the central 25% ####################
-    # States
-    percentile_62_5 = np.percentile(state, 62.5, axis=2)
-    percentile_37_5 = np.percentile(state, 37.5, axis=2)
-    
-    # Wind speed
-    wind_percentile_62_5 = np.percentile(wind_speed, 62.5, axis=1)
-    wind_percentile_37_5 = np.percentile(wind_speed, 37.5, axis=1)
-    
-    # Wave elevation
-    wave_percentile_62_5 = np.percentile(wave_eta, 62.5, axis=1)
-    wave_percentile_37_5 = np.percentile(wave_eta, 37.5, axis=1)
-    
-    # Tension force
-    Qt_percentile_62_5 = np.percentile(Q_t, 62.5, axis=1)
-    Qt_percentile_37_5 = np.percentile(Q_t, 37.5, axis=1)
-    
-    # Get the median (50%) ####################
-    # States
-    percentile_50 = np.percentile(state, 50, axis=2)
-    
-    # Wind speed
-    wind_percentile_50 = np.percentile(wind_speed, 50, axis=1)
-    
-    # Wave elevation
-    wave_percentile_50 = np.percentile(wave_eta, 50, axis=1)
-    
-    # Tension force
-    Qt_percentile_50 = np.percentile(Q_t, 50, axis=1)
         
-    
-    state_names = ['Surge_m', 'Surge_Velocity_m_s', 'Heave_m', 'Heave_Velocity_m_s', 
-                   'Pitch_Angle_deg', 'Pitch_Rate_deg_s', 'Rotor_speed_rpm']
-    
-    start_time = 0
-    end_time = t[-1]
-    
-    #if end_time > 1000:
-    #   start_time = end_time - 1000
-    
-    now = datetime.now()
-    time = now.strftime('%Y-%m-%d_%H-%M-%S')    
+    num_states = state.shape[1]
+
+    for i in range(num_states):
+        state_i = state[:, i, :]
         
-    # Plot wind speed
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, wind_percentile_12_5, wind_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, wind_percentile_37_5, wind_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, wind_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Wind Speed (m/s)')
-    plt.title('Time evolution of Wind Speed')
-    plt.grid(True)
-    plt.xlim(start_time, end_time)
-    plt.savefig('./results_figure/Wind_Speed_{time}.png')
+        max_index = np.argmax(state_i, axis=1)
+        min_index = np.argmin(state_i, axis=1)
 
-    
-    # Plot wave_eta
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, wave_percentile_12_5, wave_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, wave_percentile_37_5, wave_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, wave_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Water Surface Elevation at x = 0 (m)')
-    plt.title('Time evolution of Wave Surface Elevation at x = 0')
-    plt.grid(True)
-    plt.xlim(start_time, end_time)
-    plt.savefig('./results_figure/Wave_Eta_{time}.png')
+        # Flatten the indices and count occurrences
+        max_counts = np.bincount(max_index, minlength=state_i.shape[1])
+        min_counts = np.bincount(min_index, minlength=state_i.shape[1])
 
-    
-    
-    # Plot all states
-    for i in range(7):
-        plt.figure(figsize=(12.8, 4.8))
-        plt.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
-        plt.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
-        plt.plot(t, percentile_50[:, i], color='r', linewidth=1) 
-        plt.plot(t, max_value[:, i], linewidth=1)
-        plt.plot(t, min_value[:, i], linewidth=1)
-        plt.xlabel('Time (s)')
-        plt.ylabel(f'{state_names[i]}')
-        plt.title(f'Time evolution of {state_names[i]}')
-        plt.grid(True)
-        plt.xlim(start_time, end_time)
-        safe_filename = state_names[i].replace('/', '_')  
-        plt.savefig(f'./results_figure/{state_names[i]}_{time}.png')  
-        
+        # Plotting
+        fig, ax = plt.subplots(2, 1, figsize=(10, 8))
 
-        plt.figure(figsize=(12.8, 4.8))
-        plt.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
-        plt.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
-        plt.plot(t, percentile_50[:, i], color='r', linewidth=1) 
-        plt.xlabel('Time (s)')
-        plt.ylabel(f'{state_names[i]}')
-        plt.title(f'Time evolution of {state_names[i]}')
-        plt.grid(True)
-        plt.xlim(end_time - 30, end_time)
-        safe_filename = state_names[i].replace('/', '_')  
-        short = '_30s'
-        plt.savefig(f'./results_figure/{safe_filename + short}_{time}.png')  
+        # Plot for max occurrences
+        ax[0].bar(range(state_i.shape[1]), max_counts, color='b', alpha=0.7, label="Max occurrences")
+        ax[0].set_title(f"Number of occurrences for Max in State {i}")
+        ax[0].set_xlabel("Simulation Index")
+        ax[0].set_ylabel("Occurrences")
+        ax[0].legend()
 
-        
-    # Plot average tension force on each rod
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, Qt_percentile_12_5, Qt_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, Qt_percentile_37_5, Qt_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, Qt_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Averga Tension Force Per Line (N)')
-    plt.title('Time evolution of Averga Tension Force Per Line')
-    plt.grid(True)
-    plt.xlim(start_time, end_time)
-    plt.savefig('./results_figure/Tension_force_{time}.png')
+        # Plot for min occurrences
+        ax[1].bar(range(state_i.shape[1]), min_counts, color='r', alpha=0.7, label="Min occurrences")
+        ax[1].set_title(f"Number of occurrences for Min in State {i}")
+        ax[1].set_xlabel("Simulation Index")
+        ax[1].set_ylabel("Occurrences")
+        ax[1].legend()
 
-    
-    plt.figure(figsize=(12.8, 4.8))
-    plt.fill_between(t, Qt_percentile_12_5, Qt_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
-    plt.fill_between(t, Qt_percentile_37_5, Qt_percentile_62_5, color='b', alpha=1)
-    plt.plot(t, Qt_percentile_50, color='r', linewidth=1)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Averga Tension Force Per Line')
-    plt.title('Time evolution of Averga Tension Force Per Line (N)')
-    plt.grid(True)
-    plt.xlim(end_time - 30, end_time)
-    plt.savefig('./results_figure/Tension_force_30s_{time}.png')
-    
-    max_index = np.argmax(state, axis=2)
-    min_index = np.argmin(state, axis=2)
-
-    # Flatten the indices and count occurrences
-    max_counts = np.bincount(max_index.ravel(), minlength=state.shape[2])
-    min_counts = np.bincount(min_index.ravel(), minlength=state.shape[2])
-
-    # Plotting
-    fig, ax = plt.subplots(2, 1, figsize=(10, 8))
-
-    # Plot for max occurrences
-    ax[0].bar(range(state.shape[2]), max_counts, color='b', alpha=0.7, label="Max occurrences")
-    ax[0].set_title("Number of occurrences for Max")
-    ax[0].set_xlabel("Simulation Index")
-    ax[0].set_ylabel("Occurrences")
-    ax[0].legend()
-
-    # Plot for min occurrences
-    ax[1].bar(range(state.shape[2]), min_counts, color='r', alpha=0.7, label="Min occurrences")
-    ax[1].set_title("Number of occurrences for Min")
-    ax[1].set_xlabel("Simulation Index")
-    ax[1].set_ylabel("Occurrences")
-    ax[1].legend()
-
-    plt.tight_layout()
-    plt.savefig("./results_figure/max_min_occurrences_histogram.png", dpi=600)
+        plt.tight_layout()
+        plt.savefig(f"./results_figure/max_min_occurrences_histogram_state_{i}.png", dpi=600)
+        plt.close(fig)  # Close the figure to free up memory
     
 plot_quantiles()
 

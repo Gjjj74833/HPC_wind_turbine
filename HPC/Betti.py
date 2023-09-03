@@ -8,10 +8,8 @@ Betti model implementation
 import sys
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 import subprocess
 import bisect
-import time
 from multiprocessing import Pool
 from datetime import datetime
 
@@ -751,7 +749,7 @@ def rk4(Betti, x0, t0, tf, dt, beta, T_E, Cp_type, performance, v_w, v_wind):
     return t, x, v_wind[:len(t)], np.array(wave_eta), Qt_list
 
 
-def main(end_time, v_w, x0, v_wind, time_step = 0.01, Cp_type = 0):
+def main(end_time, v_w, x0, v_wind, time_step = 0.05, Cp_type = 0):
     """
     Cp computation method
 
@@ -848,7 +846,7 @@ def run_simulations_parallel(n_simulations, params):
 
     vWind = []
     for i in range(n_simulations):
-        vWind.append(genWind(params[1], params[0], 0.01))
+        vWind.append(genWind(params[1], params[0], 0.05))
    
     
     with Pool(int(sys.argv[3])) as p:
