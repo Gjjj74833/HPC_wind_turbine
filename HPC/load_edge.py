@@ -284,26 +284,23 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
             ax[j+2].set_xlabel('Time (s)')
             ax[j+2].set_ylabel(f'{state_names[j]}')
             
-            ax[j+2].fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.2, edgecolor='none')
-            ax[j+2].fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=0.2)
-            ax[j+2].plot(t, percentile_50[:, i], color='r', alpha=0.2, linewidth=0.5)
+            ax[j+2].fill_between(t, percentile_12_5[:, j], percentile_87_5[:, j], color='b', alpha=0.3, edgecolor='none')
+            ax[j+2].fill_between(t, percentile_37_5[:, j], percentile_62_5[:, j], color='b', alpha=0.3)
+            ax[j+2].plot(t, percentile_50[:, j], color='r', alpha=0.4, linewidth=0.5)
             
-            ax[j+2].plot(t, max_state[:,i], alpha=0.2)
-            ax[j+2].plot(t, min_state[:,i], alpha=0.2)
+            ax[j+2].plot(t, max_state[:,j], alpha=0.4)
+            ax[j+2].plot(t, min_state[:,j], alpha=0.4)
             
             ax[j+2].set_title(f'Time evolution of {state_names[j]}')
             ax[j+2].grid(True)
             ax[j+2].set_xlim(0, t[-1])
-            
-
-        
-    
+      
     
     # for 7 states:
     for i in range(7):
         # create subplots for each simulation index in max_occ_sim
         fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(15, 20))
-        fig_max_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} max value')
+        fig_max_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} max value from {state.shape[2]} simulations', fontsize=16)
         ax_max_occ = ax_max_occ.flatten()
         
         plot_helper(ax_max_occ, max_occ_sim[i])
@@ -314,8 +311,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         
         
         # create subplots for each simulation index in mix_occ_sim
-        fig_min_occ, ax_min_occ = plt.subplots(4, 2, figsize=(15, 20))
-        fig_min_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} min value')
+        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(15, 20))
+        fig_min_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} min value from {state.shape[2]} simulations', fontsize=16)
         ax_min_occ = ax_min_occ.flatten()
         
         plot_helper(ax_min_occ, min_occ_sim[i])
@@ -325,8 +322,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
-        fig_max_value, ax_max_value = plt.subplots(4, 2, figsize=(15, 20))
-        fig_max_value.suptitle(f'Trajectories for the simulation that have the maximum value for {state_names[i]}')
+        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(15, 20))
+        fig_max_value.suptitle(f'Trajectories for the simulation that have the maximum value for {state_names[i]} from {state.shape[2]} simulations', fontsize=16)
         ax_max_value = ax_max_value.flatten()
         
         plot_helper(ax_max_value, max_value_sim[i])
@@ -336,8 +333,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
-        fig_min_value, ax_min_value = plt.subplots(4, 2, figsize=(15, 20))
-        fig_min_value.suptitle(f'Trajectories for the simulation that have the minimum value for {state_names[i]}')
+        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(15, 20))
+        fig_min_value.suptitle(f'Trajectories for the simulation that have the minimum value for {state_names[i]} from {state.shape[2]} simulations', fontsize=16)
         ax_min_value = ax_min_value.flatten()
         
         plot_helper(ax_min_value, min_value_sim[i])
@@ -346,6 +343,12 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.savefig(f'./results_figure/min_value_{state_names[i]}.png', dpi=600)
         plt.close(fig_min_value) 
     
+    
+def distribution(state):
+    
+    state = state[-500:]
+    used_state = state.reshape(-1, 7)
+    del state
     
     
     
