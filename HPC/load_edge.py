@@ -35,31 +35,48 @@ def plot_quantiles():
     fig, ax = plt.subplots(7, 2, figsize=(15, 30))
     ax = ax.flatten()  # Flatten to easily index
     
+    # record the index of simulation that have the most occurrence of max and min
+    # value for each 7 states
     max_occ_sim = []
     min_occ_sim = []
     
+    # record the index of simulation that have the max and min value through all
+    # time steps for each 7 states
     max_value_sim = []
     min_value_sim = []
     
     for i in range(7):
         state_i = state[:, i, :]
         
-        max_value = np.argmax(state_i, axis=1)
-        mmin_value = np.argmin(state_i, axis=1)
+        # store the max and min value for ith state in all time steps 
+        max_value = np.max(state_i, axis=1)
+        min_value = np.min(state_i, axis=1)
         
+        # find the time step where the max and min occur
+        max_value_time = np.argmax(max_value)
+        min_value_time = np.argmin(min_value)
  
-        
+        # store the simulation index that have the most occurrence of max
+        # and min at each time step
         max_index = np.argmax(state_i, axis=1)
         min_index = np.argmin(state_i, axis=1)
         
+        # find the simulation index for the max and min value occured over
+        # the entire time domain
+        max_value_sim.append(max_index[max_value_time])
+        min_value_sim.append(min_index[min_value_time])
+        
         print(f'shape max index {i}', max_index.shape)
         
-        # Count occurrences
+        # from max_index, all time steps, count the occurrence of max and min
+        # for each simulation
         max_counts = np.bincount(max_index, minlength=state_i.shape[1])
         min_counts = np.bincount(min_index, minlength=state_i.shape[1])
         
         print(f'shape max counts {i}', max_counts.shape)
         
+        # for each state, find the simulation that have the most occurrence
+        # of max and min value
         max_occ_sim.append(np.argmax(max_counts))
         min_occ_sim.append(np.argmax(min_counts))
 
@@ -83,6 +100,10 @@ def plot_quantiles():
     
     print("The simulation that has the most occurrence of max is", max_occ_sim)
     print("The simulation that has the most occurrence of max is", min_occ_sim)
+    
+    print("On the entire time domain, the max occured at index of simulation", max_value_sim )
+    print("On the entire time domain, the max occured at index of simulation", max_value_sim )
+    
     
 plot_quantiles()
 
