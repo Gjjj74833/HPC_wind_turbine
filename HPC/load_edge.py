@@ -109,7 +109,7 @@ def plot_quantiles():
     # for 7 states:
     for i in range(7):
         # create subplots for each simulation index in max_occ_sim
-        fig_max_occ, ax_max_occ = plt.subplots(4, 2, figsize=(15, 30))
+        fig_max_occ, ax_max_occ = plt.subplots(4, 2, figsize=(15, 15))
         fig_max_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} max value')
         ax_max_occ = ax_max_occ.flatten()
         for j in range(7):
@@ -119,13 +119,13 @@ def plot_quantiles():
             ax_max_occ[j].set_title(f'Time evolution of {state_names[j]}')
             ax_max_occ[j].grid(True)
             ax_max_occ[j].set_xlim(0, t[-1])
-        plt.tight_layout()
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
         plt.savefig(f'./results_figure/max_occ_{state_names[i]}.png', dpi=600)
         plt.close(fig_max_occ) 
         
         
         # create subplots for each simulation index in mix_occ_sim
-        fig_min_occ, ax_min_occ = plt.subplots(4, 2, figsize=(15, 30))
+        fig_min_occ, ax_min_occ = plt.subplots(4, 2, figsize=(15, 15))
         fig_min_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} min value')
         ax_min_occ = ax_min_occ.flatten()
         for j in range(7):
@@ -135,12 +135,12 @@ def plot_quantiles():
             ax_min_occ[j].set_title(f'Time evolution of {state_names[j]}')
             ax_min_occ[j].grid(True)
             ax_min_occ[j].set_xlim(0, t[-1])
-        plt.tight_layout()
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
         plt.savefig(f'./results_figure/min_occ_{state_names[i]}.png', dpi=600)
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
-        fig_max_value, ax_max_value = plt.subplots(4, 2, figsize=(15, 30))
+        fig_max_value, ax_max_value = plt.subplots(4, 2, figsize=(15, 15))
         fig_max_value.suptitle(f'Trajectories for the simulation that have the maximum value for {state_names[i]}')
         ax_max_value = ax_max_value.flatten()
         for j in range(7):
@@ -150,12 +150,12 @@ def plot_quantiles():
             ax_max_value[j].set_title(f'Time evolution of {state_names[j]}')
             ax_max_value[j].grid(True)
             ax_max_value[j].set_xlim(0, t[-1])
-        plt.tight_layout()
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
         plt.savefig(f'./results_figure/max_value_{state_names[i]}.png', dpi=600)
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
-        fig_min_value, ax_min_value = plt.subplots(4, 2, figsize=(15, 30))
+        fig_min_value, ax_min_value = plt.subplots(4, 2, figsize=(15, 15))
         fig_min_value.suptitle(f'Trajectories for the simulation that have the minimum value for {state_names[i]}')
         ax_min_value = ax_min_value.flatten()
         for j in range(7):
@@ -165,7 +165,7 @@ def plot_quantiles():
             ax_min_value[j].set_title(f'Time evolution of {state_names[j]}')
             ax_min_value[j].grid(True)
             ax_min_value[j].set_xlim(0, t[-1])
-        plt.tight_layout()
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
         plt.savefig(f'./results_figure/min_value_{state_names[i]}.png', dpi=600)
         plt.close(fig_min_value) 
     
