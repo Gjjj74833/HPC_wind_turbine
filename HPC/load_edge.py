@@ -349,7 +349,6 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
 def distribution(state):
     
     state = state[-20,:,:]
-    used_state = state.reshape(-1, 7)
     del state
     
     state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
@@ -361,14 +360,14 @@ def distribution(state):
     
     for i in range(7):
         #make histogram plot for each state
-        ax[i].hist(used_state[:, i], bins=100, edgecolor='black') 
+        ax[i].hist(state[:, i], bins=100) 
         ax[i].set_title(f'{state_names[i]}')
         ax[i].set_xlabel(f'{state_names[i]}')
         
 
     fig.delaxes(ax[7]) 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-    plt.savefig(f'./results_figure/distribution_{used_state.shape[0]}.png', dpi=600)
+    plt.savefig('./results_figure/distribution.png', dpi=600)
     plt.close(fig)
     
     
