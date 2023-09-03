@@ -24,16 +24,18 @@ def plot_quantiles():
     
     states = [data['state'] for data in datas]
 
-    
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
     
+    ######################################################################
+    state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
+                   'Pitch_Angle', 'Pitch_Rate', 'Rotor_speed']
 
     # Create one large subplot grid: 7 rows x 2 columns for 7 states
     fig, ax = plt.subplots(7, 2, figsize=(15, 30))
     ax = ax.flatten()  # Flatten to easily index
     
-    for i in range(state):
+    for i in range(7):
         state_i = state[:, i, :]
         max_index = np.argmax(state_i, axis=1)
         min_index = np.argmin(state_i, axis=1)
@@ -44,21 +46,21 @@ def plot_quantiles():
 
         # Plot for max occurrences
         ax[2*i].bar(range(state_i.shape[1]), max_counts, color='b', alpha=0.7, label="Max occurrences")
-        ax[2*i].set_title(f"Number of occurrences for Max in State {i}")
+        ax[2*i].set_title(f"Number of occurrences for Max in {state_names[i]}")
         ax[2*i].set_xlabel("Simulation Index")
         ax[2*i].set_ylabel("Occurrences")
         ax[2*i].legend()
 
         # Plot for min occurrences
         ax[2*i+1].bar(range(state_i.shape[1]), min_counts, color='r', alpha=0.7, label="Min occurrences")
-        ax[2*i+1].set_title(f"Number of occurrences for Min in State {i}")
+        ax[2*i+1].set_title(f"Number of occurrences for Min in {state_names[i]}")
         ax[2*i+1].set_xlabel("Simulation Index")
         ax[2*i+1].set_ylabel("Occurrences")
         ax[2*i+1].legend()
         
     plt.tight_layout()
     plt.savefig("./results_figure/max_min_occurrences_histogram_all_states.png", dpi=600)
-    plt.close(fig)  # Close the figure to free up memory
+    plt.close(fig)  
     
 plot_quantiles()
 
