@@ -103,7 +103,7 @@ def plot_quantiles():
     time = now.strftime('%Y-%m-%d_%H-%M-%S')    
         
     # Plot wind speed
-    plt.figure(figsize=(12.8, 4.8))
+    plt.figure(figsize=(6.4, 2.4))
     plt.fill_between(t, wind_percentile_12_5, wind_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
     plt.fill_between(t, wind_percentile_37_5, wind_percentile_62_5, color='b', alpha=1)
     plt.plot(t, wind_percentile_50, color='r', linewidth=1)
@@ -116,7 +116,7 @@ def plot_quantiles():
 
     
     # Plot wave_eta
-    plt.figure(figsize=(12.8, 4.8))
+    plt.figure(figsize=(6.4, 2.4))
     plt.fill_between(t, wave_percentile_12_5, wave_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
     plt.fill_between(t, wave_percentile_37_5, wave_percentile_62_5, color='b', alpha=1)
     plt.plot(t, wave_percentile_50, color='r', linewidth=1)
@@ -131,7 +131,7 @@ def plot_quantiles():
     
     # Plot all states
     for i in range(7):
-        plt.figure(figsize=(12.8, 4.8))
+        plt.figure(figsize=(6.4, 2.4))
         plt.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
         plt.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
         plt.plot(t, percentile_50[:, i], color='r', linewidth=1) 
@@ -146,7 +146,7 @@ def plot_quantiles():
         plt.savefig(f'./results_figure/{state_names[i]}_{time}.png')  
         
 
-        plt.figure(figsize=(12.8, 4.8))
+        plt.figure(figsize=(6.4, 2.4))
         plt.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
         plt.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
         plt.plot(t, percentile_50[:, i], color='r', linewidth=1) 
@@ -161,7 +161,7 @@ def plot_quantiles():
 
         
     # Plot average tension force on each rod
-    plt.figure(figsize=(12.8, 4.8))
+    plt.figure(figsize=(6.4, 2.4))
     plt.fill_between(t, Qt_percentile_12_5, Qt_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
     plt.fill_between(t, Qt_percentile_37_5, Qt_percentile_62_5, color='b', alpha=1)
     plt.plot(t, Qt_percentile_50, color='r', linewidth=1)
@@ -173,7 +173,7 @@ def plot_quantiles():
     plt.savefig('./results_figure/Tension_force_{time}.png')
 
     
-    plt.figure(figsize=(12.8, 4.8))
+    plt.figure(figsize=(6.4, 2.4))
     plt.fill_between(t, Qt_percentile_12_5, Qt_percentile_87_5, color='b', alpha=0.3, edgecolor='none')
     plt.fill_between(t, Qt_percentile_37_5, Qt_percentile_62_5, color='b', alpha=1)
     plt.plot(t, Qt_percentile_50, color='r', linewidth=1)
