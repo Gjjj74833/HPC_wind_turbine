@@ -161,7 +161,7 @@ def drvCpCtCq(omega_R, v_in, beta):
     return float(data_list[4]), float(data_list[6])
 
 
-def genWind(v_w, end_time, time_step):
+def genWind(v_w, end_time, time_step, file_index):
     """
     Use Turbsim to generate a wind with turbulence.
 
@@ -188,7 +188,7 @@ def genWind(v_w, end_time, time_step):
     seed2 = np.random.randint(-2147483648, 2147483648)
     seed = [seed1, seed2]
     
-    path_inp = f'./turbsim/TurbSim_{sys.argv[1]}.inp'
+    path_inp = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.inp'
     
     
     # Open the inp file and overwrite with given parameters
@@ -228,7 +228,7 @@ def genWind(v_w, end_time, time_step):
     subprocess.run(command)
     
     # Read the output file
-    path_hh = f'./turbsim/TurbSim_{sys.argv[1]}.hh'
+    path_hh = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.hh'
     
     with open(path_hh, 'r') as file:
         lines = file.readlines()
@@ -806,7 +806,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     return t, x, v_wind[:len(t)], np.array(wave_eta), Qt_list
 
 
-def main(end_time, v_w, x0, v_wind, time_step = 0.05, Cp_type = 0):
+def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
     """
     Cp computation method
 
@@ -836,6 +836,7 @@ def main(end_time, v_w, x0, v_wind, time_step = 0.05, Cp_type = 0):
     
     # modify this to change initial condition
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
+    v_wind = genWind(v_w, end_time, time_step, file_index)
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
@@ -863,14 +864,12 @@ def run_simulations_parallel(n_simulations, params):
 
     params.append(state)
 
-    vWind = []
-    for i in range(n_simulations):
-        vWind.append(genWind(params[1], params[0], 0.05))
+    file_index = list(range(1, n_simulations + 1))
    
     
     with Pool(int(sys.argv[3])) as p:
         
-        all_params = [params + [vWind[i]] for i in range(n_simulations)]
+        all_params = [params + file_index[i] for i in range(n_simulations)]
         
         results = p.map(run_simulation, all_params)
 
