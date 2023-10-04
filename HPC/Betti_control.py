@@ -187,7 +187,7 @@ def genWind(v_w, end_time, time_step, file_index):
     seed1 = np.random.randint(-2147483648, 2147483648)
     seed2 = np.random.randint(-2147483648, 2147483648)
     seed = [seed1, seed2]
-    
+    print("&&&&&&&&&^^^^^^^^^^^^%%%%%%%%%%")
     path_inp = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.inp'
     
     
@@ -864,12 +864,12 @@ def run_simulations_parallel(n_simulations, params):
 
     params.append(state)
 
-    file_index = list(range(1, n_simulations + 1))
+    file_index = list(range(0, n_simulations))
    
     
     with Pool(int(sys.argv[3])) as p:
         
-        all_params = [params + file_index[i] for i in range(n_simulations)]
+        all_params = [params + [file_index[i]] for i in range(n_simulations)]
         
         results = p.map(run_simulation, all_params)
 

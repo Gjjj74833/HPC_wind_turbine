@@ -21,22 +21,18 @@
 ### REQUIRED. Set the number of nodes
 #SBATCH --nodes=1
 ### REQUIRED. Set the memory required for this job.
-#SBATCH --mem=32gb
+#SBATCH --mem=20gb
 ### REQUIRED. Specify the time required for this job, hhh:mm:ss
-#SBATCH --time=05:00:00
+#SBATCH --time=08:00:00
 
-#SBATCH --array=1-50 
+#SBATCH --array=1-20 
 # --------------------------------------------------------------
 ### PART 2: Executes bash commands to run your job
 # --------------------------------------------------------------
 ### Load required modules/libraries if needed
-mkdir TurbSim_${SLURM_ARRAY_TASK_ID}
-
-for file_index in $(seq 0 $(($1-1))); do
-    cp TurbSim.inp turbsim/TurbSim_${SLURM_ARRAY_TASK_ID}/TurbSim_${file_index}.inp
-done
 
 module load python/3.9
 
-python3 Betti.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
+python3 Betti_control.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
 rm -f test*
+
