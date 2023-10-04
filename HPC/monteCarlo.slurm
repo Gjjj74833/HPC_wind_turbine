@@ -30,7 +30,12 @@
 ### PART 2: Executes bash commands to run your job
 # --------------------------------------------------------------
 ### Load required modules/libraries if needed
-cp TurbSim.inp turbsim/TurbSim_${SLURM_ARRAY_TASK_ID}.inp
+mkdir TurbSim_${SLURM_ARRAY_TASK_ID}
+
+for file_index in $(seq 0 $(($1-1))); do
+    cp TurbSim.inp turbsim/TurbSim_${SLURM_ARRAY_TASK_ID}/TurbSim_${file_index}.inp
+done
+
 module load python/3.9
 
 python3 Betti.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
