@@ -6,7 +6,6 @@
 ### This script takes one int argument, which run the simulation $n_simulation times. 
 ### If no argument is provided, 100 is the default.
 
-### If no argument provided, by default run 100 simulations
 n_simulations=20
 
 ### If a positive integer provided as argument, use this number

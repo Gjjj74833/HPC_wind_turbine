@@ -21,7 +21,7 @@
 ### REQUIRED. Set the number of nodes
 #SBATCH --nodes=1
 ### REQUIRED. Set the memory required for this job.
-#SBATCH --mem=16gb
+#SBATCH --mem=30gb
 ### REQUIRED. Specify the time required for this job, hhh:mm:ss
 #SBATCH --time=02:00:00
 
@@ -33,4 +33,4 @@
 module load python/3.9
  
 ### Run your work
-python3 load.py
+python3 load_edge.py
