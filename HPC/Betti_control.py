@@ -125,7 +125,7 @@ def drvCpCtCq(omega_R, v_in, beta):
 
     """
 
-    
+	    
     # Convert rad/s to rpm since the AeroDyn driver takes rpm as parameter
     omega_rpm = omega_R*(60 / (2*np.pi))
     beta_deg = beta*(180/np.pi)
@@ -180,8 +180,7 @@ def genWind(v_w, end_time, time_step, file_index):
         A list of horizontal wind speed computed at each time step
 
     """
-    if end_time <= 600:
-        end_time = 601
+    end_time += 1
         
     # Generate seeds for random wind model
     seed1 = np.random.randint(-2147483648, 2147483648)

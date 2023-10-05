@@ -25,7 +25,7 @@
 ### REQUIRED. Specify the time required for this job, hhh:mm:ss
 #SBATCH --time=08:00:00
 
-#SBATCH --array=1-20 
+#SBATCH --array=1-50 
 # --------------------------------------------------------------
 ### PART 2: Executes bash commands to run your job
 # --------------------------------------------------------------
