@@ -12,6 +12,7 @@ import subprocess
 import bisect
 from multiprocessing import Pool
 from datetime import datetime
+import random
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):
     """
@@ -101,66 +102,6 @@ def CpCtCq(TSR, beta, performance):
     return C_p[TSR_index][pitch_index], C_t[TSR_index][pitch_index]
 
 
-def drvCpCtCq(omega_R, v_in, beta):
-    """
-    Compute the power coefficient use AeroDyn v15 driver. Based on input 
-    requirements for AeroDyn v15, we take the rotor speed and relative 
-    wind velocity as parameters instead of TSR. there's no need to compute 
-    TSR when use this function to calculate Cp and Ct.
-
-    Parameters
-    ----------
-    omega_R : float
-        The rotor speed in rad/s
-    v_in : float
-        relative wind speed
-    beta : float
-        blade pitch angle in rad
-
-    Returns
-    -------
-    float
-        the power coefficient
-        the thrust coefficient
-
-    """
-
-	    
-    # Convert rad/s to rpm since the AeroDyn driver takes rpm as parameter
-    omega_rpm = omega_R*(60 / (2*np.pi))
-    beta_deg = beta*(180/np.pi)
-    
-    omega_Rstr = str(omega_rpm)
-    v_instr = str(v_in)
-    beta_str = str(beta_deg)
-    
-    # Replace the path to the AeroDyn exe and drv file based on your file location
-    path_exe = "C:/Users/ghhh7/AeroDyn_v15/bin/AeroDyn_Driver_x64.exe"
-    path_drv = "C:/Users/ghhh7/AeroDyn_v15/TLPmodel/5MW_TLP_DLL_WTurb_WavesIrr_WavesMulti/5MW_TLP_DLL_WTurb_WavesIrr_Aero.dvr"
-    
-    # Update the driver file with desired input case to analysis
-    with open(path_drv, 'r') as file:
-        lines = file.readlines() 
-
-    # Replace line 22 for input
-    lines[21] = v_instr + " 0.00E+00 " + omega_Rstr + " " + beta_str + " 0.00E+00 0.1 0.1\n"
-
-    # Open the file in write mode and overwrite it with the new content
-    with open(path_drv, 'w') as file:
-        file.writelines(lines)
-    
-    # Execute the driver 
-    os.system(path_exe + " " + path_drv)
-    
-    # Read output file
-    with open("LTP.1.out", 'r') as file:
-        lines = file.readlines()
-        data = lines[8]
-        data_list = data.split()
-    
-    return float(data_list[4]), float(data_list[6])
-
-
 def genWind(v_w, end_time, time_step, file_index):
     """
     Use Turbsim to generate a wind with turbulence.
@@ -186,7 +127,6 @@ def genWind(v_w, end_time, time_step, file_index):
     seed1 = np.random.randint(-2147483648, 2147483648)
     seed2 = np.random.randint(-2147483648, 2147483648)
     seed = [seed1, seed2]
-    print("&&&&&&&&&^^^^^^^^^^^^%%%%%%%%%%")
     path_inp = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.inp'
     
     
@@ -487,12 +427,9 @@ def structure(x_1, beta, omega_R, t, Cp_type, performance, v_w, v_aveg, random_p
     Cp = 0
     Ct = 0
     
-    if Cp_type == 0:
-        Cp = CpCtCq(TSR, beta, performance)[0]
-        Ct = CpCtCq(TSR, beta, performance)[1]
-    else:
-        Cp = drvCpCtCq(omega_R, v_in, beta)[0]
-        Ct = drvCpCtCq(omega_R, v_in, beta)[1]
+    Cp = CpCtCq(TSR, beta, performance)[0]
+    Ct = CpCtCq(TSR, beta, performance)[1]
+
     
     FA = 0.5*rho*A*Ct*v_in**2
     FAN = 0.5*rho*C_dN*A_N*np.cos(alpha)*(v_w + v_zeta + d_N*omega*np.cos(alpha))**2
@@ -828,7 +765,6 @@ def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
     wave_eta: list
         The wave elevation at surge = 0 for each time step
     """
-    
     performance = process_rotor_performance()
     
     start_time = 0
