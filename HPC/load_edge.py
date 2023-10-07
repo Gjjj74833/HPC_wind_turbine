@@ -280,16 +280,16 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         
         # plot 7 states
         for j in range(7):
+            ax[j+2].plot(t, max_state[:,j], alpha=0.6, linewidth=0.5)
+            ax[j+2].plot(t, min_state[:,j], alpha=0.6, linewidth=0.5)
+
             ax[j+2].plot(t, state[:, j, index], color='black', linewidth=0.5)
             ax[j+2].set_xlabel('Time (s)')
             ax[j+2].set_ylabel(f'{state_names[j]}')
             
             ax[j+2].fill_between(t, percentile_12_5[:, j], percentile_87_5[:, j], color='b', alpha=0.3, edgecolor='none')
             ax[j+2].fill_between(t, percentile_37_5[:, j], percentile_62_5[:, j], color='b', alpha=0.3)
-            ax[j+2].plot(t, percentile_50[:, j], color='r', alpha=0.4, linewidth=0.5)
-            
-            ax[j+2].plot(t, max_state[:,j], alpha=0.4)
-            ax[j+2].plot(t, min_state[:,j], alpha=0.4)
+            ax[j+2].plot(t, percentile_50[:, j], color='r', alpha=0.8, linewidth=0.5)
             
             ax[j+2].set_title(f'Time evolution of {state_names[j]}')
             ax[j+2].grid(True)
@@ -374,10 +374,10 @@ def distribution(state):
     
     
 
-state = load_data()[1]
+t, state, wind_speed, wave_eta, Q_t = load_data()
 
-
-distribution(state)
+plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
+plot_trajectories(t, state, wind_speed, wave_eta)
 
 
     
