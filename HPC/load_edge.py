@@ -85,9 +85,6 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     
     # Tension force
     Qt_percentile_50 = np.percentile(Q_t, 50, axis=1)
-        
-    max_state = np.max(state, axis=2)
-    min_state = np.min(state, axis=2)
 
     state_names = ['Surge_m', 'Surge_Velocity_m_s', 'Heave_m', 'Heave_Velocity_m_s', 
                    'Pitch_Angle_deg', 'Pitch_Rate_deg_s', 'Rotor_speed_rpm']
@@ -127,8 +124,6 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
         ax.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
         ax.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
         ax.plot(t, percentile_50[:, i], color='r', linewidth=1)
-        ax.plot(t, max_state[:, i])
-        ax.plot(t, min_state[:, i])
         ax.set_xlabel('Time (s)')
         ax.set_ylabel(f'{state_names[i]}')
         ax.set_title(f'Time evolution of {state_names[i]}')
@@ -139,8 +134,6 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
         ax_short.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
         ax_short.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
         ax_short.plot(t, percentile_50[:, i], color='r', linewidth=1)
-        ax.plot(t, max_state[:, i])
-        ax.plot(t, min_state[:, i])
         ax_short.set_xlabel('Time (s)')
         ax_short.set_ylabel(f'{state_names[i]}')
         ax_short.set_title(f'Time evolution of {state_names[i]}')
@@ -171,7 +164,7 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     plt.savefig(f'./results_figure/percentile_{n_simulation}simulations_{end_time}seconds.png')
     plt.close(fig)
     
-    return percentile_87_5, percentile_12_5, percentile_62_5, percentile_37_5, max_state, min_state
+    return percentile_87_5, percentile_12_5, percentile_62_5, percentile_37_5
     
     
 
@@ -409,6 +402,7 @@ t, state, wind_speed, wave_eta, Q_t = load_data()
 
 plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
 plot_trajectories(t, state, wind_speed, wave_eta)
+pitchAnaly(state)
 
 
     
