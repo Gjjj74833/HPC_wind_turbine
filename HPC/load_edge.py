@@ -409,10 +409,10 @@ def extremeOccurDen(state):
         kde_max = gaussian_kde(max_state[:,i])
         kde_min = gaussian_kde(min_state[:,i])
         
-        with open('./density_function/max_kde_{i}.pkl', 'wb') as f:
+        with open(f'./density_function/max_kde_{i}.pkl', 'wb') as f:
             pickle.dump(kde_max, f)
 
-        with open('./density_function/min_kde_{i}.pkl', 'wb') as f:
+        with open(f'./density_function/min_kde_{i}.pkl', 'wb') as f:
             pickle.dump(kde_min, f)
         
         x_max = np.linspace(min(max_state[:,i]), max(max_state[:,i]), 1000)
@@ -437,12 +437,49 @@ def extremeOccurDen(state):
     plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
     plt.close()
         
+def correl_pitch_heave(state):
+    
+    pitch = state[::20, 4, :]
+    heave = state[::20, 2, :]
+    
+    all_pitch = pitch.reshape(-1)
+    all_heave = heave.reshape(-1)
+    
+    # make binned scattor plot
+    # Define the number of bins
+    num_bins = 500
+    
+    # Create bins for pitch data
+    pitch_bins = np.linspace(all_pitch.min(), all_pitch.max(), num_bins)
+    pitch_bin_midpoints = (pitch_bins[:-1] + pitch_bins[1:]) / 2
+    
+    # Find the index of the bin each pitch value falls into
+    bin_indices = np.digitize(all_pitch, pitch_bins)
+    
+    # Calculate the average heave for each pitch bin
+    average_heave_per_bin = [all_heave[bin_indices == i].mean() for i in range(1, len(pitch_bins))]
+    
+    # Plotting the binned scatter plot
+    plt.figure(figsize=(10, 6))
+    plt.scatter(average_heave_per_bin, pitch_bin_midpoints, color='b', label='Binned Average', s=5)
+    plt.ylabel('Pitch (deg)')
+    plt.xlabel('Average Heave (m)')
+    plt.title('Binned Scatter Plot of Average Heave vs. Pitch')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('./results_figure/corr_pitch_heave.png', dpi=600)
+    plt.close()
+    
+    corr_matrix = np.corrcoef(all_pitch, all_heave)
+    correlation_coefficient = corr_matrix[0, 1]
+
+    print(f"Correlation Coefficient (Pearson's r) between Pitch and Heave: {correlation_coefficient:.4f}")
     
     
 
 t, state, wind_speed, wave_eta, Q_t = load_data()
-
-pitchAnaly(state)
+extremeOccurDen(state)
 extremeOccurDen(state)
 
 
