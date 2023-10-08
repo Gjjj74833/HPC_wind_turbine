@@ -387,10 +387,10 @@ def pitchAnaly(state):
     plt.close()
 
     # Save PDFs using pickle
-    with open('kde_pitch.pkl', 'wb') as f:
+    with open('./density_function/kde_pitch.pkl', 'wb') as f:
         pickle.dump(kde_pitch, f)
 
-    with open('kde_rate.pkl', 'wb') as f:
+    with open('./density_function/kde_rate.pkl', 'wb') as f:
         pickle.dump(kde_rate, f)
     
 def extremeOccurDen(state):
@@ -408,6 +408,12 @@ def extremeOccurDen(state):
         
         kde_max = gaussian_kde(max_state[:,i])
         kde_min = gaussian_kde(min_state[:,i])
+        
+        with open('./density_function/max_kde_{i}.pkl', 'wb') as f:
+            pickle.dump(kde_max, f)
+
+        with open('./density_function/min_kde_{i}.pkl', 'wb') as f:
+            pickle.dump(kde_min, f)
         
         x_max = np.linspace(min(max_state[:,i]), max(max_state[:,i]), 1000)
         x_min = np.linspace(min(min_state[:,i]), max(min_state[:,i]), 1000)
