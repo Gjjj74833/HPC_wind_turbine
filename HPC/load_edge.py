@@ -8,6 +8,8 @@ Load and visualize the simulation results
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import gaussian_kde
+import pickle
 
 
 def load_data():
@@ -220,33 +222,38 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         max_value_sim.append(max_index[max_value_time])
         min_value_sim.append(min_index[min_value_time])
         
-        print(f'shape max index {i}', max_index.shape)
-        
         # from max_index, all time steps, count the occurrence of max and min
         # for each simulation
         max_counts = np.bincount(max_index, minlength=state_i.shape[1])
         min_counts = np.bincount(min_index, minlength=state_i.shape[1])
         
-        print(f'shape max counts {i}', max_counts.shape)
-        
         # for each state, find the simulation that have the most occurrence
         # of max and min value
         max_occ_sim.append(np.argmax(max_counts))
         min_occ_sim.append(np.argmax(min_counts))
+        
+        max_counts = max_counts*t[1]
+        min_counts = min_counts*t[1]
 
         # Plot for max occurrences
-        ax[2*i].bar(range(state_i.shape[1]), max_counts, color='b', alpha=0.7, label="Max occurrences")
-        ax[2*i].set_title(f"Number of occurrences for Max in {state_names[i]}")
-        ax[2*i].set_xlabel("Simulation Index")
-        ax[2*i].set_ylabel("Occurrences")
-        ax[2*i].legend()
+        bin_edges = np.arange(0, max(max_counts)+6*t[1], 5*t[1])  
+        ax[2*i].hist(max_counts, bins=bin_edges, density=True, alpha=0.7, align='mid')
+        ax[2*i].set_title(f'State {i} - Max Occurrences')
+        ax[2*i].set_xlabel('Time Stay at Max (s)')
+        ax[2*i].set_ylabel('Frequency')
+        selected_ticks = bin_edges[::8]  # select every second bin edge for x-ticks
+        ax[2*i].set_xticks(selected_ticks)
+        ax[2*i].tick_params(axis='x', rotation=45)  # rotate x-ticks for better readability
 
         # Plot for min occurrences
-        ax[2*i+1].bar(range(state_i.shape[1]), min_counts, color='r', alpha=0.7, label="Min occurrences")
-        ax[2*i+1].set_title(f"Number of occurrences for Min in {state_names[i]}")
-        ax[2*i+1].set_xlabel("Simulation Index")
-        ax[2*i+1].set_ylabel("Occurrences")
-        ax[2*i+1].legend()
+        bin_edges = np.arange(0, max(min_counts)+6*t[1], 5*t[1])  # Define bin edges for the histogram
+        ax[2*i + 1].hist(min_counts, bins=bin_edges, density=True, alpha=0.7, align='mid')
+        ax[2*i + 1].set_title(f'State {i} - Min Occurrences')
+        ax[2*i + 1].set_xlabel('Time Stay at Min (s)')
+        ax[2*i + 1].set_ylabel('Frequency')
+        selected_ticks = bin_edges[::8]  # select every second bin edge for x-ticks
+        ax[2*i + 1].set_xticks(selected_ticks)
+        ax[2*i + 1].tick_params(axis='x', rotation=45)
         
     plt.tight_layout()
     plt.savefig("./results_figure/max_min_occurrences_histogram_all_states.png", dpi=600)
@@ -346,29 +353,53 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_min_value) 
     
     
-def distribution(state):
-    
-    state = state[-20,:,:]
+def pitchAnaly(state):
+    pitch = state[::20, 4, :]
+    pitch_rate = state[::20, 5, :]
 
-    
-    state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
-                   'Pitch_Angle', 'Pitch_Rate', 'Rotor_speed']
-    
-    fig, ax = plt.subplots(2, 4, figsize=(15, 8.5))
-    fig.suptitle('The distribution for each state from last 500 time steps')
-    ax = ax.flatten()
-    
-    for i in range(7):
-        #make histogram plot for each state
-        ax[i].hist(state[:, i], bins=100) 
-        ax[i].set_title(f'{state_names[i]}')
-        ax[i].set_xlabel(f'{state_names[i]}')
-        
+    # Reshape data
+    all_pitch = pitch.reshape(-1)
+    all_rate = pitch_rate.reshape(-1)
 
-    fig.delaxes(ax[7]) 
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-    plt.savefig('./results_figure/distribution.png', dpi=600)
-    plt.close(fig)
+    # Kernel Density Estimation for pitch and pitch_rate
+    kde_pitch = gaussian_kde(all_pitch)
+    kde_rate = gaussian_kde(all_rate)
+
+    # Create linspace for plotting
+    x_pitch = np.linspace(min(all_pitch), max(all_pitch), 1000)
+    x_rate = np.linspace(min(all_rate), max(all_rate), 1000)
+
+    # Create subplots
+    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+
+    # Pitch Plot
+    ax[0].hist(all_pitch, bins=50, density=True, alpha=0.7, color='r', label='Data')
+    ax[0].plot(x_pitch, kde_pitch(x_pitch), 'k', lw=2, label='PDF')
+    ax[0].set_title('Pitch Distribution')
+    ax[0].set_xlabel('Pitch')
+    ax[0].set_ylabel('Density')
+    ax[0].legend()
+
+    # Pitch Rate Plot
+    ax[1].hist(all_rate, bins=50, density=True, alpha=0.7, color='b', label='Data')
+    ax[1].plot(x_rate, kde_rate(x_rate), 'k', lw=2, label='PDF')
+    ax[1].set_title('Pitch Rate Distribution')
+    ax[1].set_xlabel('Pitch Rate')
+    ax[1].set_ylabel('Density')
+    ax[1].legend()
+
+    plt.savefig('./results_figure/pitch_distribution.png', dpi=600)
+    plt.tight_layout()
+    plt.close()
+
+    # Save PDFs using pickle
+    with open('kde_pitch.pkl', 'wb') as f:
+        pickle.dump(kde_pitch, f)
+
+    with open('kde_rate.pkl', 'wb') as f:
+        pickle.dump(kde_rate, f)
+    
+
     
     
     
