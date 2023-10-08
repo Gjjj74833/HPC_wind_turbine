@@ -364,7 +364,7 @@ def pitchAnaly(state):
 
     # Plot density
     # Create subplots
-    fig, ax = plt.subplots(1, 2, figsize=(7, 5))
+    fig, ax = plt.subplots(1, 2, figsize=(10, 4))
 
     # Pitch Plot
     ax[0].hist(all_pitch, bins=100, density=True, alpha=0.6, color='r', label='Data')
@@ -403,7 +403,7 @@ def extremeOccurDen(state):
     
     fig, ax = plt.subplots(7, 2, figsize=(15, 30))
     ax = ax.flatten()
-    fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16)
+    fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16, fontweight='bold', y=1.03)
     for i in range(7):
         
         kde_max = gaussian_kde(max_state[:,i])
@@ -434,7 +434,7 @@ def extremeOccurDen(state):
         ax[2*i].grid(True, linestyle='--', alpha=0.7)
         
     plt.savefig('./results_figure/extreme_distribution.png', dpi=600)
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+    plt.tight_layout() 
     plt.close()
         
 def correl_pitch_heave(state):
@@ -479,8 +479,9 @@ def correl_pitch_heave(state):
     
 
 t, state, wind_speed, wave_eta, Q_t = load_data()
+pitchAnaly(state)
 extremeOccurDen(state)
-extremeOccurDen(state)
+
 
 
     
