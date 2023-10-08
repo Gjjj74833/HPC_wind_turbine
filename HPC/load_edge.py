@@ -401,9 +401,9 @@ def extremeOccurDen(state):
     max_state = np.max(state, axis=2)
     min_state = np.min(state, axis=2)
     
-    fig, ax = plt.subplots(7, 2, figsize=(15, 30))
+    fig, ax = plt.subplots(7, 2, figsize=(10, 23))
     ax = ax.flatten()
-    fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16, fontweight='bold', y=1.03)
+    fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16, y=1)
     for i in range(7):
         
         kde_max = gaussian_kde(max_state[:,i])
@@ -435,6 +435,7 @@ def extremeOccurDen(state):
         
     plt.savefig('./results_figure/extreme_distribution.png', dpi=600)
     plt.tight_layout() 
+    plt.show()
     plt.close()
         
 def correl_pitch_heave(state):
@@ -445,6 +446,22 @@ def correl_pitch_heave(state):
     all_pitch = pitch.reshape(-1)
     all_heave = heave.reshape(-1)
     
+    pitch_87_5 = np.percentile(all_pitch, 87.5)
+    pitch_12_5 = np.percentile(all_pitch, 12.5)
+    
+    heave_87_5 = np.percentile(all_heave, 87.5)
+    heave_12_5 = np.percentile(all_heave, 12.5)
+    
+    pitch_62_5 = np.percentile(all_pitch, 62.5)
+    pitch_37_5 = np.percentile(all_pitch, 37.5)
+    
+    heave_62_5 = np.percentile(all_heave, 62.5)
+    heave_37_5 = np.percentile(all_heave, 37.5)
+    
+    pitch_50 = np.percentile(all_pitch, 50)
+    
+    heave_50 = np.percentile(all_heave, 50)
+
     # make binned scattor plot
     # Define the number of bins
     num_bins = 500
@@ -459,8 +476,24 @@ def correl_pitch_heave(state):
     # Calculate the average heave for each pitch bin
     average_heave_per_bin = [all_heave[bin_indices == i].mean() for i in range(1, len(pitch_bins))]
     
-    # Plotting the binned scatter plot
-    plt.figure(figsize=(10, 6))
+    # Filling regions
+    # Fill for central 75% of data in pitch (vertical axis)
+    plt.axhspan(pitch_12_5, pitch_87_5, color='gray', alpha=0.2)
+
+    # Fill for central 75% of data in heave (horizontal axis)
+    plt.axvspan(heave_12_5, heave_87_5, color='gray', alpha=0.2, label='Central 75%')
+
+    # Fill for central 25% of data in pitch (vertical axis)
+    plt.axhspan(pitch_37_5, pitch_62_5, color='gray', alpha=0.4)
+
+    # Fill for central 25% of data in heave (horizontal axis)
+    plt.axvspan(heave_37_5, heave_62_5, color='gray', alpha=0.4, label='Central 25%')
+
+    # Fill for median
+    plt.axhline(pitch_50, color='gray', alpha=0.6, linestyle='--')
+    plt.axvline(heave_50, color='gray', alpha=0.6, label='Median', linestyle='--')
+
+    
     plt.scatter(average_heave_per_bin, pitch_bin_midpoints, color='b', label='Binned Average', s=5)
     plt.ylabel('Pitch (deg)')
     plt.xlabel('Average Heave (m)')
@@ -475,12 +508,13 @@ def correl_pitch_heave(state):
     correlation_coefficient = corr_matrix[0, 1]
 
     print(f"Correlation Coefficient (Pearson's r) between Pitch and Heave: {correlation_coefficient:.4f}")
-    
+
+
     
 
 t, state, wind_speed, wave_eta, Q_t = load_data()
-pitchAnaly(state)
 extremeOccurDen(state)
+correl_pitch_heave(state)
 
 
 
