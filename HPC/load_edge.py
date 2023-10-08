@@ -435,7 +435,6 @@ def extremeOccurDen(state):
         
     plt.savefig('./results_figure/extreme_distribution.png', dpi=600)
     plt.tight_layout() 
-    plt.show()
     plt.close()
         
 def correl_pitch_heave(state):
