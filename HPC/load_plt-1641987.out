@@ -1,0 +1,6 @@
+/home/u31/yihanl21/devalop/HPC/load_edge.py:460: RuntimeWarning: Mean of empty slice.
+  average_heave_per_bin = [all_heave[bin_indices == i].mean() for i in range(1, len(pitch_bins))]
+/opt/ohpc/pub/apps/python/3.9.10/lib/python3.9/site-packages/numpy/core/_methods.py:189: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+Correlation Coefficient (Pearson's r) between Pitch and Heave: 0.1090
+Detailed performance metrics for this job will be available at https://metrics.hpc.arizona.edu/#job_viewer?action=show&realm=SUPREMM&resource_id=4&local_job_id=1641987 by 8am on 2023/10/08.
