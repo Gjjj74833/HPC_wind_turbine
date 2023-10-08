@@ -86,8 +86,8 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     # Tension force
     Qt_percentile_50 = np.percentile(Q_t, 50, axis=1)
 
-    state_names = ['Surge_m', 'Surge_Velocity_m_s', 'Heave_m', 'Heave_Velocity_m_s', 
-                   'Pitch_Angle_deg', 'Pitch_Rate_deg_s', 'Rotor_speed_rpm']
+    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
     
     start_time = 0
     end_time = t[-1]
@@ -173,8 +173,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     
     
     ######################################################################
-    state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
-                   'Pitch_Angle', 'Pitch_Rate', 'Rotor_speed']
+    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
 
     # Create one large subplot for max and min occurrences for each state
     fig, ax = plt.subplots(7, 2, figsize=(15, 30))
@@ -362,22 +362,23 @@ def pitchAnaly(state):
     x_pitch = np.linspace(min(all_pitch), max(all_pitch), 1000)
     x_rate = np.linspace(min(all_rate), max(all_rate), 1000)
 
+    # Plot density
     # Create subplots
-    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+    fig, ax = plt.subplots(1, 2, figsize=(7, 5))
 
     # Pitch Plot
-    ax[0].hist(all_pitch, bins=50, density=True, alpha=0.7, color='r', label='Data')
-    ax[0].plot(x_pitch, kde_pitch(x_pitch), 'k', lw=2, label='PDF')
+    ax[0].hist(all_pitch, bins=100, density=True, alpha=0.6, color='r', label='Data')
+    ax[0].plot(x_pitch, kde_pitch(x_pitch), 'k', lw=1, label='PDF')
     ax[0].set_title('Pitch Distribution')
-    ax[0].set_xlabel('Pitch')
+    ax[0].set_xlabel('Pitch (deg)')
     ax[0].set_ylabel('Density')
     ax[0].legend()
 
     # Pitch Rate Plot
-    ax[1].hist(all_rate, bins=50, density=True, alpha=0.7, color='b', label='Data')
-    ax[1].plot(x_rate, kde_rate(x_rate), 'k', lw=2, label='PDF')
+    ax[1].hist(all_rate, bins=100, density=True, alpha=0.6, color='b', label='Data')
+    ax[1].plot(x_rate, kde_rate(x_rate), 'k', lw=1, label='PDF')
     ax[1].set_title('Pitch Rate Distribution')
-    ax[1].set_xlabel('Pitch Rate')
+    ax[1].set_xlabel('Pitch Rate (deg/s)')
     ax[1].set_ylabel('Density')
     ax[1].legend()
 
@@ -392,17 +393,51 @@ def pitchAnaly(state):
     with open('kde_rate.pkl', 'wb') as f:
         pickle.dump(kde_rate, f)
     
+def extremeOccurDen(state):
+    
+    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
+    
+    max_state = np.max(state, axis=2)
+    min_state = np.min(state, axis=2)
+    
+    fig, ax = plt.subplots(7, 2, figsize=(15, 30))
+    ax = ax.flatten()
+    fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16)
+    for i in range(7):
+        
+        kde_max = gaussian_kde(max_state[:,i])
+        kde_min = gaussian_kde(min_state[:,i])
+        
+        x_max = np.linspace(min(max_state[:,i]), max(max_state[:,i]), 1000)
+        x_min = np.linspace(min(min_state[:,i]), max(min_state[:,i]), 1000)
+        
+        ax[2*i].hist(max_state[:,i], bins=100, density=True, alpha=0.6, color='r', label='Max Data')
+        ax[2*i].plot(x_max, kde_max(x_max), 'k', lw=1, label='PDF')
+        ax[2*i].set_xlabel(state_names[i])
+        ax[2*i].set_ylabel('Density')
+        ax[2*i].legend()
+        ax[2*i].grid(True, linestyle='--', alpha=0.7)
 
-    
-    
+        # Pitch Rate Plot
+        ax[2*i+1].hist(min_state[:,i], bins=100, density=True, alpha=0.6, color='b', label='Min Data')
+        ax[2*i+1].plot(x_min, kde_min(x_min), 'k', lw=1, label='PDF')
+        ax[2*i+1].set_xlabel(state_names[i])
+        ax[2*i+1].set_ylabel('Density')
+        ax[2*i+1].legend()
+        ax[2*i].grid(True, linestyle='--', alpha=0.7)
+        
+    plt.savefig('./results_figure/extreme_distribution.png', dpi=600)
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+    plt.close()
+        
     
     
 
 t, state, wind_speed, wave_eta, Q_t = load_data()
 
-plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
-plot_trajectories(t, state, wind_speed, wave_eta)
 pitchAnaly(state)
+extremeOccurDen(state)
 
 
     
