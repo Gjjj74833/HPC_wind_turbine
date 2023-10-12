@@ -739,7 +739,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     for i in t:
         wave_eta.append(pierson_moskowitz_spectrum(v_w, 0, 0, i, random_phases)[0])
 
-    return t, x, v_wind[:len(t)], np.array(wave_eta), Qt_list
+    return t[::10], x[::10], v_wind[:len(t)][::10], np.array(wave_eta)[::10], Qt_list[::10]
 
 
 def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):

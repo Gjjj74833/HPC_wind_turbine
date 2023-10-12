@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 import pickle
 from scipy.stats import norm, expon, gamma, kstest, gaussian_kde
+from matplotlib.lines import Line2D
 
 
 
@@ -349,8 +350,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     
     
 def pitchAnaly(state):
-    pitch = state[::20, 4, :]
-    pitch_rate = state[::20, 5, :]
+    pitch = state[:, 4, :]
+    pitch_rate = state[:, 5, :]
 
     # Reshape data
     all_pitch = pitch.reshape(-1)
@@ -395,7 +396,7 @@ def pitchAnaly(state):
     with open('./density_function/kde_rate.pkl', 'wb') as f:
         pickle.dump(kde_rate, f)
     
-def extremeOccurDen(state):
+def extremeOccurDen_distribution(state):
     
     state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
                    'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
@@ -408,34 +409,42 @@ def extremeOccurDen(state):
     fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16, y=1)
     for i in range(7):
         
+        cur_state = state[:, i, :].reshape(-1)
+        
         kde_max = gaussian_kde(max_state[:,i])
         kde_min = gaussian_kde(min_state[:,i])
-        
-        with open(f'./density_function/max_kde_{i}.pkl', 'wb') as f:
-            pickle.dump(kde_max, f)
-
-        with open(f'./density_function/min_kde_{i}.pkl', 'wb') as f:
-            pickle.dump(kde_min, f)
+        kde_state = gaussian_kde(cur_state)
         
         x_max = np.linspace(min(max_state[:,i]), max(max_state[:,i]), 1000)
         x_min = np.linspace(min(min_state[:,i]), max(min_state[:,i]), 1000)
+        x_state = np.linspace(min(cur_state), max(cur_state), 1000)
         
-        ax[2*i].hist(max_state[:,i], bins=100, density=True, alpha=0.6, color='r', label='Max Data')
-        ax[2*i].plot(x_max, kde_max(x_max), 'k', lw=1, label='PDF')
-        ax[2*i].set_xlabel(state_names[i])
-        ax[2*i].set_ylabel('Density')
-        ax[2*i].legend()
-        ax[2*i].grid(True, linestyle='--', alpha=0.7)
+        # plot max
+        ax[i].hist(max_state[:,i], bins=100, density=True, alpha=0.5, color='r', label='Max')
+        ax[i].plot(x_max, kde_max(x_max), 'k', lw=1)
+        
+        # plot min
+        ax[i].hist(min_state[:,i], bins=100, density=True, alpha=0.5, color='b', label='Min')
+        ax[i].plot(x_min, kde_min(x_min), 'k', lw=1)
+        
+        # plot all
+        ax[i].hist(cur_state, bins=100, density=True, alpha=0.5, color='gray', label='All Distribution')
+        ax[i].plot(x_state, kde_state(x_state), 'k', lw=1)
+        
+        ax[i].set_xlabel(state_names[i])
+        ax[i].set_ylabel('Density')
+        ax[i].grid(True, linestyle='--', alpha=0.7)
 
-        # Pitch Rate Plot
-        ax[2*i+1].hist(min_state[:,i], bins=100, density=True, alpha=0.6, color='b', label='Min Data')
-        ax[2*i+1].plot(x_min, kde_min(x_min), 'k', lw=1, label='PDF')
-        ax[2*i+1].set_xlabel(state_names[i])
-        ax[2*i+1].set_ylabel('Density')
-        ax[2*i+1].legend()
-        ax[2*i].grid(True, linestyle='--', alpha=0.7)
+
+    ax[7].axis('off')
+    
+    legend_elements = [Line2D([0], [0], color='r', lw=8, alpha=0.5, label='Max Value Distribution'),
+                       Line2D([0], [0], color='b', lw=8, alpha=0.5, label='Min Value Distribution'),
+                       Line2D([0], [0], color='gray', lw=8, alpha=0.5, label='All Data Distribution')]
+    
+    ax[7].legend(handles=legend_elements, loc='center')
         
-    plt.savefig('./results_figure/extreme_distribution.png', dpi=600)
+    plt.savefig('./results_figure/density.png', dpi=600)
     plt.tight_layout() 
     plt.close()
         
@@ -511,50 +520,23 @@ def correl_pitch_heave(state):
     print(f"Correlation Coefficient (Pearson's r) between Pitch and Heave: {correlation_coefficient:.4f}")
 
 def distribution(state):
-    
-    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
-                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
-    
+
     for i in range(7):
-        state = state[-1000::20, i, :]
-        all_state = state.reshape(-1)
+        state_20 = state[::20, i, :]
+        state_final = state_20[-10:]
+        all_state = state_final.reshape(-1)
         
         kde_state = gaussian_kde(all_state)
+        with open(f'./density_function/state_{i}.pkl', 'wb') as f:
+            pickle.dump(kde_state, f)
         
-        # Fit data to distributions
-        norm_params = norm.fit(all_state)
-        expon_params = expon.fit(all_state)
-        gamma_params = gamma.fit(all_state)
 
-        # Compute KS test for each distribution
-        ks_norm = kstest(all_state, 'norm', norm_params)
-        ks_expon = kstest(all_state, 'expon', expon_params)
-        ks_gamma = kstest(all_state, 'gamma', gamma_params)
-
-        # Determine best fit based on p-value (for demonstration)
-        best_fit = "unknown"
-        best_params = ()
-        if ks_norm[1] > 0.05:
-            best_fit = "Normal"
-            best_params = norm_params
-        elif ks_expon[1] > 0.05:
-            best_fit = "Exponential"
-            best_params = expon_params
-        elif ks_gamma[1] > 0.05:
-            best_fit = "Gamma"
-            best_params = gamma_params
-
-        print("######################################################################")
-        print(f"For {state_names[i]}:")
-        print(f"  Normal Distribution: D={ks_norm[0]:.5f}, p={ks_norm[1]:.5f}")
-        print(f"  Exponential Distribution: D={ks_expon[0]:.5f}, p={ks_expon[1]:.5f}")
-        print(f"  Gamma Distribution: D={ks_gamma[0]:.5f}, p={ks_gamma[1]:.5f}")
-        print(f"  The best fitting distribution is: {best_fit} with parameters {best_params}\n")
         
         
 
 
 t, state, wind_speed, wave_eta, Q_t = load_data()
+extremeOccurDen_distribution(state)
 distribution(state)
 
 
