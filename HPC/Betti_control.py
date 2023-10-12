@@ -741,9 +741,9 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     for i in t:
         wave_eta.append(pierson_moskowitz_spectrum(v_w, 0, 0, i, random_phases)[0])
         
-    steps = 0.5 / dt
+    steps = int(0.5 / dt)
     # dicard data for first 500s
-    discard_steps = 500/0.5
+    discard_steps = int(500 / 0.5)
 
     t_sub = t[::steps][discard_steps:]
     x_sub = x[::steps][discard_steps:]
