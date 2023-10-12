@@ -178,6 +178,9 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     ######################################################################
     state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
                    'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
+    
+    safe_state_names = ['Surge', 'Surge Velocity', 'Heave', 'Heave Velocity, 
+                   'Pitch Angle', 'Pitch Rate', 'Rotor Speed']
 
     # Create one large subplot for max and min occurrences for each state
     fig, ax = plt.subplots(7, 2, figsize=(15, 30))
@@ -300,11 +303,11 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
             
         ax[9].axis('off')
         
-        legend_elements = [Line2D([0], [0], color='black', lw=1, alpha=1, label='Trajectories of One Simulation Results With Extreme Events')
+        legend_elements = [Line2D([0], [0], color='black', lw=1, alpha=1, label='Trajectories of One Simulation Results With Extreme Events'),
                            Line2D([0], [0], color='r', lw=1, alpha=0.9, label='Median Cross All Simulations'),
                            Line2D([0], [0], color='b', lw=8, alpha=0.6, label='Central 25th Percentile of Data'),
                            Line2D([0], [0], color='b', lw=8, alpha=0.3, label='Central 75th Percentile of Data'),
-                           Line2D([0], [0], color='green', lw=1, alpha=0.6, label='The Max Value Cross All Simulations at Each Time Step')
+                           Line2D([0], [0], color='green', lw=1, alpha=0.6, label='The Max Value Cross All Simulations at Each Time Step'),
                            Line2D([0], [0], color='orange', lw=1, alpha=0.6, label='The Min Value Cross All Simulations at Each Time Step')]
         
         ax[9].legend(handles=legend_elements, loc='center')
@@ -320,7 +323,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plot_helper(ax_max_occ, max_occ_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/max_occ_{state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/max_occ_{safe_state_names[i]}.png', dpi=600)
         plt.close(fig_max_occ) 
         
         
@@ -332,7 +335,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plot_helper(ax_min_occ, min_occ_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/min_occ_{state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/min_occ_{safe_state_names[i]}.png', dpi=600)
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
@@ -343,7 +346,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plot_helper(ax_max_value, max_value_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/max_value_{state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/max_value_{safe_state_names[i]}.png', dpi=600)
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
@@ -355,7 +358,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/min_value_{state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/min_value_{safe_state_names[i]}.png', dpi=600)
         plt.close(fig_min_value) 
     
     
