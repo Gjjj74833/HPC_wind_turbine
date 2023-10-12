@@ -6,13 +6,14 @@ Betti model implementation with PID controller
 @version (2023-06-24)
 """
 import sys
-import os
+import pickle
+from scipy.stats import gaussian_kde
 import numpy as np
 import subprocess
 import bisect
 from multiprocessing import Pool
 from datetime import datetime
-import random
+
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):
     """
@@ -786,26 +787,29 @@ def run_simulation(params):
 
 
 def run_simulations_parallel(n_simulations, params):
-    
       
+    # Sample initial conditions directly using resample(n_simulations)
+    initial_conditions = []
+    for i in range(7):
+        with open(f'./density_function/state_{i}.pkl', 'rb') as f:
+            kde_loaded = pickle.load(f)
+        samples = kde_loaded.resample(n_simulations).flatten()
+        initial_conditions.append(samples)
 
-    state = np.array([-2.61426271, 
-                 -0.00299848190, 
-                 37.5499264, 
-                 -0.0558194064,
-                 0.00147344971, 
-                 -0.000391112846, 
-                 1.26855822])
-
-    params.append(state)
-
+    # Transpose to get conditions for each simulation
+    initial_conditions = np.array(initial_conditions).T
+    
+    initial_conditions[:, 4] = -np.deg2rad(initial_conditions[:, 4])
+    initial_conditions[:, 5] = -np.deg2rad(initial_conditions[:, 5])
+    initial_conditions[:, 6] = initial_conditions[:, 6]*0.104719755
+    
+    initial_conditions[:, 0:4] = -initial_conditions[:, 0:4]
+    initial_conditions[:, 2] += 37.550
+    
     file_index = list(range(0, n_simulations))
-   
     
     with Pool(int(sys.argv[3])) as p:
-        
-        all_params = [params + [file_index[i]] for i in range(n_simulations)]
-        
+        all_params = [params + [initial_conditions[i]] + [file_index[i]] for i in range(n_simulations)]
         results = p.map(run_simulation, all_params)
 
     return results
