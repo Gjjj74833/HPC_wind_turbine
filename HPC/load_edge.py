@@ -283,8 +283,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         
         # plot 7 states
         for j in range(7):
-            ax[j+2].plot(t, max_state[:,j], alpha=0.6, linewidth=0.5)
-            ax[j+2].plot(t, min_state[:,j], alpha=0.6, linewidth=0.5)
+            ax[j+2].plot(t, max_state[:,j], alpha=0.6, color='green', linewidth=0.5)
+            ax[j+2].plot(t, min_state[:,j], alpha=0.6, color='orange', linewidth=0.5)
 
             ax[j+2].plot(t, state[:, j, index], color='black', linewidth=0.5)
             ax[j+2].set_xlabel('Time (s)')
@@ -292,20 +292,29 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
             
             ax[j+2].fill_between(t, percentile_12_5[:, j], percentile_87_5[:, j], color='b', alpha=0.3, edgecolor='none')
             ax[j+2].fill_between(t, percentile_37_5[:, j], percentile_62_5[:, j], color='b', alpha=0.3)
-            ax[j+2].plot(t, percentile_50[:, j], color='r', alpha=0.8, linewidth=0.5)
+            ax[j+2].plot(t, percentile_50[:, j], color='r', alpha=0.9, linewidth=0.5)
             
             ax[j+2].set_title(f'Time evolution of {state_names[j]}')
             ax[j+2].grid(True)
             ax[j+2].set_xlim(0, t[-1])
             
-        ax[9].remove()
+        ax[9].axis('off')
+        
+        legend_elements = [Line2D([0], [0], color='black', lw=1, alpha=1, label='Trajectories of One Simulation Results With Extreme Events')
+                           Line2D([0], [0], color='r', lw=1, alpha=0.9, label='Median Cross All Simulations'),
+                           Line2D([0], [0], color='b', lw=8, alpha=0.6, label='Central 25th Percentile of Data'),
+                           Line2D([0], [0], color='b', lw=8, alpha=0.3, label='Central 75th Percentile of Data'),
+                           Line2D([0], [0], color='green', lw=1, alpha=0.6, label='The Max Value Cross All Simulations at Each Time Step')
+                           Line2D([0], [0], color='orange', lw=1, alpha=0.6, label='The Min Value Cross All Simulations at Each Time Step')]
+        
+        ax[9].legend(handles=legend_elements, loc='center')
       
     
     # for 7 states:
     for i in range(7):
         # create subplots for each simulation index in max_occ_sim
-        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(15, 20))
-        fig_max_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} max value from {state.shape[2]} simulations', fontsize=16)
+        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(8, 12))
+        fig_max_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_max_occ = ax_max_occ.flatten()
         
         plot_helper(ax_max_occ, max_occ_sim[i])
@@ -316,8 +325,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         
         
         # create subplots for each simulation index in mix_occ_sim
-        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(15, 20))
-        fig_min_occ.suptitle(f'Trajectories for the simulation that have the most occurrence for {state_names[i]} min value from {state.shape[2]} simulations', fontsize=16)
+        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(8, 12))
+        fig_min_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_min_occ = ax_min_occ.flatten()
         
         plot_helper(ax_min_occ, min_occ_sim[i])
@@ -327,8 +336,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
-        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(15, 20))
-        fig_max_value.suptitle(f'Trajectories for the simulation that have the maximum value for {state_names[i]} from {state.shape[2]} simulations', fontsize=16)
+        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(8, 12))
+        fig_max_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_max_value = ax_max_value.flatten()
         
         plot_helper(ax_max_value, max_value_sim[i])
@@ -338,11 +347,12 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
-        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(15, 20))
-        fig_min_value.suptitle(f'Trajectories for the simulation that have the minimum value for {state_names[i]} from {state.shape[2]} simulations', fontsize=16)
+        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(8, 12))
+        fig_min_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_min_value = ax_min_value.flatten()
         
         plot_helper(ax_min_value, min_value_sim[i])
+        
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
         plt.savefig(f'./results_figure/min_value_{state_names[i]}.png', dpi=600)
@@ -444,14 +454,14 @@ def extremeOccurDen_distribution(state):
     
     ax[7].legend(handles=legend_elements, loc='center')
         
-    plt.savefig('./results_figure/density.png', dpi=600)
     plt.tight_layout() 
+    plt.savefig('./results_figure/density.png', dpi=600)
     plt.close()
         
 def correl_pitch_heave(state):
     
-    pitch = state[::20, 4, :]
-    heave = state[::20, 2, :]
+    pitch = state[:, 4, :]
+    heave = state[:, 2, :]
     
     all_pitch = pitch.reshape(-1)
     all_heave = heave.reshape(-1)
@@ -536,8 +546,11 @@ def distribution(state):
 
 
 t, state, wind_speed, wave_eta, Q_t = load_data()
+plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
+plot_trajectories(t, state, wind_speed, wave_eta)
 extremeOccurDen_distribution(state)
-distribution(state)
+correl_pitch_heave(state)
+
 
 
 
