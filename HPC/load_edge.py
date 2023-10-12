@@ -10,6 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 import pickle
+from scipy.stats import norm, expon, gamma, kstest, gaussian_kde
+
 
 
 def load_data():
@@ -401,7 +403,7 @@ def extremeOccurDen(state):
     max_state = np.max(state, axis=2)
     min_state = np.min(state, axis=2)
     
-    fig, ax = plt.subplots(7, 2, figsize=(10, 23))
+    fig, ax = plt.subplots(2, 4, figsize=(10, 23))
     ax = ax.flatten()
     fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16, y=1)
     for i in range(7):
@@ -508,12 +510,52 @@ def correl_pitch_heave(state):
 
     print(f"Correlation Coefficient (Pearson's r) between Pitch and Heave: {correlation_coefficient:.4f}")
 
-
+def distribution(state):
     
+    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
+    
+    for i in range(7):
+        state = state[-1000::20, i, :]
+        all_state = state.reshape(-1)
+        
+        kde_state = gaussian_kde(all_state)
+        
+        # Fit data to distributions
+        norm_params = norm.fit(all_state)
+        expon_params = expon.fit(all_state)
+        gamma_params = gamma.fit(all_state)
+
+        # Compute KS test for each distribution
+        ks_norm = kstest(all_state, 'norm', norm_params)
+        ks_expon = kstest(all_state, 'expon', expon_params)
+        ks_gamma = kstest(all_state, 'gamma', gamma_params)
+
+        # Determine best fit based on p-value (for demonstration)
+        best_fit = "unknown"
+        best_params = ()
+        if ks_norm[1] > 0.05:
+            best_fit = "Normal"
+            best_params = norm_params
+        elif ks_expon[1] > 0.05:
+            best_fit = "Exponential"
+            best_params = expon_params
+        elif ks_gamma[1] > 0.05:
+            best_fit = "Gamma"
+            best_params = gamma_params
+
+        print("######################################################################")
+        print(f"For {state_names[i]}:")
+        print(f"  Normal Distribution: D={ks_norm[0]:.5f}, p={ks_norm[1]:.5f}")
+        print(f"  Exponential Distribution: D={ks_expon[0]:.5f}, p={ks_expon[1]:.5f}")
+        print(f"  Gamma Distribution: D={ks_gamma[0]:.5f}, p={ks_gamma[1]:.5f}")
+        print(f"  The best fitting distribution is: {best_fit} with parameters {best_params}\n")
+        
+        
+
 
 t, state, wind_speed, wave_eta, Q_t = load_data()
-extremeOccurDen(state)
-correl_pitch_heave(state)
+distribution(state)
 
 
 
