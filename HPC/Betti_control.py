@@ -6,8 +6,6 @@ Betti model implementation with PID controller
 @version (2023-06-24)
 """
 import sys
-import pickle
-from scipy.stats import gaussian_kde
 import numpy as np
 import subprocess
 import bisect
@@ -709,14 +707,17 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     ###########################################################################
 
     error = np.empty(n)
+    
+    betas = []
 
     for i in range(n - 1):
+        betas.append(beta)
         k1, Q_t = Betti(x[i], t[i], beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)
         k2 = Betti(x[i] + 0.5 * dt * k1, t[i] + 0.5 * dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
         k3 = Betti(x[i] + 0.5 * dt * k2, t[i] + 0.5 * dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
         k4 = Betti(x[i] + dt * k3, t[i] + dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
         x[i + 1] = x[i] + dt * (k1 + 2*k2 + 2*k3 + k4) / 6
-       
+        
         beta, integral, error = PI_blade_pitch_controller(x[i][6], dt, beta, integral, error, i)
         
         Qt_list.append(Q_t)
@@ -739,8 +740,19 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     wave_eta = []
     for i in t:
         wave_eta.append(pierson_moskowitz_spectrum(v_w, 0, 0, i, random_phases)[0])
+        
+    steps = 0.5 / dt
+    # dicard data for first 500s
+    discard_steps = 500/0.5
 
-    return t[::10], x[::10], v_wind[:len(t)][::10], np.array(wave_eta)[::10], Qt_list[::10]
+    t_sub = t[::steps][discard_steps:]
+    x_sub = x[::steps][discard_steps:]
+    v_wind_sub = v_wind[:len(t)][::steps][discard_steps:]
+    wave_eta_sub = np.array(wave_eta)[::steps][discard_steps:]
+    betas_sub = betas[::steps][discard_steps:]
+    Qt_list_sub = Qt_list[::steps][discard_steps:]
+    
+    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, Qt_list_sub
 
 
 def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
@@ -776,7 +788,7 @@ def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
+    t, x, v_wind, wave_eta, betas, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
 
     # return the output to be ploted
     return t, x, v_wind, wave_eta, Q_t
@@ -787,29 +799,24 @@ def run_simulation(params):
 
 
 def run_simulations_parallel(n_simulations, params):
-      
-    # Sample initial conditions directly using resample(n_simulations)
-    initial_conditions = []
-    for i in range(7):
-        with open(f'./density_function/state_{i}.pkl', 'rb') as f:
-            kde_loaded = pickle.load(f)
-        samples = kde_loaded.resample(n_simulations).flatten()
-        initial_conditions.append(samples)
+    
+    state = np.array([-2.61426271, 
+                 -0.00299848190, 
+                 37.5499264, 
+                 -0.0558194064,
+                 0.00147344971, 
+                 -0.000391112846, 
+                 1.26855822])
 
-    # Transpose to get conditions for each simulation
-    initial_conditions = np.array(initial_conditions).T
-    
-    initial_conditions[:, 4] = -np.deg2rad(initial_conditions[:, 4])
-    initial_conditions[:, 5] = -np.deg2rad(initial_conditions[:, 5])
-    initial_conditions[:, 6] = initial_conditions[:, 6]*0.104719755
-    
-    initial_conditions[:, 0:4] = -initial_conditions[:, 0:4]
-    initial_conditions[:, 2] += 37.550
-    
+    params.append(state)
+
     file_index = list(range(0, n_simulations))
+   
     
     with Pool(int(sys.argv[3])) as p:
-        all_params = [params + [initial_conditions[i]] + [file_index[i]] for i in range(n_simulations)]
+        
+        all_params = [params + [file_index[i]] for i in range(n_simulations)]
+        
         results = p.map(run_simulation, all_params)
 
     return results
@@ -823,12 +830,13 @@ def save_binaryfile(results):
     state = np.stack([s[1] for s in results], axis=2)
     wind_speed = np.stack([s[2] for s in results], axis=1)
     wave_eta = np.stack([s[3] for s in results], axis=1)
-    Q_t = np.stack([s[4] for s in results], axis=1)
+    betas = np.stack([s[4] for s in results], axis=1)
+    Q_t = np.stack([s[5] for s in results], axis=1)
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, Q_t=Q_t)
+    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, betas=betas, Q_t=Q_t)
    
 
 ###############################################################################

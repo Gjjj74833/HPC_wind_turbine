@@ -417,7 +417,7 @@ def extremeOccurDen_distribution(state):
     max_state = np.max(state, axis=2)
     min_state = np.min(state, axis=2)
     
-    fig, ax = plt.subplots(2, 4, figsize=(10, 23))
+    fig, ax = plt.subplots(2, 4, figsize=(15, 5))
     ax = ax.flatten()
     fig.suptitle('Distribution of Extreme Values for Each State from Monte Carlo Simulation', fontsize=16, y=1)
     for i in range(7):
