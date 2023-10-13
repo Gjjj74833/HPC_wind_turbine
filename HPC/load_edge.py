@@ -10,7 +10,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 import pickle
-from scipy.stats import norm, expon, gamma, kstest, gaussian_kde
 from matplotlib.lines import Line2D
 
 
@@ -38,7 +37,7 @@ def load_data():
     wave_eta = np.hstack(wave_etas)
     Q_t = np.hstack(Q_ts)
     
-    return t, state, wind_speed, wave_eta, Q_t
+    return t, state, wind_speed, wave_eta, beta, Q_t
 
 def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     
@@ -179,8 +178,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
                    'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
     
-    safe_state_names = ['Surge', 'Surge Velocity', 'Heave', 'Heave Velocity, 
-                   'Pitch Angle', 'Pitch Rate', 'Rotor Speed']
+    safe_state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
+                   'Pitch_Angle', 'Pitch_Rate', 'Rotor_Speed']
 
     # Create one large subplot for max and min occurrences for each state
     fig, ax = plt.subplots(7, 2, figsize=(15, 30))
@@ -316,7 +315,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     # for 7 states:
     for i in range(7):
         # create subplots for each simulation index in max_occ_sim
-        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(8, 12))
+        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(15, 20))
         fig_max_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_max_occ = ax_max_occ.flatten()
         
@@ -328,7 +327,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         
         
         # create subplots for each simulation index in mix_occ_sim
-        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(8, 12))
+        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(15, 20))
         fig_min_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_min_occ = ax_min_occ.flatten()
         
@@ -339,7 +338,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
-        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(8, 12))
+        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(15, 20))
         fig_max_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_max_value = ax_max_value.flatten()
         
@@ -350,12 +349,11 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
-        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(8, 12))
+        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(15, 20))
         fig_min_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_min_value = ax_min_value.flatten()
         
         plot_helper(ax_min_value, min_value_sim[i])
-        
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
         plt.savefig(f'./results_figure/min_value_{safe_state_names[i]}.png', dpi=600)
@@ -542,13 +540,10 @@ def distribution(state):
         kde_state = gaussian_kde(all_state)
         with open(f'./density_function/state_{i}.pkl', 'wb') as f:
             pickle.dump(kde_state, f)
-        
-
-        
-        
 
 
-t, state, wind_speed, wave_eta, Q_t = load_data()
+t, state, wind_speed, wave_eta, beta, Q_t = load_data()
+
 plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
 plot_trajectories(t, state, wind_speed, wave_eta)
 extremeOccurDen_distribution(state)
