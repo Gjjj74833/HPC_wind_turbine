@@ -37,7 +37,7 @@ def load_data():
     wave_eta = np.hstack(wave_etas)
     Q_t = np.hstack(Q_ts)
     
-    return t, state, wind_speed, wave_eta, beta, Q_t
+    return t, state, wind_speed, wave_eta, Q_t
 
 def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     
@@ -542,7 +542,7 @@ def distribution(state):
             pickle.dump(kde_state, f)
 
 
-t, state, wind_speed, wave_eta, beta, Q_t = load_data()
+t, state, wind_speed, wave_eta, Q_t = load_data()
 
 plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
 plot_trajectories(t, state, wind_speed, wave_eta)
