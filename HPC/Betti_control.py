@@ -791,7 +791,7 @@ def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
     t, x, v_wind, wave_eta, betas, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
 
     # return the output to be ploted
-    return t, x, v_wind, wave_eta, Q_t
+    return t, x, v_wind, wave_eta, betas, Q_t
     
 
 def run_simulation(params):
