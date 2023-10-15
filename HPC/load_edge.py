@@ -95,7 +95,7 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     end_time = t[-1]
     
     # Create one big figure
-    fig, axes = plt.subplots(nrows=9, ncols=2, figsize=(13, 22))
+    fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(18, 9))
     
     # Flatten the axes array
     axes = axes.flatten()
@@ -131,7 +131,7 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
         ax.set_title(f'Time evolution of {state_names[i]}')
         ax.set_xlim(start_time, end_time)
         ax.grid(True)
-        
+    '''
         ax_short = axes[2*i+3]
         ax_short.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
         ax_short.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
@@ -159,7 +159,7 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     axes[17].set_title('Time evolution of Average Tension Force Per Line (N)')
     axes[17].set_xlim(end_time - 30, end_time)
     axes[17].grid(True)
-    
+    '''
     n_simulation = wind_speed.shape[1]
     
     plt.tight_layout()
@@ -315,7 +315,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     # for 7 states:
     for i in range(7):
         # create subplots for each simulation index in max_occ_sim
-        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(15, 20))
+        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(12, 17))
         fig_max_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_max_occ = ax_max_occ.flatten()
         
@@ -327,7 +327,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         
         
         # create subplots for each simulation index in mix_occ_sim
-        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(15, 20))
+        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(12, 17))
         fig_min_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_min_occ = ax_min_occ.flatten()
         
@@ -338,7 +338,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
-        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(15, 20))
+        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(12, 17))
         fig_max_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_max_value = ax_max_value.flatten()
         
@@ -349,7 +349,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
-        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(15, 20))
+        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(12, 17))
         fig_min_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
         ax_min_value = ax_min_value.flatten()
         
@@ -545,9 +545,7 @@ def distribution(state):
 t, state, wind_speed, wave_eta, Q_t = load_data()
 
 plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
-plot_trajectories(t, state, wind_speed, wave_eta)
-extremeOccurDen_distribution(state)
-correl_pitch_heave(state)
+
 
 
 
