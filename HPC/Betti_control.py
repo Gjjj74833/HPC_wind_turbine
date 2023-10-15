@@ -123,8 +123,8 @@ def genWind(v_w, end_time, time_step, file_index):
     end_time += 1
         
     # Generate seeds for random wind model
-    seed1 = np.random.randint(-2147483648, 2147483648)
-    seed2 = np.random.randint(-2147483648, 2147483648)
+    seed1 = np.random.randint(-214748364, 214748364)
+    seed2 = np.random.randint(-214748364, 214748364)
     seed = [seed1, seed2]
     path_inp = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.inp'
     
@@ -655,7 +655,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     Qt_list = []
     
     # generate a random seed
-    wave_seed = np.random.randint(0, high=2**32 - 1)
+    wave_seed = np.random.randint(0, high=10^7)
     np.random.seed(wave_seed)
     random_phases = 2*np.pi*np.random.rand(400)
     
