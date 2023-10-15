@@ -30,14 +30,16 @@ def load_data():
     wind_speeds = [data['wind_speed'] for data in datas]
     wave_etas = [data['wave_eta'] for data in datas]
     Q_ts = [data['Q_t'] for data in datas]
+    seeds = [data['seeds'] for data in datas]
     
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
     wind_speed = np.hstack(wind_speeds)
     wave_eta = np.hstack(wave_etas)
     Q_t = np.hstack(Q_ts)
+    seeds = np.hstack(seeds)
     
-    return t, state, wind_speed, wave_eta, Q_t
+    return t, state, wind_speed, wave_eta, seeds, Q_t
 
 def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     
@@ -170,7 +172,7 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     
     
 
-def plot_trajectories(t, state, wind_speed, wave_eta):
+def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
     
     
     
@@ -257,12 +259,22 @@ def plot_trajectories(t, state, wind_speed, wave_eta):
     plt.savefig("./results_figure/max_min_occurrences_histogram_all_states.png", dpi=600)
     plt.close(fig)  
     
-    print("The simulation that has the most occurrence of max is", max_occ_sim)
-    print("The simulation that has the most occurrence of min is", min_occ_sim)
+    max_occ_seeds = []
+    min_occ_seeds = []
+    max_value_seeds = []
+    min_value_seeds = []
     
-    print("On the entire time domain, the max occured at index of simulation", max_value_sim )
-    print("On the entire time domain, the min occured at index of simulation", min_value_sim )
-    
+    for i in range(7):
+        max_occ_seeds.append(seeds[:, max_occ_sim[i]])
+        min_occ_seeds.append(seeds[:, min_occ_sim[i]])
+        max_value_seeds.append(seeds[:, max_value_sim[i]])
+        min_value_seeds.append(seeds[:, min_value_sim[i]])
+        
+        print(f'min_occ {state_names[i]}:', min_occ_sim[i], 'seeds:', min_occ_seeds[i])
+        print(f'max_occ {state_names[i]}:', max_occ_sim[i], 'seeds:', max_occ_seeds[i])    
+        print(f'min_value {state_names[i]}:', min_value_sim[i], 'seeds:', min_value_seeds[i])
+        print(f'max_value {state_names[i]}:', max_value_sim[i], 'seeds:', max_value_seeds[i])
+
     # plot trajectories 
     
     def plot_helper(ax, index):
@@ -542,7 +554,7 @@ def distribution(state):
             pickle.dump(kde_state, f)
 
 
-t, state, wind_speed, wave_eta, Q_t = load_data()
+t, state, wind_speed, wave_eta, seeds, Q_t = load_data()
 
 plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
 
