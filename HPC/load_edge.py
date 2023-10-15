@@ -122,7 +122,7 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     
     # subplots for states
     for i in range(7):
-        ax = axes[2*i+2]
+        ax = axes[i+2]
         ax.fill_between(t, percentile_12_5[:, i], percentile_87_5[:, i], color='b', alpha=0.3, edgecolor='none')
         ax.fill_between(t, percentile_37_5[:, i], percentile_62_5[:, i], color='b', alpha=1)
         ax.plot(t, percentile_50[:, i], color='r', linewidth=1)

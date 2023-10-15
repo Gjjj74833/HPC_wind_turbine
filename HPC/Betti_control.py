@@ -179,6 +179,9 @@ def genWind(v_w, end_time, time_step, file_index):
     for line in data:
         columns = line.split()
         horSpd.append(float(columns[1]))  
+    
+    horSpd.append(seed1)
+    horSpd.append(seed2)
 
     return np.array(horSpd)
 
@@ -651,6 +654,9 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     x[0] = x0
     Qt_list = []
     
+    # generate a random seed
+    wave_seed = np.random.randint(0, high=2**32 - 1)
+    np.random.seed(wave_seed)
     random_phases = 2*np.pi*np.random.rand(400)
     
     ###########################################################################
@@ -744,6 +750,8 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     steps = int(0.5 / dt)
     # dicard data for first 500s
     discard_steps = int(500 / 0.5)
+    
+    seeds = [v_wind[-2], v_wind[-1], wave_seed]
 
     t_sub = t[::steps][discard_steps:]
     x_sub = x[::steps][discard_steps:]
@@ -752,7 +760,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     betas_sub = betas[::steps][discard_steps:]
     Qt_list_sub = Qt_list[::steps][discard_steps:]
     
-    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, Qt_list_sub
+    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, seeds, Qt_list_sub
 
 
 def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
@@ -788,10 +796,10 @@ def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
+    t, x, v_wind, wave_eta, betas, seeds, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
 
     # return the output to be ploted
-    return t, x, v_wind, wave_eta, betas, Q_t
+    return t, x, v_wind, wave_eta, betas, seeds, Q_t
     
 
 def run_simulation(params):
@@ -831,12 +839,19 @@ def save_binaryfile(results):
     wind_speed = np.stack([s[2] for s in results], axis=1)
     wave_eta = np.stack([s[3] for s in results], axis=1)
     betas = np.stack([s[4] for s in results], axis=1)
-    Q_t = np.stack([s[5] for s in results], axis=1)
+    seeds = np.stack([s[5] for s in results], axis=1)
+    Q_t = np.stack([s[6] for s in results], axis=1)
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  state=state, wind_speed=wind_speed, wave_eta=wave_eta, betas=betas, Q_t=Q_t)
+    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  
+                                                            state=state, 
+                                                            wind_speed=wind_speed, 
+                                                            wave_eta=wave_eta, 
+                                                            betas=betas, 
+                                                            seeds=seeds, 
+                                                            Q_t=Q_t)
    
 
 ###############################################################################
