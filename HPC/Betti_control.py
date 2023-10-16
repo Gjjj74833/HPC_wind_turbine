@@ -11,6 +11,7 @@ import subprocess
 import bisect
 from multiprocessing import Pool
 from datetime import datetime
+import random
 
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):
@@ -790,7 +791,7 @@ def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
     
     # modify this to change initial condition
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
-    v_wind, seeds= genWind(v_w, end_time, time_step, file_index)
+    v_wind, seeds = genWind(v_w, end_time, time_step, file_index)
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
