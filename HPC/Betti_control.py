@@ -123,8 +123,8 @@ def genWind(v_w, end_time, time_step, file_index):
     end_time += 1
         
     # Generate seeds for random wind model
-    seed1 = np.random.randint(-214748364, 214748364)
-    seed2 = np.random.randint(-214748364, 214748364)
+    seed1 = np.random.randint(-2147483648, 2147483648)
+    seed2 = np.random.randint(-2147483648, 2147483648)
     seed = [seed1, seed2]
     path_inp = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.inp'
     
@@ -180,10 +180,8 @@ def genWind(v_w, end_time, time_step, file_index):
         columns = line.split()
         horSpd.append(float(columns[1]))  
     
-    horSpd.append(seed1)
-    horSpd.append(seed2)
 
-    return np.array(horSpd)
+    return np.array(horSpd), seed
 
 
 def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
@@ -655,10 +653,11 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     Qt_list = []
     
     # generate a random seed
-    wave_seed = np.random.randint(0, high=10^7)
+    state_before = np.random.get_state()
+    wave_seed = np.random.randint(0, high=10**7)
     np.random.seed(wave_seed)
     random_phases = 2*np.pi*np.random.rand(400)
-    
+    np.random.set_state(state_before)
     ###########################################################################
     # PI controller
     integral = 0
@@ -751,7 +750,6 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     # dicard data for first 500s
     discard_steps = int(500 / 0.5)
     
-    seeds = [v_wind[-2], v_wind[-1], wave_seed]
 
     t_sub = t[::steps][discard_steps:]
     x_sub = x[::steps][discard_steps:]
@@ -760,7 +758,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     betas_sub = betas[::steps][discard_steps:]
     Qt_list_sub = Qt_list[::steps][discard_steps:]
     
-    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, seeds, Qt_list_sub
+    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, wave_seed, Qt_list_sub
 
 
 def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
@@ -792,12 +790,12 @@ def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
     
     # modify this to change initial condition
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
-    v_wind = genWind(v_w, end_time, time_step, file_index)
+    v_wind, seeds= genWind(v_w, end_time, time_step, file_index)
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, seeds, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
-
+    t, x, v_wind, wave_eta, betas, seed_wave, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
+    seeds.append(seed_wave)
     # return the output to be ploted
     return t, x, v_wind, wave_eta, betas, seeds, Q_t
     
