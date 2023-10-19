@@ -11,7 +11,6 @@ import subprocess
 import bisect
 from multiprocessing import Pool
 from datetime import datetime
-import random
 
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):

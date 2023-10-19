@@ -557,6 +557,7 @@ def distribution(state):
 t, state, wind_speed, wave_eta, seeds, Q_t = load_data()
 
 plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
+plot_trajectories(t, state, wind_speed, wave_eta, seeds)
 
 
 
