@@ -2,8 +2,8 @@
 for Certification Test #5 (SMOOTH Spectrum, formatted FF files, Coherent Structures).
 ---------Runtime Options-----------------------------------
 False         Echo            - Echo input data to <RootName>.ech (flag)
--619865094 RandSeed1 - First random seed (-2147483648 to 2147483647)
-54333010 RandSeed2 - Second random seed (-2147483648 to 2147483647) for intrinsic pRNG, or an alternative pRNG: "RanLux" or "RNSNLW"
+1959064098 RandSeed1 - First random seed (-2147483648 to 2147483647)
+-1690322664  RandSeed2 - Second random seed (-2147483648 to 2147483647) for intrinsic pRNG, or an alternative pRNG: "RanLux" or "RNSNLW"
 False         WrBHHTP         - Output hub-height turbulence parameters in binary form?  (Generates RootName.bin)
 False         WrFHHTP         - Output hub-height turbulence parameters in formatted form?  (Generates RootName.dat)
 True         WrADHH          - Output hub-height time-series data in AeroDyn form?  (Generates RootName.hh)
@@ -18,8 +18,8 @@ False         WrACT           - Output coherent turbulence time steps in AeroDyn
 --------Turbine/Model Specifications-----------------------
          5   NumGrid_Z       - Vertical grid-point matrix dimension
          5   NumGrid_Y       - Horizontal grid-point matrix dimension
-0.01 TimeStep - Time step [seconds]
-600 AnalysisTime - Length of analysis time series [seconds] (program will add time if necessary: AnalysisTime = MAX(AnalysisTime, UsableTime+GridWidth/MeanHHWS) )
+0.05 TimeStep - Time step [seconds]
+2001 AnalysisTime - Length of analysis time series [seconds] (program will add time if necessary: AnalysisTime = MAX(AnalysisTime, UsableTime+GridWidth/MeanHHWS) )
 "ALL"         UsableTime      - Usable length of output time series [seconds] (program will add GridWidth/MeanHHWS seconds unless UsableTime is "ALL")
          90   HubHt           - Hub height [m] (should be > 0.5*GridHeight)
          162.00   GridHeight      - Grid height [m]
