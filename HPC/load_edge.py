@@ -470,7 +470,61 @@ def extremeOccurDen_distribution(state):
     plt.tight_layout() 
     plt.savefig('./results_figure/density.png', dpi=600)
     plt.close()
+    
+def extremeValueDen_distribution(state):
+    
+    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
+    
+    max_state = np.max(state, axis=0)
+    min_state = np.min(state, axis=0)
+    
+    fig, ax = plt.subplots(2, 4, figsize=(15, 5))
+    ax = ax.flatten()
+    fig.suptitle('The Distribution and Extreme Value for Each State from Monte Carlo Simulation', fontsize=16, y=1)
+    for i in range(7):
         
+        cur_state = state[:, i, :].reshape(-1)
+        
+        kde_max = gaussian_kde(max_state[i])
+        kde_min = gaussian_kde(min_state[i])
+        kde_state = gaussian_kde(cur_state)
+        
+        x_max = np.linspace(min(max_state[i]), max(max_state[i]), 1000)
+        x_min = np.linspace(min(min_state[i]), max(min_state[i]), 1000)
+        x_state = np.linspace(min(cur_state), max(cur_state), 1000)
+        
+        # plot max
+        ax[i].hist(max_state[i], bins=100, density=True, alpha=0.5, color='r', label='Max')
+        ax[i].plot(x_max, kde_max(x_max), 'k', lw=1)
+        
+        # plot min
+        ax[i].hist(min_state[i], bins=100, density=True, alpha=0.5, color='b', label='Min')
+        ax[i].plot(x_min, kde_min(x_min), 'k', lw=1)
+        
+        # plot all
+        ax[i].hist(cur_state, bins=100, density=True, alpha=0.5, color='gray', label='All Distribution')
+        ax[i].plot(x_state, kde_state(x_state), 'k', lw=1)
+        
+        ax[i].set_xlabel(state_names[i])
+        ax[i].set_ylabel('Density')
+        ax[i].grid(True, linestyle='--', alpha=0.7)
+
+
+    ax[7].axis('off')
+    
+    legend_elements = [Line2D([0], [0], color='r', lw=8, alpha=0.5, label='Max Value Distribution'),
+                       Line2D([0], [0], color='b', lw=8, alpha=0.5, label='Min Value Distribution'),
+                       Line2D([0], [0], color='gray', lw=8, alpha=0.5, label='All Data Distribution')]
+    
+    ax[7].legend(handles=legend_elements, loc='center')
+        
+    plt.tight_layout() 
+    plt.savefig('./results_figure/density_value.png', dpi=300)
+    plt.close()
+        
+    
+    
 def correl_pitch_heave(state):
     
     pitch = state[:, 4, :]
@@ -556,8 +610,7 @@ def distribution(state):
 
 t, state, wind_speed, wave_eta, seeds, Q_t = load_data()
 
-plot_quantiles(t, state, wind_speed, wave_eta, Q_t)
-plot_trajectories(t, state, wind_speed, wave_eta, seeds)
+extremeValueDen_distribution(state)
 
 
 
