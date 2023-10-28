@@ -606,11 +606,78 @@ def distribution(state):
         kde_state = gaussian_kde(all_state)
         with open(f'./density_function/state_{i}.pkl', 'wb') as f:
             pickle.dump(kde_state, f)
+            
+            
+def save_percentile_extreme(t, state, wind_speed, wave_eta):
+    
+    # Get the central 75% ####################
+    # States
+    percentile_87_5 = np.percentile(state, 87.5, axis=2)
+    percentile_12_5 = np.percentile(state, 12.5, axis=2)
+
+    # Wind speed
+    wind_percentile_87_5 = np.percentile(wind_speed, 87.5, axis=1)
+    wind_percentile_12_5 = np.percentile(wind_speed, 12.5, axis=1)
+    
+    # Wave elevation
+    wave_percentile_87_5 = np.percentile(wave_eta, 87.5, axis=1)
+    wave_percentile_12_5 = np.percentile(wave_eta, 12.5, axis=1)
+    
+    
+    # Get the central 25% ####################
+    # States
+    percentile_62_5 = np.percentile(state, 62.5, axis=2)
+    percentile_37_5 = np.percentile(state, 37.5, axis=2)
+    
+    # Wind speed
+    wind_percentile_62_5 = np.percentile(wind_speed, 62.5, axis=1)
+    wind_percentile_37_5 = np.percentile(wind_speed, 37.5, axis=1)
+    
+    # Wave elevation
+    wave_percentile_62_5 = np.percentile(wave_eta, 62.5, axis=1)
+    wave_percentile_37_5 = np.percentile(wave_eta, 37.5, axis=1)
+
+    
+    # Get the median (50%) ####################
+    # States
+    percentile_50 = np.percentile(state, 50, axis=2)
+    
+    # Wind speed
+    wind_percentile_50 = np.percentile(wind_speed, 50, axis=1)
+    
+    # Wave elevation
+    wave_percentile_50 = np.percentile(wave_eta, 50, axis=1)
+    
+    max_state = np.max(state, axis=2)
+    min_state = np.min(state, axis=2)
+    
+    np.savez('percentile_data/percentile_extreme.npz', t=t,  
+                 percentile_87_5 = percentile_87_5,
+                 percentile_12_5 = percentile_12_5,
+                 wind_percentile_87_5 = wind_percentile_87_5,
+                 wind_percentile_12_5 = wind_percentile_12_5,
+                 wave_percentile_87_5 = wave_percentile_87_5,
+                 wave_percentile_12_5 = wave_percentile_12_5,
+                 percentile_62_5 = percentile_62_5,
+                 percentile_37_5 = percentile_37_5,
+                 wind_percentile_62_5 = wind_percentile_62_5,
+                 wind_percentile_37_5 = wind_percentile_37_5,
+                 wave_percentile_62_5 = wave_percentile_62_5,
+                 wave_percentile_37_5 = wave_percentile_37_5,
+                 percentile_50 = percentile_50,
+                 wind_percentile_50 = wind_percentile_50,
+                 wave_percentile_50 = wave_percentile_50,
+                 max_state = max_state,
+                 min_state = min_state)
+                 
+                 
+                 
+                           
 
 
 t, state, wind_speed, wave_eta, seeds, Q_t = load_data()
 
-extremeValueDen_distribution(state)
+save_percentile_extreme(t, state, wind_speed, wave_eta)
 
 
 
