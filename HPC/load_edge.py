@@ -672,12 +672,45 @@ def save_percentile_extreme(t, state, wind_speed, wave_eta):
                  
                  
                  
-                           
+def pitch_acceleration(state, seeds):
+    '''
+    this function find the extreme pitch accelaration, output the seeds
+    '''
+    pitch_rate = state[:, 6, :]
+    path = "results_1"
+    print(path)
+    
+    pitch_acceleration = np.diff(pitch_rate, axis=0)
+    
+    max_acrose_simulation = np.max(pitch_acceleration, axis=1)
+    min_acrose_simulation = np.min(pitch_acceleration, axis=1)
+    
+    # find the time step where the max and min occur
+    max_value_time = np.argmax(max_acrose_simulation)
+    min_value_time = np.argmin(min_acrose_simulation)
+    
+    # store the simulation index that have the most occurrence of max
+    # and min at each time step
+    max_index = np.argmax(pitch_acceleration, axis=1)
+    min_index = np.argmin(pitch_acceleration, axis=1)
+    
+    print("max value index:", max_index[max_value_time], seeds[:, max_index[max_value_time]])
+    print("min value index:", min_index[min_value_time], seeds[:, min_index[min_value_time]])
+    
+    # from max_index, all time steps, count the occurrence of max and min
+    # for each simulation
+    max_counts = np.bincount(max_index, minlength=pitch_acceleration.shape[1])
+    min_counts = np.bincount(min_index, minlength=pitch_acceleration.shape[1])
+    
+    # for each state, find the simulation that have the most occurrence
+    # of max and min value
+    print("max occ index:", np.argmax(max_counts), "seeds:", seeds[:, np.argmax(max_counts)])
+    print("max occ index:", np.argmax(max_counts), "seeds:", seeds[:, np.argmax(min_counts)])
 
 
 t, state, wind_speed, wave_eta, seeds, Q_t = load_data()
 
-save_percentile_extreme(t, state, wind_speed, wave_eta)
+pitch_acceleration(state, seeds)
 
 
 
