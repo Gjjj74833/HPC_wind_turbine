@@ -180,6 +180,8 @@ def genWind(v_w, end_time, time_step, file_index):
         columns = line.split()
         horSpd.append(float(columns[1]))  
     
+    command = ["cp", path_hh, f"./turbsim_output/{seed[0]}_{seed[1]}.hh"]
+    subprocess.run(command)
 
     return np.array(horSpd), seed
 
