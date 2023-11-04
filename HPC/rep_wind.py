@@ -7,32 +7,12 @@ Created on Sun Oct 29 01:08:56 2023
 import numpy as np
 import subprocess
 
-def genWind(v_w, end_time, time_step, seed):
-    """
-    Use Turbsim to generate a wind with turbulence.
+def genWind(seed, end_time, time_step=0.05, v_w=20):
 
-    Parameters
-    ----------
-    v_w : float
-        the average wind speed
-    end_time : float
-        the time to analysis. Should be consistent with the model driver
-    time_step : float
-        the time step to analysis. Should be consistent with the model driver
-
-    Returns
-    -------
-    horSpd : list
-        A list of horizontal wind speed computed at each time step
-
-    """
     end_time += 1
-        
+
     # Generate seeds for random wind model
-    seed1 = np.random.randint(-2147483648, 2147483648)
-    seed2 = np.random.randint(-2147483648, 2147483648)
-    seed = [seed1, seed2]
-    path_inp = +'TurbSim.inp'
+    path_inp = 'TurbSim.inp'
     
     
     # Open the inp file and overwrite with given parameters
@@ -71,20 +51,43 @@ def genWind(v_w, end_time, time_step, seed):
     command = ["turbsim", path_inp]
     subprocess.run(command)
     
-    # Read the output file
-    path_hh = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.hh'
+    command = ["cp", "TurbSim.hh", f"./turbsim_output/{seed[0]}_{seed[1]}.hh"]
+    subprocess.run(command)
     
-    with open(path_hh, 'r') as file:
-        lines = file.readlines()
-    
-    # Skip the header
-    data = lines[8:]
-    
-    horSpd = []
+seeds = [[-121491204, -1304678860],
+         [-1424433141, 2045330612],
+         [1365634968, 1998175349],
+         [1959064098, -1690322664],
+         [400672822, -1387694271],
+         [631843952, 414653701],
+         [384934251, 1838707713],
+         [-1741971552, 560505679],
+         [-514258701, 1239123680],
+         [2062356962, -1973551217],
+         [1351979082, -1358014331],
+         [-118014334, -1217641822],
+         [1005984867, -686930290],
+         [-1726641590, 1688144086],
+         [-464316375, 2044166783],
+         [159058000, 1370406950],
+         [163203302, -812798221],
+         [416290233, -458643487],
+         [1648937011, 1892887397],
+         [-856074495, 432459576],
+         [-2056281993, 1247348841],
+         [-1793101032, 1508361815],
+         [-967220521, 626952838],
+         [-1772727346, 209617217],
+         [1820087526, 32059213],
+         [-1283202251, 1363511765],
+         [-150537734.  -78472730],
+         [1351979082. -1358014331],
+         [1948384108. -656727226]]
+        
+for seed in seeds:
+    genWind(seed, 3000, time_step=0.05, v_w=20)
 
-    for line in data:
-        columns = line.split()
-        horSpd.append(float(columns[1]))  
-    
+###########################################################################################
 
-    return np.array(horSpd)
+
+

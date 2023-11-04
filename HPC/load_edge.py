@@ -676,11 +676,12 @@ def pitch_acceleration(state, seeds):
     '''
     this function find the extreme pitch accelaration, output the seeds
     '''
-    pitch_rate = state[:, 6, :]
+    pitch_rate = state[:, 5, :]
     path = "results_1"
     print(path)
     
     pitch_acceleration = np.diff(pitch_rate, axis=0)
+    np.save(f'./pitch_acceleration/pitch_acceleration_{path}.npy', pitch_acceleration)
     
     max_acrose_simulation = np.max(pitch_acceleration, axis=1)
     min_acrose_simulation = np.min(pitch_acceleration, axis=1)
