@@ -708,10 +708,17 @@ def pitch_acceleration(state, seeds):
     print("max occ index:", np.argmax(max_counts), "seeds:", seeds[:, np.argmax(max_counts)])
     print("max occ index:", np.argmax(max_counts), "seeds:", seeds[:, np.argmax(min_counts)])
 
+def analyze_seeds(seeds):
+    seeds_wind = seeds[:2]
+    seedsT = seeds_wind.T
+    unique_columns = {tuple(column) for column in seedsT}
+    
+    print(len(unique_columns))
+    
 
 t, state, wind_speed, wave_eta, seeds, Q_t = load_data()
 
-pitch_acceleration(state, seeds)
+analyze_seeds(seeds)
 
 
 
