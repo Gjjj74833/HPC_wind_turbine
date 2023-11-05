@@ -101,7 +101,7 @@ def CpCtCq(TSR, beta, performance):
     return C_p[TSR_index][pitch_index], C_t[TSR_index][pitch_index]
 
 
-def genWind(v_w, end_time, time_step, file_index):
+def genWind(v_w, end_time, time_step, file_index, seed):
     """
     Use Turbsim to generate a wind with turbulence.
 
@@ -122,10 +122,7 @@ def genWind(v_w, end_time, time_step, file_index):
     """
     end_time += 1
         
-    # Generate seeds for random wind model
-    seed1 = np.random.randint(-2147483648, 2147483648)
-    seed2 = np.random.randint(-2147483648, 2147483648)
-    seed = [seed1, seed2]
+    
     path_inp = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.inp'
     
     
@@ -183,7 +180,7 @@ def genWind(v_w, end_time, time_step, file_index):
     command = ["cp", path_hh, f"./turbsim_output/{seed[0]}_{seed[1]}.hh"]
     subprocess.run(command)
 
-    return np.array(horSpd), seed
+    return np.array(horSpd)
 
 
 def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
@@ -609,7 +606,7 @@ def Betti(x, t, beta, T_E, Cp_type, performance, v_w, v_aveg, random_phases):
     return dxdt, Q_t
 
 
-def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
+def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, wave_seed):
     """
     Solve the system of ODEs dx/dt = Betti(x, t) using the fourth-order Runge-Kutta method.
 
@@ -656,7 +653,6 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     
     # generate a random seed
     state_before = np.random.get_state()
-    wave_seed = np.random.randint(0, high=10**7)
     np.random.seed(wave_seed)
     random_phases = 2*np.pi*np.random.rand(400)
     np.random.set_state(state_before)
@@ -760,10 +756,10 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind):
     betas_sub = betas[::steps][discard_steps:]
     Qt_list_sub = Qt_list[::steps][discard_steps:]
     
-    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, wave_seed, Qt_list_sub
+    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, Qt_list_sub
 
 
-def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
+def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, Cp_type = 0):
     """
     Cp computation method
 
@@ -792,12 +788,14 @@ def main(end_time, v_w, x0, file_index, time_step = 0.05, Cp_type = 0):
     
     # modify this to change initial condition
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
-    v_wind, seeds = genWind(v_w, end_time, time_step, file_index)
+    wind_seeds = seeds[:2]
+    wave_seed = seeds[2]
+    
+    v_wind = genWind(v_w, end_time, time_step, file_index, wind_seeds)
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, seed_wave, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind)
-    seeds.append(seed_wave)
+    t, x, v_wind, wave_eta, betas, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind, wave_seed)
     # return the output to be ploted
     return t, x, v_wind, wave_eta, betas, seeds, Q_t
     
@@ -819,11 +817,12 @@ def run_simulations_parallel(n_simulations, params):
     params.append(state)
 
     file_index = list(range(0, n_simulations))
+    seeds_array = np.load(f'./seeds/seeds_{sys.argv[1]}.npy')
    
     
     with Pool(int(sys.argv[3])) as p:
         
-        all_params = [params + [file_index[i]] for i in range(n_simulations)]
+        all_params = [params + [file_index[i], seeds_array[i]] for i in range(n_simulations)]
         
         results = p.map(run_simulation, all_params)
 
