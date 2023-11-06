@@ -742,7 +742,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
     # Output wave elevation at zeta = 0
     wave_eta = []
     for i in t:
-        wave_eta.append(pierson_moskowitz_spectrum(v_w, 0, 0, i, random_phases)[0])
+        wave_eta.append(pierson_moskowitz_spectrum(v_w, -2.61426271, 0, i, random_phases)[0])
         
     steps = int(0.5 / dt)
     # dicard data for first 500s
