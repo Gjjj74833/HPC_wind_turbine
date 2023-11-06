@@ -41,6 +41,22 @@ def load_data():
     
     return t, state, wind_speed, wave_eta, seeds, Q_t
 
+def merge_pitch_acc(states):
+    """
+    merge pitch acceleration to states
+    states.shape: (time_step, state, simulation_index)
+    state in this order:
+    [surge, surge_velocity, heave, heave_velocity, pitch, pitch_rate, pitch_acceleration, rotor_speed]
+    
+    return the merged state
+    """
+    pitch_rate = states[:, 5, :]  
+    pitch_acceleration = np.diff(pitch_rate, axis=0)
+    last_acceleration = pitch_acceleration[-1][None, :]
+    pitch_acceleration = np.concatenate((pitch_acceleration, last_acceleration), axis=0)[:, None, :] 
+    new_state = np.concatenate((states[:, :6, :], pitch_acceleration, states[:, 6, :][:, None, :]), axis=1)
+    return new_state
+
 def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
     
     # Get the central 75% ####################
@@ -178,15 +194,11 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
     
     ######################################################################
     state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
-                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Pitch Acceleration (deg/s^2)', 'Rotor Speed (rpm)']
     
     safe_state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
                    'Pitch_Angle', 'Pitch_Rate', 'Rotor_Speed']
 
-    # Create one large subplot for max and min occurrences for each state
-    fig, ax = plt.subplots(7, 2, figsize=(15, 30))
-    ax = ax.flatten()  # Flatten to easily index
-    
     # record the index of simulation that have the most occurrence of max and min
     # value for each 7 states
     max_occ_sim = []
@@ -197,15 +209,20 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
     max_value_sim = []
     min_value_sim = []
     
-    percentile_87_5 = np.percentile(state, 87.5, axis=2)
-    percentile_12_5 = np.percentile(state, 12.5, axis=2)
-    percentile_62_5 = np.percentile(state, 62.5, axis=2)
-    percentile_37_5 = np.percentile(state, 37.5, axis=2)
-    percentile_50 = np.percentile(state, 50, axis=2)
-    max_state = np.max(state, axis=2)
-    min_state = np.min(state, axis=2)
+    data = np.load('percentile_data/percentile_extreme.npz')
+
+    percentile_87_5 = data['percentile_87_5']
+    percentile_12_5 = data['percentile_12_5']
+    percentile_62_5 = data['percentile_62_5']
+    percentile_37_5 = data['percentile_37_5']
+    percentile_50 = data['percentile_50']
+    max_state = data['max_state']
+    min_state = data['min_state']
     
-    for i in range(7):
+    data.close()
+    
+    num_state = state.shape[1]
+    for i in range(num_state):
         state_i = state[:, i, :]
         
         # find the time step where the max and min occur
@@ -234,37 +251,13 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         
         max_counts = max_counts*t[1]
         min_counts = min_counts*t[1]
-
-        # Plot for max occurrences
-        bin_edges = np.arange(0, max(max_counts)+6*t[1], 5*t[1])  
-        ax[2*i].hist(max_counts, bins=bin_edges, density=True, alpha=0.7, align='mid')
-        ax[2*i].set_title(f'State {i} - Max Occurrences')
-        ax[2*i].set_xlabel('Time Stay at Max (s)')
-        ax[2*i].set_ylabel('Frequency')
-        selected_ticks = bin_edges[::8]  # select every second bin edge for x-ticks
-        ax[2*i].set_xticks(selected_ticks)
-        ax[2*i].tick_params(axis='x', rotation=45)  # rotate x-ticks for better readability
-
-        # Plot for min occurrences
-        bin_edges = np.arange(0, max(min_counts)+6*t[1], 5*t[1])  # Define bin edges for the histogram
-        ax[2*i + 1].hist(min_counts, bins=bin_edges, density=True, alpha=0.7, align='mid')
-        ax[2*i + 1].set_title(f'State {i} - Min Occurrences')
-        ax[2*i + 1].set_xlabel('Time Stay at Min (s)')
-        ax[2*i + 1].set_ylabel('Frequency')
-        selected_ticks = bin_edges[::8]  # select every second bin edge for x-ticks
-        ax[2*i + 1].set_xticks(selected_ticks)
-        ax[2*i + 1].tick_params(axis='x', rotation=45)
-        
-    plt.tight_layout()
-    plt.savefig("./results_figure/max_min_occurrences_histogram_all_states.png", dpi=600)
-    plt.close(fig)  
     
     max_occ_seeds = []
     min_occ_seeds = []
     max_value_seeds = []
     min_value_seeds = []
     
-    for i in range(7):
+    for i in range(num_state):
         max_occ_seeds.append(seeds[:, max_occ_sim[i]])
         min_occ_seeds.append(seeds[:, min_occ_sim[i]])
         max_value_seeds.append(seeds[:, max_value_sim[i]])
@@ -716,9 +709,13 @@ def analyze_seeds(seeds):
     print(len(unique_columns))
     
 
-t, state, wind_speed, wave_eta, seeds, Q_t = load_data()
+t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
+state = merge_pitch_acc(temp_state)
+save_percentile_extreme(t, state, wind_speed, wave_eta)
 
-analyze_seeds(seeds)
+
+
+plot_trajectories(t, state, wind_speed, wave_eta, seeds)
 
 
 

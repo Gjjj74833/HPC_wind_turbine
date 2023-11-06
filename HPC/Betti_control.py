@@ -176,9 +176,9 @@ def genWind(v_w, end_time, time_step, file_index, seed):
     for line in data:
         columns = line.split()
         horSpd.append(float(columns[1]))  
-    
-    command = ["cp", path_hh, f"./turbsim_output/{seed[0]}_{seed[1]}.hh"]
-    subprocess.run(command)
+ 
+    v_wind = np.array(horSpd)
+    np.save(f"./turbsim_output/{seed[0]}_{seed[1]}.hh", v_wind)
 
     return np.array(horSpd)
 
