@@ -327,7 +327,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_max_occ, max_occ_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/max_occ_{safe_state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/max_occ_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_max_occ) 
         
         
@@ -339,7 +339,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_min_occ, min_occ_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/min_occ_{safe_state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/min_occ_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
@@ -350,7 +350,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_max_value, max_value_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/max_value_{safe_state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/max_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
@@ -361,7 +361,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_min_value, min_value_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/min_value_{safe_state_names[i]}.png', dpi=600)
+        plt.savefig(f'./results_figure/min_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_value) 
     
     
