@@ -9,35 +9,42 @@ generating seeds
 import numpy as np
 
 def generate_and_save_unique_arrays(n, n_array, seed=None):
-    # Ensure n is within valid range and can be evenly divided by n_array
     if n % n_array != 0:
         raise ValueError("Invalid input: n is not divisible by n_array.")
 
-    # Set the random seed for reproducibility
     np.random.seed(seed)
     
-    # Generate n*3 unique random integers within the desired range
-    all_values = np.random.choice(np.arange(-9600000, 9600000), 
-                                  size=n*3, replace=False)
+    # Generate the first two columns with the full range
+    first_two_columns = np.random.choice(np.arange(-9600000, 9600000), 
+                                         size=n*2, replace=False)
+
+    # Generate the third column with only non-negative values
+    third_column = np.random.choice(np.arange(0, 9600000), 
+                                    size=n, replace=False)
     
-    # Determine the number of rows per sub-array
     rows_per_array = n // n_array
     
     for i in range(n_array):
-        # Select and reshape the values for each sub-array
-        start_idx = i * rows_per_array * 3
-        end_idx = start_idx + rows_per_array * 3
-        sub_array = all_values[start_idx:end_idx].reshape((rows_per_array, 3))
+        start_idx_2col = i * rows_per_array * 2
+        end_idx_2col = start_idx_2col + rows_per_array * 2
         
-        # Save the sub-array to a .npy file
+        # Get the sub-array for the first two columns
+        sub_array_2col = first_two_columns[start_idx_2col:end_idx_2col].reshape((rows_per_array, 2))
+        
+        start_idx_3col = i * rows_per_array
+        end_idx_3col = start_idx_3col + rows_per_array
+        
+        # Get the sub-array for the third column
+        sub_array_3col = third_column[start_idx_3col:end_idx_3col].reshape((rows_per_array, 1))
+        
+        # Combine them to form a sub-array with the third column non-negative
+        sub_array = np.hstack((sub_array_2col, sub_array_3col))
+        
         filename = f'./seeds/seeds_{i+1}.npy'
         np.save(filename, sub_array)
         print(f"Saved: {filename}")
 
-# Example usage
-generate_and_save_unique_arrays(10000, 50, seed=123)
-
-
+generate_and_save_unique_arrays(10000, 50)
 seeds = loseeds = np.load(f'./seeds/seeds_4.npy')
 
 
