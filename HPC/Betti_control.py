@@ -178,9 +178,9 @@ def genWind(v_w, end_time, time_step, file_index, seed):
         horSpd.append(float(columns[1]))  
  
     v_wind = np.array(horSpd)
-    np.save(f"./turbsim_output/{seed[0]}_{seed[1]}.hh", v_wind)
+    np.save(f"./turbsim_output/{seed[0]}_{seed[1]}.npy", v_wind)
 
-    return np.array(horSpd)
+    return v_wind
 
 
 def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
