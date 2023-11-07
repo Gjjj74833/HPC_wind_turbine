@@ -197,7 +197,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
                    'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Pitch Acceleration (deg/s^2)', 'Rotor Speed (rpm)']
     
     safe_state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
-                   'Pitch_Angle', 'Pitch_Rate', 'Rotor_Speed']
+                   'Pitch_Angle', 'Pitch_Rate', 'Pitch_Acceleration', 'Rotor_Speed']
 
     # record the index of simulation that have the most occurrence of max and min
     # value for each 7 states
@@ -317,8 +317,8 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         ax[9].legend(handles=legend_elements, loc='center')
       
     
-    # for 7 states:
-    for i in range(7):
+    # for 8 states including pitch acceleration:
+    for i in range(num_state):
         # create subplots for each simulation index in max_occ_sim
         fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(12, 17))
         fig_max_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
