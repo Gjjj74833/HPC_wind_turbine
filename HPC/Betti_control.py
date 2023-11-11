@@ -179,7 +179,10 @@ def genWind(v_w, end_time, time_step, file_index, seed):
  
     v_wind = np.array(horSpd)
     np.save(f"./turbsim_output/{seed[0]}_{seed[1]}.npy", v_wind)
-
+    
+    command = ['rm', f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}*']
+    subprocess.run(command)
+    
     return v_wind
 
 

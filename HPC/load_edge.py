@@ -16,7 +16,7 @@ from matplotlib.lines import Line2D
 
 def load_data():
     
-    directory = 'results'
+    directory = 'results_1'
     
     # collect all data files
     data_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.npz')]
@@ -191,7 +191,7 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
 def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
     
     
-    
+    figure_directory = "results_figure_1"
     ######################################################################
     state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
                    'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Pitch Acceleration (deg/s^2)', 'Rotor Speed (rpm)']
@@ -327,7 +327,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_max_occ, max_occ_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/max_occ_{safe_state_names[i]}.png', dpi=300)
+        plt.savefig(f'./{figure_directory}/max_occ_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_max_occ) 
         
         
@@ -339,7 +339,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_min_occ, min_occ_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/min_occ_{safe_state_names[i]}.png', dpi=300)
+        plt.savefig(f'./{figure_directory}/min_occ_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
@@ -350,7 +350,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_max_value, max_value_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/max_value_{safe_state_names[i]}.png', dpi=300)
+        plt.savefig(f'./{figure_directory}/max_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
@@ -361,7 +361,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plot_helper(ax_min_value, min_value_sim[i])
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.savefig(f'./results_figure/min_value_{safe_state_names[i]}.png', dpi=300)
+        plt.savefig(f'./{figure_directory}/min_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_value) 
     
     
@@ -711,7 +711,6 @@ def analyze_seeds(seeds):
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
 state = merge_pitch_acc(temp_state)
-save_percentile_extreme(t, state, wind_speed, wave_eta)
 
 
 
