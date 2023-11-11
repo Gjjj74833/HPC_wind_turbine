@@ -16,7 +16,7 @@ from matplotlib.lines import Line2D
 
 def load_data():
     
-    directory = 'results_1'
+    directory = 'results'
     
     # collect all data files
     data_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.npz')]
@@ -190,14 +190,14 @@ def plot_quantiles(t, state, wind_speed, wave_eta, Q_t):
 
 def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
     
+    figure_directory = 'results_figure_1'
     
-    figure_directory = "results_figure_1"
     ######################################################################
     state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
                    'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Pitch Acceleration (deg/s^2)', 'Rotor Speed (rpm)']
     
     safe_state_names = ['Surge', 'Surge_Velocity', 'Heave', 'Heave_Velocity', 
-                   'Pitch_Angle', 'Pitch_Rate', 'Rotor_Speed']
+                   'Pitch_Angle', 'Pitch_Rate', 'Pitch_Acceleration', 'Rotor_Speed']
 
     # record the index of simulation that have the most occurrence of max and min
     # value for each 7 states
@@ -257,6 +257,9 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
     max_value_seeds = []
     min_value_seeds = []
     
+    print('******************************************************************')
+    print(figure_directory)
+    print('******************************************************************')
     for i in range(num_state):
         max_occ_seeds.append(seeds[:, max_occ_sim[i]])
         min_occ_seeds.append(seeds[:, min_occ_sim[i]])
@@ -298,7 +301,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
             ax[j+2].set_ylabel(f'{state_names[j]}')
             
             ax[j+2].fill_between(t, percentile_12_5[:, j], percentile_87_5[:, j], color='b', alpha=0.3, edgecolor='none')
-            ax[j+2].fill_between(t, percentile_37_5[:, j], percentile_62_5[:, j], color='b', alpha=0.3)
+            ax[j+2].fill_between(t, percentile_37_5[:, j], percentile_62_5[:, j], color='b', alpha=0.3, edgecolor='none')
             ax[j+2].plot(t, percentile_50[:, j], color='r', alpha=0.9, linewidth=0.5)
             
             ax[j+2].set_title(f'Time evolution of {state_names[j]}')
@@ -317,50 +320,46 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         ax[9].legend(handles=legend_elements, loc='center')
       
     
-    # for 7 states:
-    for i in range(7):
+    # for 8 states including pitch acceleration:
+    for i in range(num_state):
         # create subplots for each simulation index in max_occ_sim
-        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(12, 17))
-        fig_max_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
+        fig_max_occ, ax_max_occ = plt.subplots(5, 2, figsize=(12, 16))
         ax_max_occ = ax_max_occ.flatten()
         
         plot_helper(ax_max_occ, max_occ_sim[i])
         
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+        plt.tight_layout() 
         plt.savefig(f'./{figure_directory}/max_occ_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_max_occ) 
         
         
         # create subplots for each simulation index in mix_occ_sim
-        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(12, 17))
-        fig_min_occ.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
+        fig_min_occ, ax_min_occ = plt.subplots(5, 2, figsize=(12, 16))
         ax_min_occ = ax_min_occ.flatten()
         
         plot_helper(ax_min_occ, min_occ_sim[i])
         
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+        plt.tight_layout() 
         plt.savefig(f'./{figure_directory}/min_occ_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_occ) 
         
         # create subplots for each simulation index in max_value_sim
-        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(12, 17))
-        fig_max_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
+        fig_max_value, ax_max_value = plt.subplots(5, 2, figsize=(12, 16))
         ax_max_value = ax_max_value.flatten()
         
         plot_helper(ax_max_value, max_value_sim[i])
         
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+        plt.tight_layout() 
         plt.savefig(f'./{figure_directory}/max_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_max_value) 
         
         # create subplots for each simulation index in min_value_sim
-        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(12, 17))
-        fig_min_value.suptitle('Extreme Trajectories and Percentile Plot', fontsize=16)
+        fig_min_value, ax_min_value = plt.subplots(5, 2, figsize=(12, 16))
         ax_min_value = ax_min_value.flatten()
         
         plot_helper(ax_min_value, min_value_sim[i])
         
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+        plt.tight_layout() 
         plt.savefig(f'./{figure_directory}/min_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_value) 
     
