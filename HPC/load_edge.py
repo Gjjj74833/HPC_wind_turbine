@@ -286,7 +286,7 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         # plot wave
         ax[1].plot(t, wave_eta[:, index], color='black', linewidth=0.5)
         ax[1].set_xlabel('Time (s)')
-        ax[1].set_title('Time evolution of Wave Surface Elevation at x = 0 (m)')
+        ax[1].set_title('Time evolution of Wave Surface Elevation at Average Surge Position')
         ax[1].set_ylabel('Wave height (m)')
         ax[1].grid(True)
         ax[1].set_xlim(0, t[-1])
@@ -460,13 +460,13 @@ def extremeOccurDen_distribution(state):
     ax[7].legend(handles=legend_elements, loc='center')
         
     plt.tight_layout() 
-    plt.savefig('./results_figure/density.png', dpi=600)
+    plt.savefig('./results_figure/density.png', dpi=300)
     plt.close()
     
 def extremeValueDen_distribution(state):
     
     state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
-                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Rotor Speed (rpm)']
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Pitch Acceleration (deg/s^2)']
     
     max_state = np.max(state, axis=0)
     min_state = np.min(state, axis=0)
@@ -712,8 +712,7 @@ t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
 state = merge_pitch_acc(temp_state)
 
 
-
-plot_trajectories(t, state, wind_speed, wave_eta, seeds)
+extremeOccurDen_distribution(state)
 
 
 
