@@ -707,12 +707,44 @@ def analyze_seeds(seeds):
     
     print(len(unique_columns))
     
+    
+def fft_wave(wave_eta, t):
+    fft_result = np.fft.fft(wave_eta, axis=0)
+    
+    # Calculate the amplitude spectrum
+    amplitude_spectrum = np.abs(fft_result)
+    
+    # Create the corresponding frequency values for the x-axis
+    frequencies = np.fft.fftfreq(len(wave_eta), t[1] - t[0])
+    
+    scaling_factor = 1 / len(wave_eta)
+    
+    amplitude_spectrum_meters = amplitude_spectrum * scaling_factor
+    
+    amplitude_spectrum_50 = np.median(amplitude_spectrum_meters, axis=1)
+    amplitude_spectrum_87_5 = np.percentile(wave_eta, 87.5, axis=1)
+    amplitude_spectrum_12_5 = np.percentile(wave_eta, 12.5, axis=1)
+    amplitude_spectrum_62_5 = np.percentile(wave_eta, 62.5, axis=1)
+    amplitude_spectrum_37_5 = np.percentile(wave_eta, 37.5, axis=1)
+    
+    plt.figure()
+    plt.plot(frequencies, amplitude_spectrum_50, color='r', label='Medium')
+    plt.fill_between(frequencies, amplitude_spectrum_12_5, amplitude_spectrum_87_5, color='b', alpha=0.3, edgecolor='none')
+    plt.fill_between(frequencies, amplitude_spectrum_37_5, amplitude_spectrum_62_5, color='b', alpha=0.3, edgecolor='none')
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Amplitude (m)')
+    plt.title('Amplitude Spectrum (FFT) of Wave Signals')
+    plt.grid(True)
+    plt.xlim(0.05, 0.25)
+    plt.savefig('./results_figure/fft_wave.png', dpi=200)
+    plt.close()
+    
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
-state = merge_pitch_acc(temp_state)
+#state = merge_pitch_acc(temp_state)
 
 
-extremeOccurDen_distribution(state)
+fft_wave(wave_eta, t)
 
 
 
