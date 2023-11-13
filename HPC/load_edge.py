@@ -727,6 +727,13 @@ def fft_wave(wave_eta, t):
     amplitude_spectrum_62_5 = np.percentile(wave_eta, 62.5, axis=1)
     amplitude_spectrum_37_5 = np.percentile(wave_eta, 37.5, axis=1)
     
+    np.savez('fft_data/fft_wave.npz', frequencies=frequencies,
+                                      amplitude_spectrum_50 = amplitude_spectrum_50,
+                                      amplitude_spectrum_87_5 = amplitude_spectrum_87_5,
+                                      amplitude_spectrum_12_5 = amplitude_spectrum_12_5,
+                                      amplitude_spectrum_62_5 = amplitude_spectrum_62_5,
+                                      amplitude_spectrum_37_5 = amplitude_spectrum_37_5)
+    
     plt.figure()
     plt.plot(frequencies, amplitude_spectrum_50, color='r', label='Medium')
     plt.fill_between(frequencies, amplitude_spectrum_12_5, amplitude_spectrum_87_5, color='b', alpha=0.3, edgecolor='none')
