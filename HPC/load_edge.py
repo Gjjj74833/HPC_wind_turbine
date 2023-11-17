@@ -14,6 +14,7 @@ from matplotlib.lines import Line2D
 
 
 
+
 def load_data():
     
     directory = 'results'
@@ -541,20 +542,7 @@ def correl_pitch_heave(state):
     
     heave_50 = np.percentile(all_heave, 50)
 
-    # make binned scattor plot
-    # Define the number of bins
-    num_bins = 500
-    
-    # Create bins for pitch data
-    pitch_bins = np.linspace(all_pitch.min(), all_pitch.max(), num_bins)
-    pitch_bin_midpoints = (pitch_bins[:-1] + pitch_bins[1:]) / 2
-    
-    # Find the index of the bin each pitch value falls into
-    bin_indices = np.digitize(all_pitch, pitch_bins)
-    
-    # Calculate the average heave for each pitch bin
-    average_heave_per_bin = [all_heave[bin_indices == i].mean() for i in range(1, len(pitch_bins))]
-    
+
     # Filling regions
     # Fill for central 75% of data in pitch (vertical axis)
     plt.axhspan(pitch_12_5, pitch_87_5, color='gray', alpha=0.2)
@@ -573,14 +561,14 @@ def correl_pitch_heave(state):
     plt.axvline(heave_50, color='gray', alpha=0.6, label='Median', linestyle='--')
 
     
-    plt.scatter(average_heave_per_bin, pitch_bin_midpoints, color='b', label='Binned Average', s=5)
+    plt.scatter(all_heave, all_pitch, marker='o')
     plt.ylabel('Pitch (deg)')
     plt.xlabel('Average Heave (m)')
     plt.title('Binned Scatter Plot of Average Heave vs. Pitch')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('./results_figure/corr_pitch_heave.png', dpi=600)
+    plt.savefig('./results_figure/corr_pitch_heave.png')
     plt.close()
     
     corr_matrix = np.corrcoef(all_pitch, all_heave)
@@ -748,10 +736,10 @@ def fft_wave(wave_eta, t):
     
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
-#state = merge_pitch_acc(temp_state)
+state = merge_pitch_acc(temp_state)
 
 
-fft_wave(wave_eta, t)
+correl_pitch_heave(state)
 
 
 
