@@ -528,6 +528,17 @@ def correl_pitch_heave(state):
     all_pitch = pitch.reshape(-1)
     all_heave = heave.reshape(-1)
     
+    data = pd.DataFrame({'Heave (m)': all_heave, 'Pitch Angle (deg)': all_pitch})
+    
+    est = binsreg(all_pitch, all_heave, data=data, nbins=500, polyreg=0)
+    est.bins_plot
+
+    # Save the figure
+    est = binsreg(all_pitch, all_heave, data=data, nbins=500, polyreg=1)
+    est.bins_plot  
+    plt.savefig('binned_regression_plot.png')
+
+    '''
     pitch_87_5 = np.percentile(all_pitch, 87.5)
     pitch_12_5 = np.percentile(all_pitch, 12.5)
     
@@ -544,15 +555,6 @@ def correl_pitch_heave(state):
     
     heave_50 = np.percentile(all_heave, 50)
     
-    data = pd.DataFrame({'Heave (m)': all_heave, 'Pitch Angle (deg)': all_pitch})
-    
-    est = binsreg(all_pitch, all_heave, data=data, nbins=40, polyreg=1)
-    plot = est.bins_plot
-
-    # Save the figure
-    plot.save('binned_regression_plot.png')
-
-    '''
     # Filling regions
     # Fill for central 75% of data in pitch (vertical axis)
     plt.axhspan(pitch_12_5, pitch_87_5, color='gray', alpha=0.2)
