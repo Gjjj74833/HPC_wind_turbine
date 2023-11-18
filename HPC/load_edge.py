@@ -11,7 +11,9 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 import pickle
 from matplotlib.lines import Line2D
-
+import seaborn as sns
+import binsreg
+import pandas as pd
 
 
 
@@ -520,8 +522,8 @@ def extremeValueDen_distribution(state):
     
 def correl_pitch_heave(state):
     
-    pitch = state[:, 4, :]
-    heave = state[:, 2, :]
+    pitch = state[::3, 4, :]
+    heave = state[::3, 2, :]
     
     all_pitch = pitch.reshape(-1)
     all_heave = heave.reshape(-1)
@@ -541,8 +543,16 @@ def correl_pitch_heave(state):
     pitch_50 = np.percentile(all_pitch, 50)
     
     heave_50 = np.percentile(all_heave, 50)
+    
+    data = pd.DataFrame({'Heave (m)': all_heave, 'Pitch Angle (deg)': all_pitch})
+    
+    est = binsreg(all_pitch, all_heave, data=data, nbins=40, polyreg=1)
+    plot = est.bins_plot
 
+    # Save the figure
+    plot.save('binned_regression_plot.png')
 
+    '''
     # Filling regions
     # Fill for central 75% of data in pitch (vertical axis)
     plt.axhspan(pitch_12_5, pitch_87_5, color='gray', alpha=0.2)
@@ -560,8 +570,6 @@ def correl_pitch_heave(state):
     plt.axhline(pitch_50, color='gray', alpha=0.6, linestyle='--')
     plt.axvline(heave_50, color='gray', alpha=0.6, label='Median', linestyle='--')
 
-    
-    plt.scatter(all_heave, all_pitch, s=0.5, alpha=0.1, label='Data Points', color='black')
     plt.ylabel('Pitch (deg)')
     plt.xlabel('Average Heave (m)')
     plt.title('Binned Scatter Plot of Average Heave vs. Pitch')
@@ -570,11 +578,7 @@ def correl_pitch_heave(state):
     plt.tight_layout()
     plt.savefig('./results_figure/corr_pitch_heave.png')
     plt.close()
-    
-    corr_matrix = np.corrcoef(all_pitch, all_heave)
-    correlation_coefficient = corr_matrix[0, 1]
-
-    print(f"Correlation Coefficient (Pearson's r) between Pitch and Heave: {correlation_coefficient:.4f}")
+    '''
 
 def distribution(state):
 
