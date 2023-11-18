@@ -561,7 +561,7 @@ def correl_pitch_heave(state):
     plt.axvline(heave_50, color='gray', alpha=0.6, label='Median', linestyle='--')
 
     
-    plt.scatter(all_heave, all_pitch, marker='o')
+    plt.scatter(all_heave, all_pitch, s=0.5, alpha=0.1, label='Data Points', color='black')
     plt.ylabel('Pitch (deg)')
     plt.xlabel('Average Heave (m)')
     plt.title('Binned Scatter Plot of Average Heave vs. Pitch')
@@ -736,10 +736,10 @@ def fft_wave(wave_eta, t):
     
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
-state = merge_pitch_acc(temp_state)
+#state = merge_pitch_acc(temp_state)
 
 
-correl_pitch_heave(state)
+correl_pitch_heave(temp_state)
 
 
 
