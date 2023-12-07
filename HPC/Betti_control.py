@@ -660,7 +660,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
     random_phases = 2*np.pi*np.random.rand(400)
     np.random.set_state(state_before)
     ###########################################################################
-    # PI controller
+    # PID controller
     integral = 0
     beta = beta_0
     
@@ -673,7 +673,6 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
         tildeJ_R = eta_G**2*J_G + J_R
     
         rated_omega_R = 1.26711 # The rated rotor speed is 12.1 rpm
-        #rated_omega_R = 1.571
         zeta_phi = 0.7
         omega_phin = 0.6
         beta_k = 0.1099965
@@ -742,7 +741,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
     x[:, 2] += d_BS
 
 
-    # Output wave elevation at zeta = 0
+    # Output wave elevation at average surge position
     wave_eta = []
     for i in t:
         wave_eta.append(pierson_moskowitz_spectrum(v_w, -2.61426271, 0, i, random_phases)[0])
