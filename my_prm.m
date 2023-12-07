@@ -12,7 +12,10 @@ end_point = [3 1]; % set end point
 %start_point = [8 9];
 %end_point = [-9 -8];
 
-
+% Create a VideoWriter object for an MP4 file with specified frame rate
+v = VideoWriter('path_planning_animation', 'MPEG-4');
+v.FrameRate = 10; % Set frame rate
+open(v);
 
 % Create map with obstacles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -22,16 +25,8 @@ y = [-10 -10 10 10 -10];
 
 figure;
 
-% Set figure window size
-screenSize = get(0, 'ScreenSize'); % Get the size of your screen
-figWidth = screenSize(3) * 0.8; % 80% of the screen width
-figHeight = screenSize(4) * 0.8; % 80% of the screen height
-set(gcf, 'Position', [screenSize(3)/2 - figWidth/2, screenSize(4)/2 - figHeight/2, figWidth, figHeight]);
 
-% Create a VideoWriter object for an MP4 file with reduced resolution
-v = VideoWriter('path_planning_animation', 'MPEG-4');
-v.FrameRate = 10; % Reduce frame rate to 5 frames per second
-open(v);
+
 plot(x, y); 
 hold on;
 
