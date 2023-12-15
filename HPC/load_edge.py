@@ -530,7 +530,7 @@ def correl_pitch_heave(state):
     
     data = pd.DataFrame({'Heave (m)': all_heave, 'Pitch Angle (deg)': all_pitch})
     
-    est = binsreg.binsreg(all_pitch, all_heave, data=data, nbins=500, polyreg=0)
+    est = binsreg.binsreg(all_heave, all_pitch, data=data, nbins=500, polyreg=0)
     est.bins_plot
 
     
@@ -567,9 +567,9 @@ def correl_pitch_heave(state):
     plt.axhline(pitch_50, color='gray', alpha=0.6, linestyle='--')
     plt.axvline(heave_50, color='gray', alpha=0.6, label='Median', linestyle='--')
 
-    plt.ylabel('Pitch (deg)')
-    plt.xlabel('Average Heave (m)')
-    plt.title('Binned Scatter Plot of Average Heave vs. Pitch')
+    plt.ylabel('Average Pitch (deg)')
+    plt.xlabel('Heave (m)')
+    plt.title('Binned Scatter Plot of Heave vs. Pitch')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
