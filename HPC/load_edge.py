@@ -521,57 +521,51 @@ def extremeValueDen_distribution(state):
     
     
 def correl_pitch_heave(state):
+    pitch = state[::8, 4, :].reshape(-1)
+    heave = state[::8, 2, :].reshape(-1)
     
-    pitch = state[::3, 4, :]
-    heave = state[::3, 2, :]
-    
-    all_pitch = pitch.reshape(-1)
-    all_heave = heave.reshape(-1)
-    
-    data = pd.DataFrame({'Heave (m)': all_heave, 'Pitch Angle (deg)': all_pitch})
-    
-    est = binsreg.binsreg(all_heave, all_pitch, data=data, nbins=500, polyreg=0)
-    est.bins_plot
+    nbins = 100
 
-    
-    pitch_87_5 = np.percentile(all_pitch, 87.5)
-    pitch_12_5 = np.percentile(all_pitch, 12.5)
-    
-    heave_87_5 = np.percentile(all_heave, 87.5)
-    heave_12_5 = np.percentile(all_heave, 12.5)
-    
-    pitch_62_5 = np.percentile(all_pitch, 62.5)
-    pitch_37_5 = np.percentile(all_pitch, 37.5)
-    
-    heave_62_5 = np.percentile(all_heave, 62.5)
-    heave_37_5 = np.percentile(all_heave, 37.5)
-    
-    pitch_50 = np.percentile(all_pitch, 50)
-    
-    heave_50 = np.percentile(all_heave, 50)
-    
-    # Filling regions
-    # Fill for central 75% of data in pitch (vertical axis)
+    # Bin edges
+    bin_edges = np.linspace(min(heave), max(heave), nbins + 1)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+    # Average values within each bin
+    avg_pitch = []
+    for i in range(nbins):
+        indices = (heave >= bin_edges[i]) & (heave < bin_edges[i + 1])
+        avg_pitch.append(np.mean(pitch[indices]))
+
+    # Scatter plot of averages
+    plt.scatter(bin_centers, avg_pitch)
+
+    # Calculating and marking percentile regions
+    pitch_87_5 = np.percentile(pitch, 87.5)
+    pitch_12_5 = np.percentile(pitch, 12.5)
+    heave_87_5 = np.percentile(heave, 87.5)
+    heave_12_5 = np.percentile(heave, 12.5)
+    pitch_62_5 = np.percentile(pitch, 62.5)
+    pitch_37_5 = np.percentile(pitch, 37.5)
+    heave_62_5 = np.percentile(heave, 62.5)
+    heave_37_5 = np.percentile(heave, 37.5)
+    pitch_50 = np.percentile(pitch, 50)
+    heave_50 = np.percentile(heave, 50)
+
+    # Filling regions for pitch and heave percentiles
     plt.axhspan(pitch_12_5, pitch_87_5, color='gray', alpha=0.2)
-
-    # Fill for central 75% of data in heave (horizontal axis)
     plt.axvspan(heave_12_5, heave_87_5, color='gray', alpha=0.2, label='Central 75%')
-
-    # Fill for central 25% of data in pitch (vertical axis)
     plt.axhspan(pitch_37_5, pitch_62_5, color='gray', alpha=0.4)
-
-    # Fill for central 25% of data in heave (horizontal axis)
     plt.axvspan(heave_37_5, heave_62_5, color='gray', alpha=0.4, label='Central 25%')
-
-    # Fill for median
     plt.axhline(pitch_50, color='gray', alpha=0.6, linestyle='--')
-    plt.axvline(heave_50, color='gray', alpha=0.6, label='Median', linestyle='--')
+    plt.axvline(heave_50, color='gray', alpha=0.6, label='Median')
 
+    # Setting labels and title
     plt.ylabel('Average Pitch (deg)')
     plt.xlabel('Heave (m)')
     plt.title('Binned Scatter Plot of Heave vs. Pitch')
     plt.legend()
     plt.grid(True)
+    plt.colorbar(label='Counts in bin')
     plt.tight_layout()
     plt.savefig('./results_figure/corr_pitch_heave.png')
     plt.close()
