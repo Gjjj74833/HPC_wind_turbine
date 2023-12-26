@@ -520,7 +520,70 @@ def extremeValueDen_distribution(state):
         
     
     
-def correl_pitch_heave(state):
+def correl_wave_state(states, wave_eta):
+    
+    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Pitch Acceleration (deg/s^2)']
+    
+    data = np.load('percentile_data/percentile_extreme.npz')
+
+    percentile_87_5 = data['percentile_87_5']
+    percentile_12_5 = data['percentile_12_5']
+    percentile_62_5 = data['percentile_62_5']
+    percentile_37_5 = data['percentile_37_5']
+    percentile_50 = data['percentile_50']
+
+    
+    data.close()
+    
+    wave = wave_eta[::10, :].reshape(-1)
+    
+    fig, ax = plt.subplots(2, 4, figsize=(15, 5))
+    ax = ax.flatten()
+    fig.suptitle('Correlation Between Wave Elevation and Each State', fontsize=16, y=1)
+    
+    for i in range(7):
+        state = states[::10, i, :].reshape(-1)
+        
+        nbins = 100
+        
+        # Bin edges
+        bin_edges = np.linspace(min(wave), max(wave), nbins + 1)
+        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+        
+        # Average values within each bin
+        avg_state = []
+        for j in range(nbins):
+            indices = (wave >= bin_edges[i]) & (wave < bin_edges[i + 1])
+            avg_state.append(np.mean(state[indices]))
+            
+        # Scatter plot of averages
+        ax[i].scatter(bin_centers, avg_state)
+        
+        state_87_5 = percentile_87_5[:, i]
+        state_12_5 = percentile_12_5[:, i]
+        state_62_5 = percentile_62_5[:, i]
+        state_37_5 = percentile_37_5[:, i]
+        state_50 = percentile_50[:, i]
+        
+        # Filling regions for pitch and heave percentiles
+        ax[i].axhspan(state_12_5, state_87_5, color='gray', alpha=0.2)
+        ax[i].axhspan(state_37_5, state_62_5, color='gray', alpha=0.4)
+        ax[i].axhline(state_50, color='gray', alpha=0.6, linestyle='--')
+        
+        # Setting labels and title
+        ax[i].set_ylabel(f'Average {state_names}')
+        ax[i].set_xlabel('Wave Elevation (m)')
+        ax[i].legend()
+        ax[i].grid(True)
+        
+    ax[7].axis('off')
+    plt.tight_layout() 
+    plt.savefig('./results_figure/corr_wave.png', dpi=300)
+    plt.close()
+
+    
+def corr_pitch_heave(state):
     pitch = state[::8, 4, :].reshape(-1)
     heave = state[::8, 2, :].reshape(-1)
     
@@ -565,7 +628,6 @@ def correl_pitch_heave(state):
     plt.title('Binned Scatter Plot of Heave vs. Pitch')
     plt.legend()
     plt.grid(True)
-    plt.colorbar(label='Counts in bin')
     plt.tight_layout()
     plt.savefig('./results_figure/corr_pitch_heave.png')
     plt.close()
@@ -728,6 +790,13 @@ def fft_wave(wave_eta, t):
     plt.xlim(0.05, 0.25)
     plt.savefig('./results_figure/fft_wave.png', dpi=200)
     plt.close()
+    
+
+def extremeCorrAnaly(state_1, state_2):
+    
+    pass
+    
+    
     
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
