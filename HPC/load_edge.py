@@ -567,9 +567,9 @@ def correl_wave_state(states, wave_eta):
         state_50 = percentile_50[:, i]
         
         # Filling regions for pitch and heave percentiles
-        ax[i].axhspan(state_12_5, state_87_5, color='gray', alpha=0.2)
-        ax[i].axhspan(state_37_5, state_62_5, color='gray', alpha=0.4)
-        ax[i].axhline(state_50, color='gray', alpha=0.6, linestyle='--')
+        ax[i].axhspan(state_12_5[0], state_87_5[0], color='gray', alpha=0.2)
+        ax[i].axhspan(state_37_5[0], state_62_5[0], color='gray', alpha=0.4)
+        ax[i].axhline(state_50[0], color='gray', alpha=0.6, linestyle='--')
         
         # Setting labels and title
         ax[i].set_ylabel(f'Average {state_names}')
