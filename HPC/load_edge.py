@@ -880,9 +880,9 @@ def extremeCorrAnaly(state_1, state_2):
     
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
-state = merge_pitch_acc(temp_state)
-pitch_heave_extreme(state)
-correl_wave_state(state, wave_eta)
+#state = merge_pitch_acc(temp_state)
+pitch_heave_extreme(temp_state)
+#correl_wave_state(state, wave_eta)
 
 
 
