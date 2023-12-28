@@ -536,14 +536,14 @@ def correl_wave_state(states, wave_eta):
     
     data.close()
     
-    wave = wave_eta[::10, :].reshape(-1)
+    wave = wave_eta[::10].flatten('F') 
     
     fig, ax = plt.subplots(2, 4, figsize=(15, 5))
     ax = ax.flatten()
     fig.suptitle('Correlation Between Wave Elevation and Each State', fontsize=16, y=1)
     
     for i in range(7):
-        state = states[::10, i, :].reshape(-1)
+        state = states[::10, i, :].flatten('F') 
         
         nbins = 100
         
@@ -567,12 +567,12 @@ def correl_wave_state(states, wave_eta):
         state_50 = percentile_50[:, i]
         
         # Filling regions for pitch and heave percentiles
-        ax[i].axhspan(state_12_5[0], state_87_5[0], color='gray', alpha=0.2)
-        ax[i].axhspan(state_37_5[0], state_62_5[0], color='gray', alpha=0.4)
-        ax[i].axhline(state_50[0], color='gray', alpha=0.6, linestyle='--')
+        ax[i].axhspan(state_12_5[0], state_87_5[0], color='gray', alpha=0.2, label='Central 75%')
+        ax[i].axhspan(state_37_5[0], state_62_5[0], color='gray', alpha=0.4, label='Central 25%')
+        ax[i].axhline(state_50[0], color='gray', alpha=0.6, linestyle='--', label='Median')
         
         # Setting labels and title
-        ax[i].set_ylabel(f'Average {state_names}')
+        ax[i].set_ylabel(f'Average {state_names[i]}')
         ax[i].set_xlabel('Wave Elevation (m)')
         ax[i].legend()
         ax[i].grid(True)
