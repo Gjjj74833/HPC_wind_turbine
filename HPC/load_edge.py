@@ -366,6 +366,50 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plt.savefig(f'./{figure_directory}/min_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_value) 
     
+def pitch_heave_extreme(state):
+      
+    
+    max_state_indices = np.argmax(state, axis=2)
+    min_state_indices = np.argmin(state, axis=2)
+    
+    max_heave_index = max_state_indices[:, 2]
+    min_heave_index = min_state_indices[:, 2]
+    
+    max_pitch_index = max_state_indices[:, 4]
+    min_pitch_index = min_state_indices[:, 4]
+    
+    heave_value = state[:,2,:]
+    pitch_value = state[:,4,:]
+    
+    # Finding corresponding max and min values for heave and pitch using the previously found indices
+    max_heave_value = heave_value[np.arange(heave_value.shape[0]), max_pitch_index]
+    min_heave_value = heave_value[np.arange(heave_value.shape[0]), min_pitch_index]
+    max_pitch_value = pitch_value[np.arange(pitch_value.shape[0]), max_heave_index]
+    min_pitch_value = pitch_value[np.arange(pitch_value.shape[0]), min_heave_index]
+    
+    
+    
+    fig, ax = plt.subplots(1, 2, figsize=(15, 6))
+    ax = ax.flatten()
+
+    ax[0].hist(max_pitch_value, bins=100, density=True, alpha=0.5, color='r', label='For Max Heave')
+    ax[0].hist(min_pitch_value, bins=100, density=True, alpha=0.5, color='b', label='For Min Heave')
+    ax[0].set_xlabel('Pitch (deg)')
+    ax[0].set_title('Pitch Distribution When Extreme Heave occur')
+    ax[0].grid(True, linestyle='--', alpha=0.7)
+    ax[0].legend()
+    
+    ax[1].hist(max_heave_value, bins=100, density=True, alpha=0.5, color='r', label='For Max Pitch')
+    ax[1].hist(min_heave_value, bins=100, density=True, alpha=0.5, color='b', label='For Min Pitch')
+    ax[1].set_xlabel('Heave (m)')
+    ax[1].set_title('Heave Distribution When Extreme Pitch occur')
+    ax[1].grid(True, linestyle='--', alpha=0.7)
+    ax[1].legend()
+    
+    plt.tight_layout() 
+    plt.savefig('./results_figure/heave_pitch_extreme_distr.png', dpi=300)
+    plt.close()
+    
     
 def pitchAnaly(state):
     pitch = state[:, 4, :]
@@ -518,7 +562,8 @@ def extremeValueDen_distribution(state):
     plt.savefig('./results_figure/density_value.png', dpi=300)
     plt.close()
         
-    
+
+
     
 def correl_wave_state(states, wave_eta):
     
@@ -538,19 +583,19 @@ def correl_wave_state(states, wave_eta):
     
     wave = wave_eta[::10].flatten('F') 
     
+    nbins = 100
+    
+    # Bin edges
+    bin_edges = np.linspace(min(wave), max(wave), nbins + 1)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+    
     fig, ax = plt.subplots(2, 4, figsize=(15, 5))
     ax = ax.flatten()
     fig.suptitle('Correlation Between Wave Elevation and Each State', fontsize=16, y=1)
     
     for i in range(7):
         state = states[::10, i, :].flatten('F') 
-        
-        nbins = 100
-        
-        # Bin edges
-        bin_edges = np.linspace(min(wave), max(wave), nbins + 1)
-        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-        
+
         # Average values within each bin
         avg_state = []
         for j in range(nbins):
@@ -707,8 +752,9 @@ def save_percentile_extreme(t, state, wind_speed, wave_eta):
                  max_state = max_state,
                  min_state = min_state)
                  
-                 
-                 
+    
+
+    
 def pitch_acceleration(state, seeds):
     '''
     this function find the extreme pitch accelaration, output the seeds
@@ -801,7 +847,7 @@ def extremeCorrAnaly(state_1, state_2):
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
 state = merge_pitch_acc(temp_state)
-
+pitch_heave_extreme(state)
 correl_wave_state(state, wave_eta)
 
 
