@@ -368,6 +368,30 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
     
 def pitch_heave_extreme(state):
       
+    data = np.load('percentile_data/percentile_extreme.npz')
+
+    percentile_87_5 = data['percentile_87_5'][0]
+    percentile_12_5 = data['percentile_12_5'][0]
+    percentile_62_5 = data['percentile_62_5'][0]
+    percentile_37_5 = data['percentile_37_5'][0]
+    percentile_50 = data['percentile_50'][0]
+
+    
+    data.close()
+    
+    heave_percentile_87_5 = percentile_87_5[2]
+    heave_percentile_12_5 = percentile_12_5[2]
+    heave_percentile_62_5 = percentile_62_5[2]
+    heave_percentile_37_5 = percentile_37_5[2]
+    heave_percentile_50 = percentile_50 [2]
+    
+    pitch_percentile_87_5 = percentile_87_5[4]
+    pitch_percentile_12_5 = percentile_12_5[4]
+    pitch_percentile_62_5 = percentile_62_5[4]
+    pitch_percentile_37_5 = percentile_37_5[4]
+    pitch_percentile_50 = percentile_50 [4]
+    
+    
     
     max_state_indices = np.argmax(state, axis=2)
     min_state_indices = np.argmin(state, axis=2)
@@ -389,20 +413,30 @@ def pitch_heave_extreme(state):
     
     
     
-    fig, ax = plt.subplots(1, 2, figsize=(15, 6))
+    fig, ax = plt.subplots(1, 2, figsize=(8, 3))
     ax = ax.flatten()
 
     ax[0].hist(max_pitch_value, bins=100, density=True, alpha=0.5, color='r', label='For Max Heave')
     ax[0].hist(min_pitch_value, bins=100, density=True, alpha=0.5, color='b', label='For Min Heave')
+    
+    ax[0].axvspan(pitch_percentile_12_5, pitch_percentile_87_5, color='gray', alpha=0.2, label='Central 75%')
+    ax[0].axvspan(pitch_percentile_37_5, pitch_percentile_62_5, color='gray', alpha=0.4, label='Central 25%')
+    ax[0].axvline(pitch_percentile_50, color='gray', alpha=0.6, linestyle='--', label='Median')
+    
     ax[0].set_xlabel('Pitch (deg)')
-    ax[0].set_title('Pitch Distribution When Extreme Heave occur')
+    ax[0].set_title('Pitch Distribution at Extreme Heave')
     ax[0].grid(True, linestyle='--', alpha=0.7)
     ax[0].legend()
     
     ax[1].hist(max_heave_value, bins=100, density=True, alpha=0.5, color='r', label='For Max Pitch')
     ax[1].hist(min_heave_value, bins=100, density=True, alpha=0.5, color='b', label='For Min Pitch')
+    
+    ax[1].axvspan(heave_percentile_12_5, heave_percentile_87_5, color='gray', alpha=0.2, label='Central 75%')
+    ax[1].axvspan(heave_percentile_37_5, heave_percentile_62_5, color='gray', alpha=0.4, label='Central 25%')
+    ax[1].axvline(heave_percentile_50, color='gray', alpha=0.6, linestyle='--', label='Median')
+    
     ax[1].set_xlabel('Heave (m)')
-    ax[1].set_title('Heave Distribution When Extreme Pitch occur')
+    ax[1].set_title('Heave Distribution at Extreme Pitch')
     ax[1].grid(True, linestyle='--', alpha=0.7)
     ax[1].legend()
     
