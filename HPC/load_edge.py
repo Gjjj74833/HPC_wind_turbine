@@ -872,19 +872,40 @@ def fft_wave(wave_eta, t):
     plt.close()
     
 
-def extremeCorrAnaly(state_1, state_2):
+def largest_std(one_state, seeds):
+    """
+    calculate standard deviation
     
-    pass
+    param
+    -------
+    one state to calculate
+    -------
+
+    Returns 
+    -------
+    the seeds with the largest standard deviation
+
+    """
+    flattened_data = one_state.flatten()
+
+    # Calculate the overall standard deviation
+    overall_std = np.std(flattened_data)
     
+    print(f"Overall standard deviation across all simulations: {overall_std}")
+    
+    std_devs = np.std(one_state, axis=0)
+    indices_of_largest_stds = np.argsort(std_devs)[-10:]
+    
+    for i in indices_of_largest_stds:
+        print(seeds[:, i], "std: ", std_devs[i])
     
     
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
 #state = merge_pitch_acc(temp_state)
-pitch_heave_extreme(temp_state)
-#correl_wave_state(state, wave_eta)
 
 
+largest_std(temp_state[:, 4, :], seeds)
 
 
 
