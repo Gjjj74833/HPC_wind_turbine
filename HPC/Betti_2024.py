@@ -101,89 +101,64 @@ def CpCtCq(TSR, beta, performance):
     return C_p[TSR_index][pitch_index], C_t[TSR_index][pitch_index]
 
 
-def genWind(v_w, end_time, time_step, file_index, seed):
+def gen_turbulence(v_bar, L, k_sigma_v, T_s, N_t, white_noise, 
+                   delta_omega = 0.002, M = 5000, N = 100):
     """
-    Use Turbsim to generate a wind with turbulence.
+    Generate turbulencec component for wind speed
 
     Parameters
     ----------
-    v_w : float
-        the average wind speed
-    end_time : float
-        the time to analysis. Should be consistent with the model driver
-    time_step : float
-        the time step to analysis. Should be consistent with the model driver
+    v_bar : int
+        Average wind speed
+    L : int
+        Turbulence length
+    k_sigma_v : float
+        Slope parameter
+    T_s : int
+        Time step
+    N_t : int
+        Number of step
+    white_noise : np.array
+        the white noise with mean = 0 and std = 1, has length 
 
     Returns
     -------
-    horSpd : list
-        A list of horizontal wind speed computed at each time step
+    Array of wind speed with turbulence
 
     """
-    end_time += 1
-        
     
-    path_inp = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.inp'
+    # Step 1: Update the current values of the parameters in 
+    # the turbulence component model
+    T_F = L / v_bar
+    sigma_v = k_sigma_v * v_bar
+    K_F = np.sqrt((2 * np.pi * T_F)/(4.20654 * T_s))
     
+    # Step 2: Calculate the discrete impulse response of the filter
+    delta_omega = 0.002 # Frequency step size
+    M = 5000 # Number of frequency points
+    N = 100 # Numerical parameters for convolution integration, divide 
+            # finite integral from 0 to t to N regions
     
-    # Open the inp file and overwrite with given parameters
-    with open(path_inp, 'r') as file:
-        lines = file.readlines()
-        
-    # Overwrite with new seeds
-    line = lines[4].split()
-    line[0] = str(seed[0])
-    lines[4] = ' '.join(line) + '\n'
-
-    line = lines[5].split()
-    line[0] = str(seed[1])
-    lines[5] = ' '.join(line) + '\n'
+    # Discrete frequency domain P(omega)
+    P = np.zeros(M + 1)
+    for r in range(M + 1):
+        P[r] = np.real(K_F / (1 + 1j * r * delta_omega * T_F)**(5/6))
     
-    # Overwrite "AnalysisTime" and "UsableTime"
-    line = lines[21].split()
-    line[0] = str(end_time)
-    lines[21] = ' '.join(line) + '\n'
+    # Discrete impulse response h(k) === h(T_s*k), k range from 0 to N
+    h = np.zeros(N + 1)
+    for k in range(N + 1):
+        h[k] = T_s * delta_omega * (2/np.pi) * np.sum(P * np.cos(k * np.arange(M + 1) * T_s * delta_omega))
     
-    # Overwrite the "TimeStep "
-    line = lines[20].split()
-    line[0] = str(time_step)
-    lines[20] = ' '.join(line) + '\n'
+    # Step 3: Generate the turbulence component in the interval using convolution
+    v_t = np.zeros(N_t + 1)
     
-    # Overwrite the average reference wind velocity
-    line = lines[39].split()
-    line[0] = str(v_w)
-    lines[39] = ' '.join(line) + '\n'
+    # Zero-pad the white noise 
+    white_noise_padded = np.pad(white_noise, (0, N), 'constant')
     
-    # Update the input file
-    with open(path_inp, 'w') as file:
-        file.writelines(lines)
+    for m in range(N_t + 1):
+        v_t[m] = T_s * np.sum(h * white_noise_padded[m : m + N + 1])
     
-    # Run the Turbsim to generate wind
-    command = ["turbsim", path_inp]
-    subprocess.run(command)
-    
-    # Read the output file
-    path_hh = f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}.hh'
-    
-    with open(path_hh, 'r') as file:
-        lines = file.readlines()
-    
-    # Skip the header
-    data = lines[8:]
-    
-    horSpd = []
-
-    for line in data:
-        columns = line.split()
-        horSpd.append(float(columns[1]))  
- 
-    v_wind = np.array(horSpd)
-    np.save(f"./turbsim_output/{seed[0]}_{seed[1]}.npy", v_wind)
-    
-    command = ['rm', f'./turbsim/TurbSim_{sys.argv[1]}/TurbSim_{file_index}*']
-    subprocess.run(command)
-    
-    return v_wind
+    return v_bar + sigma_v * v_t
 
 
 def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
@@ -790,14 +765,20 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, Cp_type = 0):
     
     # modify this to change initial condition
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
-    wind_seeds = seeds[:2]
-    wave_seed = seeds[2]
+
     
-    v_wind = genWind(v_w, end_time, time_step, file_index, wind_seeds)
+    # generate a random seed
+    state_before = np.random.get_state()
+    np.random.seed(seeds[0])
+    white_noise = np.random.randn(end_time + 1)
+    np.random.set_state(state_before)
+    
+    v_wind = np.repeat(gen_turbulence(v_w, 180, 0.13, 1, end_time, white_noise), int(1/time_step))
+    
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind, wave_seed)
+    t, x, v_wind, wave_eta, betas, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind, seeds[1])
     # return the output to be ploted
     return t, x, v_wind, wave_eta, betas, seeds, Q_t
     
@@ -810,6 +791,7 @@ def run_simulations_parallel(n_simulations, params):
     
     state = np.array([-2.61426271, 
                  -0.00299848190, 
+         
                  37.5499264, 
                  -0.0558194064,
                  0.00147344971, 
