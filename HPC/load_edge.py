@@ -366,6 +366,84 @@ def plot_trajectories(t, state, wind_speed, wave_eta, seeds):
         plt.savefig(f'./{figure_directory}/min_value_{safe_state_names[i]}.png', dpi=300)
         plt.close(fig_min_value) 
     
+def pitch_heave_extreme(state):
+      
+    data = np.load('percentile_data/percentile_extreme.npz')
+
+    percentile_87_5 = data['percentile_87_5'][0]
+    percentile_12_5 = data['percentile_12_5'][0]
+    percentile_62_5 = data['percentile_62_5'][0]
+    percentile_37_5 = data['percentile_37_5'][0]
+    percentile_50 = data['percentile_50'][0]
+
+    
+    data.close()
+    
+    heave_percentile_87_5 = percentile_87_5[2]
+    heave_percentile_12_5 = percentile_12_5[2]
+    heave_percentile_62_5 = percentile_62_5[2]
+    heave_percentile_37_5 = percentile_37_5[2]
+    heave_percentile_50 = percentile_50 [2]
+    
+    pitch_percentile_87_5 = percentile_87_5[4]
+    pitch_percentile_12_5 = percentile_12_5[4]
+    pitch_percentile_62_5 = percentile_62_5[4]
+    pitch_percentile_37_5 = percentile_37_5[4]
+    pitch_percentile_50 = percentile_50 [4]
+    
+    
+    
+    max_state_indices = np.argmax(state, axis=2)
+    min_state_indices = np.argmin(state, axis=2)
+    
+    max_heave_index = max_state_indices[:, 2]
+    min_heave_index = min_state_indices[:, 2]
+    
+    max_pitch_index = max_state_indices[:, 4]
+    min_pitch_index = min_state_indices[:, 4]
+    
+    heave_value = state[:,2,:]
+    pitch_value = state[:,4,:]
+    
+    # Finding corresponding max and min values for heave and pitch using the previously found indices
+    max_heave_value = heave_value[np.arange(heave_value.shape[0]), max_pitch_index]
+    min_heave_value = heave_value[np.arange(heave_value.shape[0]), min_pitch_index]
+    max_pitch_value = pitch_value[np.arange(pitch_value.shape[0]), max_heave_index]
+    min_pitch_value = pitch_value[np.arange(pitch_value.shape[0]), min_heave_index]
+    
+    
+    
+    fig, ax = plt.subplots(1, 2, figsize=(8, 3))
+    ax = ax.flatten()
+
+    ax[0].hist(max_pitch_value, bins=100, density=True, alpha=0.5, color='r', label='For Max Heave')
+    ax[0].hist(min_pitch_value, bins=100, density=True, alpha=0.5, color='b', label='For Min Heave')
+    
+    ax[0].axvspan(pitch_percentile_12_5, pitch_percentile_87_5, color='gray', alpha=0.2, label='Central 75%')
+    ax[0].axvspan(pitch_percentile_37_5, pitch_percentile_62_5, color='gray', alpha=0.4, label='Central 25%')
+    ax[0].axvline(pitch_percentile_50, color='gray', alpha=0.6, linestyle='--', label='Median')
+    
+    ax[0].set_xlabel('Pitch (deg)')
+    ax[0].set_title('Pitch Distribution at Extreme Heave')
+    ax[0].grid(True, linestyle='--', alpha=0.7)
+    ax[0].legend()
+    
+    ax[1].hist(max_heave_value, bins=100, density=True, alpha=0.5, color='r', label='For Max Pitch')
+    ax[1].hist(min_heave_value, bins=100, density=True, alpha=0.5, color='b', label='For Min Pitch')
+    
+    ax[1].axvspan(heave_percentile_12_5, heave_percentile_87_5, color='gray', alpha=0.2, label='Central 75%')
+    ax[1].axvspan(heave_percentile_37_5, heave_percentile_62_5, color='gray', alpha=0.4, label='Central 25%')
+    ax[1].axvline(heave_percentile_50, color='gray', alpha=0.6, linestyle='--', label='Median')
+    
+    ax[1].set_xlabel('Heave (m)')
+    ax[1].set_title('Heave Distribution at Extreme Pitch')
+    ax[1].grid(True, linestyle='--', alpha=0.7)
+    ax[1].legend()
+    
+    plt.tight_layout() 
+    plt.savefig('./results_figure/heave_pitch_extreme_distr.png', dpi=300)
+    plt.close()
+    
     
 def pitchAnaly(state):
     pitch = state[:, 4, :]
@@ -518,9 +596,73 @@ def extremeValueDen_distribution(state):
     plt.savefig('./results_figure/density_value.png', dpi=300)
     plt.close()
         
+
+
     
+def correl_wave_state(states, wave_eta):
     
-def correl_pitch_heave(state):
+    state_names = ['Surge (m)', 'Surge Velocity (m/s)', 'Heave (m)', 'Heave Velocity (m/s)', 
+                   'Pitch Angle (deg)', 'Pitch Rate (deg/s)', 'Pitch Acceleration (deg/s^2)']
+    
+    data = np.load('percentile_data/percentile_extreme.npz')
+
+    percentile_87_5 = data['percentile_87_5']
+    percentile_12_5 = data['percentile_12_5']
+    percentile_62_5 = data['percentile_62_5']
+    percentile_37_5 = data['percentile_37_5']
+    percentile_50 = data['percentile_50']
+
+    
+    data.close()
+    
+    wave = wave_eta[::10].flatten('F') 
+    
+    nbins = 100
+    
+    # Bin edges
+    bin_edges = np.linspace(min(wave), max(wave), nbins + 1)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+    
+    fig, ax = plt.subplots(2, 4, figsize=(15, 5))
+    ax = ax.flatten()
+    fig.suptitle('Correlation Between Wave Elevation and Each State', fontsize=16, y=1)
+    
+    for i in range(7):
+        state = states[::10, i, :].flatten('F') 
+
+        # Average values within each bin
+        avg_state = []
+        for j in range(nbins):
+            indices = (wave >= bin_edges[i]) & (wave < bin_edges[i + 1])
+            avg_state.append(np.mean(state[indices]))
+            
+        # Scatter plot of averages
+        ax[i].scatter(bin_centers, avg_state)
+        
+        state_87_5 = percentile_87_5[:, i]
+        state_12_5 = percentile_12_5[:, i]
+        state_62_5 = percentile_62_5[:, i]
+        state_37_5 = percentile_37_5[:, i]
+        state_50 = percentile_50[:, i]
+        
+        # Filling regions for pitch and heave percentiles
+        ax[i].axhspan(state_12_5[0], state_87_5[0], color='gray', alpha=0.2, label='Central 75%')
+        ax[i].axhspan(state_37_5[0], state_62_5[0], color='gray', alpha=0.4, label='Central 25%')
+        ax[i].axhline(state_50[0], color='gray', alpha=0.6, linestyle='--', label='Median')
+        
+        # Setting labels and title
+        ax[i].set_ylabel(f'Average {state_names[i]}')
+        ax[i].set_xlabel('Wave Elevation (m)')
+        ax[i].legend()
+        ax[i].grid(True)
+        
+    ax[7].axis('off')
+    plt.tight_layout() 
+    plt.savefig('./results_figure/corr_wave.png', dpi=300)
+    plt.close()
+
+    
+def corr_pitch_heave(state):
     pitch = state[::8, 4, :].reshape(-1)
     heave = state[::8, 2, :].reshape(-1)
     
@@ -565,7 +707,6 @@ def correl_pitch_heave(state):
     plt.title('Binned Scatter Plot of Heave vs. Pitch')
     plt.legend()
     plt.grid(True)
-    plt.colorbar(label='Counts in bin')
     plt.tight_layout()
     plt.savefig('./results_figure/corr_pitch_heave.png')
     plt.close()
@@ -645,8 +786,9 @@ def save_percentile_extreme(t, state, wind_speed, wave_eta):
                  max_state = max_state,
                  min_state = min_state)
                  
-                 
-                 
+    
+
+    
 def pitch_acceleration(state, seeds):
     '''
     this function find the extreme pitch accelaration, output the seeds
@@ -730,13 +872,40 @@ def fft_wave(wave_eta, t):
     plt.close()
     
 
+def largest_std(one_state, seeds):
+    """
+    calculate standard deviation
+    
+    param
+    -------
+    one state to calculate
+    -------
+
+    Returns 
+    -------
+    the seeds with the largest standard deviation
+
+    """
+    flattened_data = one_state.flatten()
+
+    # Calculate the overall standard deviation
+    overall_std = np.std(flattened_data)
+    
+    print(f"Overall standard deviation across all simulations: {overall_std}")
+    
+    std_devs = np.std(one_state, axis=0)
+    indices_of_largest_stds = np.argsort(std_devs)[-10:]
+    
+    for i in indices_of_largest_stds:
+        print(seeds[:, i], "std: ", std_devs[i])
+    
+    
+
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
 #state = merge_pitch_acc(temp_state)
 
 
-correl_pitch_heave(temp_state)
-
-
+largest_std(temp_state[:, 4, :], seeds)
 
 
 
