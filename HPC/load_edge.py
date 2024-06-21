@@ -902,10 +902,9 @@ def largest_std(one_state, seeds):
     
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
-#state = merge_pitch_acc(temp_state)
-
-
-largest_std(temp_state[:, 4, :], seeds)
+state = merge_pitch_acc(temp_state)
+save_percentile_extreme(t, state, wind_speed, wave_eta)
+largest_std(state[:, 4], seeds)
 
 
 

@@ -583,6 +583,10 @@ def Betti(x, t, beta, T_E, Cp_type, performance, v_w, v_aveg, random_phases):
     
     return dxdt, Q_t
 
+def optimize_T_E():
+    
+    
+    return T_E
 
 def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, wave_seed):
     """
@@ -736,6 +740,8 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
     return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, Qt_list_sub
 
 
+
+
 def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, Cp_type = 0):
     """
     Cp computation method
@@ -773,7 +779,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, Cp_type = 0):
     white_noise = np.random.randn(end_time + 1)
     np.random.set_state(state_before)
     
-    v_wind = np.repeat(gen_turbulence(v_w, 180, 0.13, 1, end_time, white_noise), int(1/time_step))
+    v_wind = np.repeat(gen_turbulence(v_w, 180, 0.135, 1, end_time, white_noise), int(1/time_step))
     
 
     # modify this to change run time and step size
