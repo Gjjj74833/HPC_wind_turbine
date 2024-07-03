@@ -7,35 +7,21 @@ generating seeds
 """
 
 import numpy as np
-
+    
+    
 def generate_and_save_unique_arrays(n, n_array, seed=None):
-    if n % n_array != 0:
-        raise ValueError("Invalid input: n is not divisible by n_array.")
+    # Generate unique values for the entire range
+    unique_values = np.random.choice(np.arange(0, 9600000), 
+                                     size=n*3, replace=False)
 
-    np.random.seed(seed)
-    
-    # Generate the first column with the full range
-    first_column = np.random.choice(np.arange(0, 9600000), 
-                                    size=n, replace=False)
-
-    # Generate the second column with only non-negative values
-    second_column = np.random.choice(np.arange(0, 9600000), 
-                                     size=n, replace=False)
-    
     rows_per_array = n // n_array
-    
+
     for i in range(n_array):
-        start_idx_1col = i * rows_per_array
-        end_idx_1col = start_idx_1col + rows_per_array
+        start_idx = i * rows_per_array * 3
+        end_idx = start_idx + rows_per_array * 3
         
-        # Get the sub-array for the first column
-        sub_array_1col = first_column[start_idx_1col:end_idx_1col].reshape((rows_per_array, 1))
-        
-        # Get the sub-array for the second column
-        sub_array_2col = second_column[start_idx_1col:end_idx_1col].reshape((rows_per_array, 1))
-        
-        # Combine them to form a sub-array with two unique elements per row
-        sub_array = np.hstack((sub_array_1col, sub_array_2col))
+        # Get the sub-array for the current set
+        sub_array = unique_values[start_idx:end_idx].reshape((rows_per_array, 3))
         
         filename = f'./seeds/seeds_{i+1}.npy'
         np.save(filename, sub_array)

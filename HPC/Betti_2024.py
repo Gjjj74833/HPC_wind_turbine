@@ -11,7 +11,7 @@ import subprocess
 import bisect
 from multiprocessing import Pool
 from datetime import datetime
-
+from gen_wind_Van_Der_Hoven import generate_wind
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):
     """
@@ -224,7 +224,7 @@ def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
     return wave_eta, [v_x, v_y, a_x, a_y]
 
 
-def structure(x_1, beta, omega_R, t, Cp_type, performance, v_w, v_aveg, random_phases):
+def structure(x_1, beta, omega_R, t, performance, v_w, v_aveg, random_phases):
     """
     The structure of the Betti model
 
@@ -238,11 +238,8 @@ def structure(x_1, beta, omega_R, t, Cp_type, performance, v_w, v_aveg, random_p
         Rotor speed
     t : float
         Time
-    Cp_type : int
-        The mode to compute the power and thrust coefficient. 
-        (0: read file; 1: use AeroDyn v15)
     performance: list
-        Used when Cp_type = 0. The rotor performance parameter pass to CpCtCq(TSR, beta, performance)
+        The rotor performance parameter pass to CpCtCq(TSR, beta, performance)
     v_w: float
         The wind speed with turbulent
     v_aveg: float
@@ -542,7 +539,7 @@ def WindTurbine(omega_R, v_in, beta, T_E, t, Cp):
     return domega_R
     
 
-def Betti(x, t, beta, T_E, Cp_type, performance, v_w, v_aveg, random_phases):
+def Betti(x, t, beta, T_E, performance, v_w, v_aveg, random_phases):
     """
     Combine the WindTurbine model and structure model
     
@@ -556,11 +553,8 @@ def Betti(x, t, beta, T_E, Cp_type, performance, v_w, v_aveg, random_phases):
         blade pitch angle
     T_E : float
         generator torque
-    Cp_type : int
-        The mode to compute the power and thrust coefficient. 
-        (0: read file; 1: use AeroDyn v15)
     performance: list
-        Used when Cp_type = 0. The rotor performance parameter pass to CpCtCq(TSR, beta, performance)
+        The rotor performance parameter pass to CpCtCq(TSR, beta, performance)
     v_w: float
         The wind speed with turbulent
     v_aveg: float
@@ -577,18 +571,16 @@ def Betti(x, t, beta, T_E, Cp_type, performance, v_w, v_aveg, random_phases):
     x1 = x[:6]
     omega_R = x[6]
     
-    dx1dt, v_in, Cp, Q_t = structure(x1, beta, omega_R, t, Cp_type, performance, v_w, v_aveg, random_phases)
+    dx1dt, v_in, Cp, Q_t = structure(x1, beta, omega_R, t, performance, v_w, v_aveg, random_phases)
     dx2dt = WindTurbine(omega_R, v_in, beta, T_E, t, Cp)
     dxdt = np.append(dx1dt, dx2dt)
     
     return dxdt, Q_t
 
-def optimize_T_E():
-    
-    
-    return T_E
 
-def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, wave_seed):
+
+
+def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave, v_ml, T_s1):
     """
     Solve the system of ODEs dx/dt = Betti(x, t) using the fourth-order Runge-Kutta method.
 
@@ -631,19 +623,21 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
     t = np.linspace(t0, tf, n)
     x = np.empty((n, len(x0)))
     x[0] = x0
-    Qt_list = []
+
     
     # generate a random seed
     state_before = np.random.get_state()
-    np.random.seed(wave_seed)
+    #wave_seed = np.random.randint(0, high=10**7)
+    np.random.seed(seed_wave)
     random_phases = 2*np.pi*np.random.rand(400)
     np.random.set_state(state_before)
     ###########################################################################
-    # PID controller
+    # PI controller
     integral = 0
     beta = beta_0
     
-    def PI_blade_pitch_controller(omega_R, dt, beta, integral, error, i):
+    
+    def PI_blade_pitch_controller(omega_R, dt, beta, integral, error, i, current_region):
 
         
         eta_G = 97 # (-) Speed ratio between high and low speed shafts
@@ -652,6 +646,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
         tildeJ_R = eta_G**2*J_G + J_R
     
         rated_omega_R = 1.26711 # The rated rotor speed is 12.1 rpm
+        #rated_omega_R = 1.571
         zeta_phi = 0.7
         omega_phin = 0.6
         beta_k = 0.1099965
@@ -662,7 +657,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
         K_p = 0.0765*(2*tildeJ_R*rated_omega_R*zeta_phi*omega_phin*GK)/(eta_G*(-dpdbeta_0))
         K_i = 0.013*(tildeJ_R*rated_omega_R*omega_phin**2*GK)/(eta_G*(-dpdbeta_0))
         K_d = 0.187437
-        
+   
         error_omega_R = omega_R - rated_omega_R
         error[i] = error_omega_R
 
@@ -685,32 +680,119 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
             beta = 0
         elif beta >= np.pi/4:
             beta = np.pi/4
+            
+        # find proper T_E based on rotor speed
+        generator_speed = omega_R * 97 * 9.549297
         
-        return beta, integral, error
+        if current_region == 1:
+            new_T_E = 0
+            beta = 0
+            integral = 0
+        elif current_region == 1.5:
+            new_T_E = 96.53386 * generator_speed - 64677.68667
+            beta = 0
+            integral = 0
+        elif current_region == 2:
+            new_T_E = 0.0255764 * generator_speed**2
+            beta = 0
+            integral = 0
+        elif current_region == 2.5:
+            new_T_E = 729.4343 * generator_speed - 813043.45
+            beta = 0
+            integral = 0
+        else:
+            new_T_E = 43093.55
+        
+        if new_T_E < 0:
+            new_T_E = 0
+        
+        max_TE_change_rate = 15000 / dt
+        delta_T_E = new_T_E - T_E
+
+        if delta_T_E > max_TE_change_rate:
+            new_T_E = T_E + max_TE_change_rate
+        elif delta_T_E < -max_TE_change_rate:
+            new_T_E = T_E - max_TE_change_rate
+        
+        return beta, integral, error, new_T_E
+    
+    def find_region(omega_R, beta, current_region):
+      
+        generator_speed = omega_R * 97 * 9.549297
+        # if in region 1
+        if current_region == 1:
+            # change to region 1.5 if the generator speed 
+            # is greater than 670 rpm
+            if generator_speed > 670:
+                return 1.5
+            # else stay in region 1
+            return 1
+        
+        # if in region 1.5
+        if current_region == 1.5:
+            # change to region 2 if the generator speed is greater than 871 rpm
+            if generator_speed > 871:
+                return 2
+            # change to region 1 if the generator speed is less than 670 rpm
+            if generator_speed < 670:
+                return 1
+            # else stay in region 1.5
+            return 1.5
+        
+        # if in region 2
+        if current_region == 2:
+            # change to region 2.5 if the generator speed is greater than 1161.963 rpm
+            if generator_speed > 1161.963:
+                return 2.5
+            # change to region 1.5 if the generator speed is less than 871 rpm
+            if generator_speed < 871:
+                return 1.5
+            return 2
+        
+        # if in region 2.5
+        if current_region == 2.5:
+            # change to region 3 if the generator speed is greater than 1173.7 rpm
+            if generator_speed > 1173.7:
+                return 3
+            # change to region 2 if the generator speed is less than 1161.963
+            if generator_speed < 1161.963:
+                return 2
+            return 2.5
+        
+        # if in region 3
+        if current_region == 3:
+            if beta == 0:
+                global integral
+                integral = 0
+                return 2.5
+            return 3
 
     ###########################################################################
-
     error = np.empty(n)
-    
+    current_region = 3
     betas = []
-
+    h_waves = []
+    T_E_list = []
+    P_A_list = []
     for i in range(n - 1):
         betas.append(beta)
-        k1, Q_t = Betti(x[i], t[i], beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)
-        k2 = Betti(x[i] + 0.5 * dt * k1, t[i] + 0.5 * dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
-        k3 = Betti(x[i] + 0.5 * dt * k2, t[i] + 0.5 * dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
-        k4 = Betti(x[i] + dt * k3, t[i] + dt, beta, T_E, Cp_type, performance, v_wind[i], v_w, random_phases)[0]
+        v_average_ml = v_ml[i // int((T_s1 / dt))]
+        k1, h_wave = Betti(x[i], t[i], beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)
+        k2 = Betti(x[i] + 0.5 * dt * k1, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)[0]
+        k3 = Betti(x[i] + 0.5 * dt * k2, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)[0]
+        k4 = Betti(x[i] + dt * k3, t[i] + dt, beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)[0]
         x[i + 1] = x[i] + dt * (k1 + 2*k2 + 2*k3 + k4) / 6
         
-        beta, integral, error = PI_blade_pitch_controller(x[i][6], dt, beta, integral, error, i)
+        current_region = find_region(x[i][6], beta, current_region)
+        beta, integral, error, T_E = PI_blade_pitch_controller(x[i][6], dt, beta, integral, error, i, current_region)
         
-        Qt_list.append(Q_t)
+        h_waves.append(h_wave)
+        T_E_list.append(T_E)
+        P_A_list.append(T_E*97*x[i][6])
         
-    last_Qt = Betti(x[-1], t[-1], beta, T_E, Cp_type, performance, v_wind[-1], v_w, random_phases)[1]
-    Qt_list.append(last_Qt)
+    T_E_list.append(T_E_list[-1])
+    P_A_list.append(P_A_list[-1])
     
-    Qt_list = np.array(Qt_list)
-    Qt_list =  -Qt_list
     
     x[:, 4] = -np.rad2deg(x[:, 4])
     x[:, 5] = -np.rad2deg(x[:, 5])
@@ -720,38 +802,29 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, Cp_type, performance, v_w, v_wind, w
     x[:, 2] += d_BS
 
 
-    # Output wave elevation at average surge position
-    wave_eta = []
-    for i in t:
-        wave_eta.append(pierson_moskowitz_spectrum(v_w, -2.61426271, 0, i, random_phases)[0])
-        
+   
     steps = int(0.5 / dt)
     # dicard data for first 500s
     discard_steps = int(500 / 0.5)
+     
+
+    t_sub = t[::steps][:-discard_steps]
+    x_sub = x[::steps][:-discard_steps]
+    v_wind_sub = v_wind[:len(t)][::steps][:-discard_steps]
+    h_wave_sub = np.array(h_waves)[::steps][:-discard_steps]
+    betas_sub = betas[::steps][:-discard_steps]
+    T_E_list_sub = T_E_list[::steps][:-discard_steps]
+    P_A_list_sub = P_A_list[::steps][:-discard_steps]
     
+    return t_sub-t_sub[0], x_sub, v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub
 
-    t_sub = t[::steps][discard_steps:]
-    x_sub = x[::steps][discard_steps:]
-    v_wind_sub = v_wind[:len(t)][::steps][discard_steps:]
-    wave_eta_sub = np.array(wave_eta)[::steps][discard_steps:]
-    betas_sub = betas[::steps][discard_steps:]
-    Qt_list_sub = Qt_list[::steps][discard_steps:]
-    
-    return t_sub-t_sub[0], x_sub, v_wind_sub, wave_eta_sub, betas_sub, Qt_list_sub
-
-
-
-
-def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, Cp_type = 0):
+def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     """
     Cp computation method
 
     Parameters
     ----------
-    Cp_type : TYPE, optional
-        DESCRIPTION. The default is 0.
-        0: read the power coefficient file. Fast but not very accurate
-        1: run the AeroDyn 15 driver, very accurate and very slow
+
 
     Returns
     -------
@@ -773,21 +846,26 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, Cp_type = 0):
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
 
     
-    # generate a random seed
+    # generate medium long component noise use the first seed
     state_before = np.random.get_state()
     np.random.seed(seeds[0])
-    white_noise = np.random.randn(end_time + 1)
+    white_noise_ml = np.random.uniform(-np.pi, np.pi, 31) 
     np.random.set_state(state_before)
     
-    v_wind = np.repeat(gen_turbulence(v_w, 180, 0.135, 1, end_time, white_noise), int(1/time_step))
+    # generate turbulence noise use the second seed
+    state_before = np.random.get_state()
+    np.random.seed(seeds[1])
+    white_noise_turb = np.random.normal(0, 1, int(np.ceil(end_time / T_s1) * T_s1))  # For turbulence component
+    np.random.set_state(state_before)
     
+    wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb)
+    v_wind = np.repeat(wind_speeds, int(1/time_step))
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, Q_t = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, Cp_type, performance, v_w, v_wind, seeds[1])
-    # return the output to be ploted
-    return t, x, v_wind, wave_eta, betas, seeds, Q_t
-    
+    t, x, v_wind, wave_eta, betas, T_E, P_A = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
+
+    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A
 
 def run_simulation(params):
     return main(*params)
@@ -797,7 +875,6 @@ def run_simulations_parallel(n_simulations, params):
     
     state = np.array([-2.61426271, 
                  -0.00299848190, 
-         
                  37.5499264, 
                  -0.0558194064,
                  0.00147344971, 
@@ -829,7 +906,8 @@ def save_binaryfile(results):
     wave_eta = np.stack([s[3] for s in results], axis=1)
     betas = np.stack([s[4] for s in results], axis=1)
     seeds = np.stack([s[5] for s in results], axis=1)
-    Q_t = np.stack([s[6] for s in results], axis=1)
+    T_E = np.stack([s[6] for s in results], axis=1)
+    P_A = np.stack([s[7] for s in results], axis=1)
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
@@ -840,7 +918,8 @@ def save_binaryfile(results):
                                                             wave_eta=wave_eta, 
                                                             betas=betas, 
                                                             seeds=seeds, 
-                                                            Q_t=Q_t)
+                                                            T_E=T_E,
+                                                            P_A=P_A)
    
 
 ###############################################################################
@@ -850,7 +929,7 @@ def save_binaryfile(results):
 
 if __name__ == '__main__':
 
-    v_w = 20
+    v_w = 11
     end_time = int(sys.argv[4])
     n_simulations = int(sys.argv[2])
 
