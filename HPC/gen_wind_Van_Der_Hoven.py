@@ -155,6 +155,8 @@ def gen_turbulence(v_bar, L, k_sigma_v, T_s, N_t, white_noise,
     Array of wind speed with turbulence
 
     """
+    if v_bar < 1:
+        v_bar = 1
     
     # Step 1: Update the current values of the parameters in 
     # the turbulence component model

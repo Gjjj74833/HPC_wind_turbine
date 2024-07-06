@@ -41,7 +41,7 @@ def load_data():
     wave_eta = np.hstack(wave_etas)
     seeds = np.hstack(seeds)
     
-    return t, state, wind_speed, wave_eta, seeds, Q_t
+    return t, state, wind_speed, wave_eta, seeds
 
 def merge_pitch_acc(states):
     """
@@ -900,7 +900,7 @@ def largest_std(one_state, seeds):
         np.save(f'large_std_pitch/{seeds[:, i]}', one_state[:, i])
     
 
-t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()
+t, temp_state, wind_speed, wave_eta, seeds = load_data()
 state = merge_pitch_acc(temp_state)
 save_percentile_extreme(t, state, wind_speed, wave_eta)
 largest_std(state[:, 4], seeds)
