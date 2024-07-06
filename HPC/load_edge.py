@@ -893,11 +893,11 @@ def largest_std(one_state, seeds):
     print(f"Overall standard deviation across all simulations: {overall_std}")
     
     std_devs = np.std(one_state, axis=0)
-    indices_of_largest_stds = np.argsort(std_devs)[-30:]
+    indices_of_largest_stds = np.argsort(std_devs)[-100:]
     
     for i in indices_of_largest_stds:
         print(seeds[:, i], "std: ", std_devs[i])
-    
+        np.save(f'large_std_pitch/{seeds[:, i]}', one_state[:, i])
     
 
 t, temp_state, wind_speed, wave_eta, seeds, Q_t = load_data()

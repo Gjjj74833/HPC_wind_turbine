@@ -187,6 +187,8 @@ def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
     [v_x, v_y, a_x, a_y]: list
         The wave velocity and acceleration in x and y direction
     """
+    return 0, [0, 0, 0, 0]
+    '''
     g = 9.81  # gravitational constant
     alpha = 0.0081  # Phillips' constant
 
@@ -222,7 +224,7 @@ def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
     a_y = -np.sum((omega**2) * a * exp_component * sin_component)
 
     return wave_eta, [v_x, v_y, a_x, a_y]
-
+    '''
 
 def structure(x_1, beta, omega_R, t, performance, v_w, v_aveg, random_phases):
     """
@@ -912,7 +914,7 @@ def save_binaryfile(results):
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  
+    np.savez(f'./results_no_wave/results_{sys.argv[1]}_{time}.npz', t=t,  
                                                             state=state, 
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 
