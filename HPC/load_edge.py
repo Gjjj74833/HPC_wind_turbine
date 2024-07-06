@@ -32,14 +32,13 @@ def load_data():
     states = [data['state'] for data in datas]
     wind_speeds = [data['wind_speed'] for data in datas]
     wave_etas = [data['wave_eta'] for data in datas]
-    Q_ts = [data['Q_t'] for data in datas]
+    betas = [data['betas'] for data in datas]
     seeds = [data['seeds'] for data in datas]
     
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
     wind_speed = np.hstack(wind_speeds)
     wave_eta = np.hstack(wave_etas)
-    Q_t = np.hstack(Q_ts)
     seeds = np.hstack(seeds)
     
     return t, state, wind_speed, wave_eta, seeds, Q_t
@@ -894,7 +893,7 @@ def largest_std(one_state, seeds):
     print(f"Overall standard deviation across all simulations: {overall_std}")
     
     std_devs = np.std(one_state, axis=0)
-    indices_of_largest_stds = np.argsort(std_devs)[-10:]
+    indices_of_largest_stds = np.argsort(std_devs)[-30:]
     
     for i in indices_of_largest_stds:
         print(seeds[:, i], "std: ", std_devs[i])
