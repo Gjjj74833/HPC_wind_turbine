@@ -896,8 +896,9 @@ def largest_std(one_state, seeds):
     indices_of_largest_stds = np.argsort(std_devs)[-100:]
     
     for i in indices_of_largest_stds:
-        print(seeds[:, i], "std: ", std_devs[i])
-        np.save(f'large_std_pitch/{seeds[:, i]}', one_state[:, i])
+        seed = seeds[:, i]
+        print(seed, "std: ", std_devs[i])
+        np.save(f'large_std_pitch/{seed[0]}_{seed[1]}_{seed[2]}', one_state[:, i])
     
 
 t, temp_state, wind_speed, wave_eta, seeds = load_data()
