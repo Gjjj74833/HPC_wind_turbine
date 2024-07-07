@@ -897,7 +897,7 @@ def largest_std(one_state, seeds):
     
     for i in indices_of_largest_stds:
         seed = seeds[:, i]
-        print(seed, "std: ", std_devs[i])
+        print(f'[{seed[0]}, {seed[1]}, {seed[2]}]', "std: ", std_devs[i])
         np.save(f'large_std_pitch/{seed[0]}_{seed[1]}_{seed[2]}', one_state[:, i])
     
 
