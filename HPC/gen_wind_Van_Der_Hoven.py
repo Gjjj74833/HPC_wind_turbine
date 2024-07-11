@@ -126,7 +126,7 @@ def get_median_long_component(T_s1, T_F, v_bar, white_noise):
         for i in range(len(amplitudes)):
             wind_speeds[t] += amplitudes[i]*np.cos(omegas[i]*t + white_noise[i])
     
-    return wind_speeds
+    return np.clip(wind_speeds, 1, 40)
 
 
 
@@ -155,8 +155,6 @@ def gen_turbulence(v_bar, L, k_sigma_v, T_s, N_t, white_noise,
     Array of wind speed with turbulence
 
     """
-    if v_bar < 1:
-        v_bar = 1
     
     # Step 1: Update the current values of the parameters in 
     # the turbulence component model
