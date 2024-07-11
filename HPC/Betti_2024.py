@@ -490,9 +490,8 @@ def structure(x_1, beta, omega_R, t, performance, v_w, v_aveg, random_phases):
                   omega, 
                   Q_alpha])
     
-    avegQ_t = np.sqrt(Qt_zeta**2+Qt_eta**2)/8
 
-    return np.linalg.inv(E) @ F, v_in, Cp, avegQ_t
+    return np.linalg.inv(E) @ F, v_in, Cp, h_wave - h
 
 
 def WindTurbine(omega_R, v_in, beta, T_E, t, Cp):
@@ -573,11 +572,11 @@ def Betti(x, t, beta, T_E, performance, v_w, v_aveg, random_phases):
     x1 = x[:6]
     omega_R = x[6]
     
-    dx1dt, v_in, Cp, Q_t = structure(x1, beta, omega_R, t, performance, v_w, v_aveg, random_phases)
+    dx1dt, v_in, Cp, h_wave = structure(x1, beta, omega_R, t, performance, v_w, v_aveg, random_phases)
     dx2dt = WindTurbine(omega_R, v_in, beta, T_E, t, Cp)
     dxdt = np.append(dx1dt, dx2dt)
     
-    return dxdt, Q_t
+    return dxdt, h_wave
 
 
 

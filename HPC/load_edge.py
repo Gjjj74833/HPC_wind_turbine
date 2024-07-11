@@ -887,10 +887,12 @@ def largest_std(one_state, seeds):
     """
     flattened_data = one_state.flatten()
 
-    # Calculate the overall standard deviation
-    overall_std = np.std(flattened_data)
+    cleaned_data = flattened_data[~np.isnan(flattened_data)]
+
+    overall_std = np.std(cleaned_data)
+
     
-    print(f"Overall standard deviation across all simulations: {overall_std}")
+    print(f"Overall standard deviation across all simulations for surge: {overall_std}")
     
     std_devs = np.std(one_state, axis=0)
     indices_of_largest_stds = np.argsort(std_devs)[-100:]
@@ -903,8 +905,8 @@ def largest_std(one_state, seeds):
 
 t, temp_state, wind_speed, wave_eta, seeds = load_data()
 state = merge_pitch_acc(temp_state)
-save_percentile_extreme(t, state, wind_speed, wave_eta)
-largest_std(state[:, 4], seeds)
+#save_percentile_extreme(t, state, wind_speed, wave_eta)
+largest_std(state[:, 0], seeds)
 
 
 
