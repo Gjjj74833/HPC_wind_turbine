@@ -878,8 +878,8 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     # modify this to change initial condition
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
     
-    white_noise_ml = generate_noise_from_saved_pdf('noise_pdfs/ml_pdf_nowave.pkl', 31, seeds[0])
-    white_noise_turb = generate_noise_from_saved_pdf('noise_pdfs/turb_pdf_nowave.pkl', int(np.ceil(end_time / T_s1) * T_s1), seeds[1])
+    white_noise_ml = generate_noise_from_saved_pdf('noise_pdfs/ml_pdf_nowave_1.pkl', 31, seeds[0])
+    white_noise_turb = generate_noise_from_saved_pdf('noise_pdfs/turb_pdf_nowave_1.pkl', int(np.ceil(end_time / T_s1) * T_s1), seeds[1])
     
     wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb)
     v_wind = np.repeat(wind_speeds, int(1/time_step))
