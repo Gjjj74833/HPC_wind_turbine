@@ -187,8 +187,7 @@ def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
     [v_x, v_y, a_x, a_y]: list
         The wave velocity and acceleration in x and y direction
     """
-    return 0, [0, 0, 0, 0]
-    '''
+    
     g = 9.81  # gravitational constant
     alpha = 0.0081  # Phillips' constant
 
@@ -224,7 +223,7 @@ def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
     a_y = -np.sum((omega**2) * a * exp_component * sin_component)
 
     return wave_eta, [v_x, v_y, a_x, a_y]
-    '''
+    
 
 def structure(x_1, beta, omega_R, t, performance, v_w, v_aveg, random_phases):
     """
@@ -809,13 +808,13 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     discard_steps = int(500 / 0.5)
      
 
-    t_sub = t[::steps][discard_steps:]
-    x_sub = x[::steps][discard_steps:]
-    v_wind_sub = v_wind[:len(t)][::steps][discard_steps:]
-    h_wave_sub = np.array(h_waves)[::steps][discard_steps:]
-    betas_sub = betas[::steps][discard_steps:]
-    T_E_list_sub = T_E_list[::steps][discard_steps:]
-    P_A_list_sub = P_A_list[::steps][discard_steps:]
+    t_sub = t[::steps]#[discard_steps:]
+    x_sub = x[::steps]#[discard_steps:]
+    v_wind_sub = v_wind[:len(t)][::steps]#[discard_steps:]
+    h_wave_sub = np.array(h_waves)[::steps]#[discard_steps:]
+    betas_sub = betas[::steps]#[discard_steps:]
+    T_E_list_sub = T_E_list[::steps]#[discard_steps:]
+    P_A_list_sub = P_A_list[::steps]#[discard_steps:]
     
     return t_sub-t_sub[0], x_sub, v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub
 
