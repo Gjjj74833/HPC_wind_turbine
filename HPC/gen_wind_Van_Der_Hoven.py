@@ -124,7 +124,7 @@ def get_median_long_component(T_s1, T_F, v_bar, white_noise):
     for t in range(wind_size):
         # at time t, for each frequency
         for i in range(len(amplitudes)):
-            wind_speeds[t] += amplitudes[i]*np.cos(omegas[i]*t + white_noise[i])
+            wind_speeds[t] += amplitudes[i]*np.cos(omegas[i]*t*T_s1/3600 + white_noise[i])
     
     return np.clip(wind_speeds, 1, 40)
 

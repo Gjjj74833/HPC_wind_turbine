@@ -847,7 +847,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
 
     
     # generate medium long component noise use the first seed
-    state_before = np.random.get_state()
+    state_before = np.random.get_state()                                                                                                                                                                
     np.random.seed(seeds[0])
     white_noise_ml = np.random.uniform(-np.pi, np.pi, 31) 
     np.random.set_state(state_before)
@@ -912,7 +912,7 @@ def save_binaryfile(results):
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results_no_wave/results_{sys.argv[1]}_{time}.npz', t=t,  
+    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  
                                                             state=state, 
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 

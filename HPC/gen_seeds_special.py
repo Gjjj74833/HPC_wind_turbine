@@ -62,9 +62,9 @@ def generate_second_third(n, n_array, seed_1, seed=None):
         np.save(filename, sub_array)
         print(f"Saved: {filename}")
 
-generate_second_third(10000, 50, seed_1=5386811)
+generate_second_third(15000, 50, seed_1=5386811)
         
-#seeds = np.load(f'./seeds/seeds_32.npy')
+seeds = np.load(f'./seeds/seeds_32.npy')
 #print(seeds)
 
 

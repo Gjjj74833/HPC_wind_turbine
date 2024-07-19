@@ -871,6 +871,61 @@ def fft_wave(wave_eta, t):
     plt.savefig('./results_figure/fft_wave.png', dpi=200)
     plt.close()
     
+def pitch_distribution(pitch, pitch_rate):
+    """
+    Analyzes pitch and pitch_rate by plotting their PDFs and 
+    the distribution of extreme values (max and min) observed in each sample.
+    
+    Parameters:
+    pitch (np.ndarray): 2D array for pitch where the first dimension is time and the second dimension is simulation index.
+    pitch_rate (np.ndarray): 2D array for pitch_rate where the first dimension is time and the second dimension is simulation index.
+    """
+    
+    def plot_pdf(data, ax, label):
+        # Flatten the array
+        flattened_data = data.flatten()
+
+        # Calculate the PDF using KDE
+        kde = gaussian_kde(flattened_data)
+        x = np.linspace(flattened_data.min(), flattened_data.max(), 1000)
+        pdf = kde(x)
+
+        # Calculate the max and min values for each sample (i.e., across all simulations for each time step)
+        max_values = data.max(axis=0)
+        min_values = data.min(axis=0)
+
+        # Calculate the PDFs of the max and min values
+        kde_max = gaussian_kde(max_values)
+        kde_min = gaussian_kde(min_values)
+        x_max = np.linspace(max_values.min(), max_values.max(), 1000)
+        x_min = np.linspace(min_values.min(), min_values.max(), 1000)
+        pdf_max = kde_max(x_max)
+        pdf_min = kde_min(x_min)
+
+        # Plot all PDFs on the same axes
+        ax.hist(max_values, bins=100, density=True, alpha=0.5, color='r', label='Max')
+        ax.hist(min_values, bins=100, density=True, alpha=0.5, color='b', label='Min')
+        ax.hist(flattened_data, bins=100, density=True, alpha=0.5, color='gray', label='All Distribution')
+        ax.plot(x, pdf, label=f'{label} Overall PDF', color='black')
+        ax.plot(x_max, pdf_max, label=f'{label} Max values PDF', color='red')
+        ax.plot(x_min, pdf_min, label=f'{label} Min values PDF', color='blue')
+        ax.set_xlabel(f'{label}')
+        ax.set_ylabel('Density')
+        ax.legend()
+        ax.grid(True)
+
+    # Create a figure with two subplots
+    fig, axs = plt.subplots(1, 2, figsize=(9, 4))
+
+    # Plot pitch distributions
+    plot_pdf(pitch, axs[0], 'Pitch (deg)')
+
+    # Plot pitch_rate distributions
+    plot_pdf(pitch_rate, axs[1], 'Pitch Rate (deg/s)')
+
+    plt.tight_layout()
+    plt.savefig('./figure/pitch_distr.png')
+    
 
 def largest_std(one_state, seeds):
     """
@@ -906,7 +961,8 @@ def largest_std(one_state, seeds):
 
 t, temp_state, wind_speed, wave_eta, seeds = load_data()
 #state = merge_pitch_acc(temp_state)
-#save_percentile_extreme(t, temp_state, wind_speed, wave_eta)
+save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
+pitch_distribution(temp_state[:, 4], temp_state[:, 5])
 largest_std(temp_state[:, 4], seeds)
 
 
