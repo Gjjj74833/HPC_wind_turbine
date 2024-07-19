@@ -915,7 +915,7 @@ def pitch_distribution(pitch, pitch_rate):
         ax.grid(True)
 
     # Create a figure with two subplots
-    fig, axs = plt.subplots(1, 2, figsize=(9, 4))
+    fig, axs = plt.subplots(1, 2, figsize=(10, 3))
 
     # Plot pitch distributions
     plot_pdf(pitch, axs[0], 'Pitch (deg)')
