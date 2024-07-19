@@ -906,9 +906,9 @@ def pitch_distribution(pitch, pitch_rate):
         ax.hist(max_values, bins=100, density=True, alpha=0.5, color='r', label='Max')
         ax.hist(min_values, bins=100, density=True, alpha=0.5, color='b', label='Min')
         ax.hist(flattened_data, bins=100, density=True, alpha=0.5, color='gray', label='All Distribution')
-        ax.plot(x, pdf, label=f'{label} Overall PDF', color='black')
-        ax.plot(x_max, pdf_max, label=f'{label} Max values PDF', color='red')
-        ax.plot(x_min, pdf_min, label=f'{label} Min values PDF', color='blue')
+        ax.plot(x, pdf, color='black')
+        ax.plot(x_max, pdf_max, color='red')
+        ax.plot(x_min, pdf_min, color='blue')
         ax.set_xlabel(f'{label}')
         ax.set_ylabel('Density')
         ax.legend()
@@ -962,8 +962,8 @@ def largest_std(one_state, seeds):
 t, temp_state, wind_speed, wave_eta, seeds = load_data()
 #state = merge_pitch_acc(temp_state)
 save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
-pitch_distribution(temp_state[:, 4], temp_state[:, 5])
-largest_std(temp_state[:, 4], seeds)
+#pitch_distribution(temp_state[:, 4], temp_state[:, 5])
+#largest_std(temp_state[:, 4], seeds)
 
 
 
