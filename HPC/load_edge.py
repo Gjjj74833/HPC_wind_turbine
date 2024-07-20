@@ -17,9 +17,7 @@ import pandas as pd
 
 
 
-def load_data():
-    
-    directory = 'results_5000'
+def load_data(directory):
     
     # collect all data files
     data_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.npz')]
@@ -926,6 +924,82 @@ def pitch_distribution(pitch, pitch_rate):
     plt.tight_layout()
     plt.savefig('./figure/pitch_distr.png')
     
+def pitch_distr_compare(pitch_or, pitch_rate_or, pitch_lo, pitch_rate_lo):
+    """
+    Compare pitch distribution for important sampling.
+    
+    Parameters:
+    pitch_or (np.ndarray): 2D array for original pitch where the first dimension is time and the second dimension is simulation index.
+    pitch_rate_or (np.ndarray): 2D array for original pitch rate where the first dimension is time and the second dimension is simulation index.
+    pitch_lo (np.ndarray): 2D array for pitch from importance sampling where the first dimension is time and the second dimension is simulation index.
+    pitch_rate_lo (np.ndarray): 2D array for pitch rate from importance sampling where the first dimension is time and the second dimension is simulation index.
+    """
+    
+    def plot_pdf(data_or, data_lo, ax, xlabel, ylabel):
+        # Flatten the arrays
+        flattened_data_or = data_or.flatten()
+        flattened_data_lo = data_lo.flatten()
+
+        # Calculate the PDFs using KDE
+        kde_or = gaussian_kde(flattened_data_or)
+        kde_lo = gaussian_kde(flattened_data_lo)
+        x_or = np.linspace(flattened_data_or.min(), flattened_data_or.max(), 1000)
+        x_lo = np.linspace(flattened_data_lo.min(), flattened_data_lo.max(), 1000)
+        pdf_or = kde_or(x_or)
+        pdf_lo = kde_lo(x_lo)
+
+        # Calculate the max and min values for each sample
+        max_values_or = data_or.max(axis=0)
+        min_values_or = data_or.min(axis=0)
+        max_values_lo = data_lo.max(axis=0)
+        min_values_lo = data_lo.min(axis=0)
+
+        # Calculate the PDFs of the max and min values
+        kde_max_or = gaussian_kde(max_values_or)
+        kde_min_or = gaussian_kde(min_values_or)
+        kde_max_lo = gaussian_kde(max_values_lo)
+        kde_min_lo = gaussian_kde(min_values_lo)
+        x_max_or = np.linspace(max_values_or.min(), max_values_or.max(), 1000)
+        x_min_or = np.linspace(min_values_or.min(), min_values_or.max(), 1000)
+        x_max_lo = np.linspace(max_values_lo.min(), max_values_lo.max(), 1000)
+        x_min_lo = np.linspace(min_values_lo.min(), min_values_lo.max(), 1000)
+        pdf_max_or = kde_max_or(x_max_or)
+        pdf_min_or = kde_min_or(x_min_or)
+        pdf_max_lo = kde_max_lo(x_max_lo)
+        pdf_min_lo = kde_min_lo(x_min_lo)
+
+        # Plot all PDFs on the same axes
+        ax.hist(max_values_or, bins=50, density=True, alpha=0.5, color='gray', label='Original MCMC Distribution', histtype='stepfilled')
+        ax.hist(min_values_or, bins=50, density=True, alpha=0.5, color='gray', histtype='stepfilled')
+        ax.hist(flattened_data_or, bins=50, density=True, alpha=0.5, color='gray', histtype='stepfilled')
+        ax.plot(x_or, pdf_or, color='black')
+        ax.plot(x_max_or, pdf_max_or, color='black')
+        ax.plot(x_min_or, pdf_min_or, color='black')
+
+        ax.hist(max_values_lo, bins=50, density=True, alpha=0.5, color='red', label='Importance Sampling Distribution', histtype='stepfilled')
+        ax.hist(min_values_lo, bins=50, density=True, alpha=0.5, color='red', histtype='stepfilled')
+        ax.hist(flattened_data_lo, bins=50, density=True, alpha=0.5, color='red', histtype='stepfilled')
+        ax.plot(x_lo, pdf_lo, color='red')
+        ax.plot(x_max_lo, pdf_max_lo, color='red')
+        ax.plot(x_min_lo, pdf_min_lo, color='red')
+
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.legend()
+        ax.grid(True)
+
+    # Create a figure with two subplots
+    fig, axs = plt.subplots(1, 2, figsize=(10, 3))
+
+    # Plot pitch distributions
+    plot_pdf(pitch_or, pitch_lo, axs[0], 'Pitch (deg)', 'Density')
+
+    # Plot pitch_rate distributions
+    plot_pdf(pitch_rate_or, pitch_rate_lo, axs[1], 'Pitch rate (deg/s)', 'Density')
+
+    plt.tight_layout()
+    plt.savefig('./figure/pitch_distr_compare.png')
+    
 
 def largest_std(one_state, seeds):
     """
@@ -1000,14 +1074,15 @@ def largest_std_percentage(one_state, seeds, threshold):
         seed = seeds[:, i]
         print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}')
 
-t, temp_state, wind_speed, wave_eta, seeds = load_data()
+t, state_2500, wind_speed, wave_eta, seeds = load_data('results_2500')
+state_original = load_data('results')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
 #pitch_distribution(temp_state[:, 4], temp_state[:, 5])
 #largest_std(temp_state[:, 4], seeds)
-largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
+#largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
-
+pitch_distr_compare(state_original[:, 4][1000:], state_original[:, 5][1000:], state_2500[:, 4], state_2500[:, 5])
 
     
 
