@@ -19,7 +19,7 @@ import pandas as pd
 
 def load_data():
     
-    directory = 'results'
+    directory = 'results_5000'
     
     # collect all data files
     data_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.npz')]
@@ -956,14 +956,53 @@ def largest_std(one_state, seeds):
     for i in indices_of_largest_stds:
         seed = seeds[:, i]
         print(f'[{seed[0]}, {seed[1]}, {seed[2]}]', "std: ", std_devs[i])
-        np.save(f'large_std_pitch/{seed[0]}_{seed[1]}_{seed[2]}', one_state[:, i])
     
+def largest_std_percentage(one_state, seeds, threshold):
+    """
+    Calculate standard deviation and print seeds with standard deviation greater than a threshold.
+
+    Parameters
+    ----------
+    one_state : np.ndarray
+        The state array to calculate standard deviation for.
+    seeds : np.ndarray
+        The array of seeds corresponding to each simulation.
+    threshold : float
+        The threshold for standard deviation.
+
+    Returns
+    -------
+    None
+    """
+    # Flatten the data and remove NaN values
+    flattened_data = one_state.flatten()
+    cleaned_data = flattened_data[~np.isnan(flattened_data)]
+
+    # Calculate the overall standard deviation
+    overall_std = np.std(cleaned_data)
+    print(f"Overall standard deviation across all simulations: {overall_std}")
+
+    # Calculate standard deviations along the second axis
+    std_devs = np.std(one_state, axis=0)
+
+    # Find indices of standard deviations greater than the threshold
+    indices_of_large_stds = np.where(std_devs > threshold)[0]
+
+    # Print the count of samples with std greater than the threshold
+    count_above_threshold = len(indices_of_large_stds)
+    print(f"Number of samples with standard deviation greater than {threshold}: {count_above_threshold}")
+
+    # Print the seeds and their standard deviations
+    for i in indices_of_large_stds:
+        seed = seeds[:, i]
+        print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}')
 
 t, temp_state, wind_speed, wave_eta, seeds = load_data()
 #state = merge_pitch_acc(temp_state)
-save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
+#save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
 #pitch_distribution(temp_state[:, 4], temp_state[:, 5])
 #largest_std(temp_state[:, 4], seeds)
+largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
 
 
