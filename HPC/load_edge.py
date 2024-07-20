@@ -988,12 +988,15 @@ def largest_std_percentage(one_state, seeds, threshold):
     # Find indices of standard deviations greater than the threshold
     indices_of_large_stds = np.where(std_devs > threshold)[0]
 
+    # Sort indices by standard deviation in descending order
+    sorted_indices = indices_of_large_stds[np.argsort(std_devs[indices_of_large_stds])[::-1]]
+
     # Print the count of samples with std greater than the threshold
     count_above_threshold = len(indices_of_large_stds)
     print(f"Number of samples with standard deviation greater than {threshold}: {count_above_threshold}")
 
     # Print the seeds and their standard deviations
-    for i in indices_of_large_stds:
+    for i in sorted_indices:
         seed = seeds[:, i]
         print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}')
 
