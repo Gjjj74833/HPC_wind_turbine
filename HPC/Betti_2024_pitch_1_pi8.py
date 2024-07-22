@@ -884,7 +884,7 @@ def run_simulations_parallel(n_simulations, params):
     params.append(state)
 
     file_index = list(range(0, n_simulations))
-    seeds_array = np.load(f'./seeds/seeds_{sys.argv[1]}.npy')
+    seeds_array = np.load(f'./seeds_pitch_1_pi8/seeds_{sys.argv[1]}.npy')
    
     
     with Pool(int(sys.argv[3])) as p:
@@ -912,7 +912,7 @@ def save_binaryfile(results):
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  
+    np.savez(f'./results_pitch_1_pi8/results_{sys.argv[1]}_{time}.npz', t=t,  
                                                             state=state, 
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 
