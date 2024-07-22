@@ -79,7 +79,7 @@ def generate_frequencies(N=9, k_range=(-3, 2), base=10):
         frequencies.extend([i * (base**k) for i in range(1, N + 1)])
     return frequencies
 
-def get_median_long_component(T_s1, T_F, v_bar, white_noise):
+def get_median_long_component(T_s1, T_F, v_bar, sampling_noise):
     """
     Simulate the medium- and long-term wind speed component.
 
@@ -101,6 +101,13 @@ def get_median_long_component(T_s1, T_F, v_bar, white_noise):
     np.array
         Simulated wind speeds over time.
     """
+    state_before = np.random.get_state()
+    np.random.seed(6488224)
+    sampling_source = np.random.uniform(-np.pi, np.pi, 31) 
+    np.random.set_state(state_before)
+    
+    white_noise = sampling_source + sampling_noise
+    
     frequencies = generate_frequencies()[:31]
     omegas = np.array(frequencies) * 2 * np.pi   # Convert cycles/hour to rad/hour
     amplitudes = []
