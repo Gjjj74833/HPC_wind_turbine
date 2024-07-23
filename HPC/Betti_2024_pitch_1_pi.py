@@ -849,7 +849,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     # generate medium long component noise use the first seed
     state_before = np.random.get_state()                                                                                                                                                                
     np.random.seed(seeds[0])
-    white_noise_ml = np.random.normal(loc=0, scale=np.pi, size=31)
+    white_noise_ml = np.random.normal(loc=0, scale=np.pi / int(sys.argv[6]), size=31)
     np.random.set_state(state_before)
     
     # generate turbulence noise use the second seed
@@ -858,7 +858,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     white_noise_turb = np.random.normal(0, 1, int(np.ceil(end_time / T_s1) * T_s1))  # For turbulence component
     np.random.set_state(state_before)
     
-    wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb)
+    wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb, int(sys.argv[7]))
     v_wind = np.repeat(wind_speeds, int(1/time_step))
 
     # modify this to change run time and step size
@@ -884,7 +884,7 @@ def run_simulations_parallel(n_simulations, params):
     params.append(state)
 
     file_index = list(range(0, n_simulations))
-    seeds_array = np.load(f'./seeds_pitch_1_pi/seeds_{sys.argv[1]}.npy')
+    seeds_array = np.load(f'./seeds_pitch_{sys.argv[5]}_pi{sys.argv[6]}/seeds_{sys.argv[1]}.npy')
    
     
     with Pool(int(sys.argv[3])) as p:
@@ -912,7 +912,7 @@ def save_binaryfile(results):
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results_pitch_1_pi/results_{sys.argv[1]}_{time}.npz', t=t,  
+    np.savez(f'./results_pitch_{sys.argv[5]}_pi{sys.argv[6]}/results_{sys.argv[1]}_{time}.npz', t=t,  
                                                             state=state, 
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 

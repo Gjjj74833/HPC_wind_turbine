@@ -7,7 +7,7 @@ generating seeds
 """
 
 import numpy as np
-    
+import sys
     
 def generate_and_save_unique_arrays(n, n_array, seed=None):
     # Generate unique values for the entire range
@@ -23,12 +23,11 @@ def generate_and_save_unique_arrays(n, n_array, seed=None):
         # Get the sub-array for the current set
         sub_array = unique_values[start_idx:end_idx].reshape((rows_per_array, 3))
         
-        filename = f'./seeds/seeds_{i+1}.npy'
+        filename = f'./seeds_pitch_{sys.argv[2]}_pi{sys.argv[3]}/seeds_{i+1}.npy'
         np.save(filename, sub_array)
         print(f"Saved: {filename}")
 
-generate_and_save_unique_arrays(10000, 50)
-seeds = np.load(f'./seeds/seeds_4.npy')
+generate_and_save_unique_arrays(2500, 50)
 
 
 
