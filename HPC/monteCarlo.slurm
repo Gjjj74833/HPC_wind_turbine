@@ -4,7 +4,7 @@
 ### PART 1: Requests resources to run your job.
 # --------------------------------------------------------------
 ### Optional. Set the job name
-#SBATCH --job-name=imps_pitch_1_pi
+#SBATCH --job-name=imps_pitch_${3}_pi${4}
 ### Optional. Set the output filename.
 ### SLURM reads %x as the job name and %j as the job ID
 #SBATCH --output=%x-%j.out
@@ -33,6 +33,4 @@
 
 module load python/3.9
 
-python3 Betti_2024_pitch_1_pi.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
-###rm -f test*
-
+python3 Betti_2024_pitch_1_pi.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4 $5
