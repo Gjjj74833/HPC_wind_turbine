@@ -1031,7 +1031,7 @@ def largest_std(one_state, seeds):
         seed = seeds[:, i]
         print(f'[{seed[0]}, {seed[1]}, {seed[2]}]', "std: ", std_devs[i])
     
-def largest_std_percentage(one_state, seeds, threshold):
+def largest_std_percentage(one_state, seeds, threshold, file_name):
     """
     Calculate standard deviation and print seeds with standard deviation greater than a threshold.
 
@@ -1054,7 +1054,7 @@ def largest_std_percentage(one_state, seeds, threshold):
 
     # Calculate the overall standard deviation
     overall_std = np.std(cleaned_data)
-    print(f"Overall standard deviation across all simulations: {overall_std}")
+    #print(f"Overall standard deviation across all simulations: {overall_std}")
 
     # Calculate standard deviations along the second axis
     std_devs = np.std(one_state, axis=0)
@@ -1067,12 +1067,20 @@ def largest_std_percentage(one_state, seeds, threshold):
 
     # Print the count of samples with std greater than the threshold
     count_above_threshold = len(indices_of_large_stds)
-    print(f"Number of samples with standard deviation greater than {threshold}: {count_above_threshold}")
+    
+    with open(file_name, 'w') as file:
+        file.write(f"Overall standard deviation across all simulations: {overall_std}\n")
+        file.write(f"Number of samples with standard deviation greater than {threshold}: {count_above_threshold}\n")
+        for i in sorted_indices:
+            seed = seeds[:, i]
+            file.write(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}\n')
+        
+    #print(f"Number of samples with standard deviation greater than {threshold}: {count_above_threshold}")
 
     # Print the seeds and their standard deviations
-    for i in sorted_indices:
-        seed = seeds[:, i]
-        print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}')
+    #for i in sorted_indices:
+    #    seed = seeds[:, i]
+    #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
         
 def largest_std_percentage_save_flie(one_state, seeds, threshold, file_name):
     """
@@ -1136,6 +1144,6 @@ def largest_std_percentage_save_flie(one_state, seeds, threshold, file_name):
 for sample_ID in range(2, 6):
     for elipse in [1, 2, 4, 6, 8]:
         t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
-        largest_std_percentage_save_flie(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
     
 
