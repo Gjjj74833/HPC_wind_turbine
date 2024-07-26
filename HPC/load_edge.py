@@ -1131,19 +1131,19 @@ def largest_std_percentage_save_flie(one_state, seeds, threshold, file_name):
             file.write(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}\n')
 
 
-#t, state_2500, wind_speed, wave_eta, seeds = load_data('results_2500')
-#state_original = load_data('results')[1]
+t, state_2500, wind_speed, wave_eta, seeds = load_data('results')
+state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
-#pitch_distribution(temp_state[:, 4], temp_state[:, 5])
-#largest_std(temp_state[:, 4], seeds)
+pitch_distribution(state_original[:, 0], state_original[:, 1])
+largest_std(state_2500[:, 0][:500], seeds)
 #largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
 #pitch_distr_compare(state_original[:, 4][1000:], state_original[:, 5][1000:], state_2500[:, 4], state_2500[:, 5])
 
-for sample_ID in range(2, 6):
-    for elipse in [1, 2, 4, 6, 8]:
-        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
-        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+#for sample_ID in range(2, 6):
+#    for elipse in [1, 2, 4, 6, 8]:
+#        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
+#        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
     
 
