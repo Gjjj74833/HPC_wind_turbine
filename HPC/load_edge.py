@@ -1082,7 +1082,26 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #    seed = seeds[:, i]
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
         
-def largest_std_percentage_save_flie(one_state, seeds, threshold, file_name):
+def largest_sample(state, seeds):
+    # Flatten the state array to a 1D array
+    flattened_state = state.flatten()
+
+    # Get the indices of the 100 largest values
+    largest_indices = np.argpartition(flattened_state, -100)[-100:]
+
+    # Extract the corresponding values
+    largest_values = flattened_state[largest_indices]
+
+    # Convert the 1D indices back to 2D indices
+    original_indices = np.unravel_index(largest_indices, state.shape)
+
+    # Extract the corresponding seeds using the 2D indices
+    corresponding_seeds = seeds[original_indices[0], original_indices[1]]
+
+    # Print the largest values and their corresponding seeds
+    for value, seed in zip(largest_values, corresponding_seeds):
+        print(f"Value: {value}, Seed: {seed}")
+    
     """
     Calculate standard deviation and print seeds with standard deviation greater than a threshold.
 
@@ -1132,11 +1151,11 @@ def largest_std_percentage_save_flie(one_state, seeds, threshold, file_name):
 
 
 t, state_2500, wind_speed, wave_eta, seeds = load_data('results')
-state_original = load_data('results_all_pitch')[1]
+#state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
-pitch_distribution(state_original[:, 0], state_original[:, 1])
-largest_std(state_2500[:, 0][:500], seeds)
+#pitch_distribution(state_original[:, 0], state_original[:, 1])
+#largest_std(state_2500[:, 0][:500], seeds)
 #largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
 #pitch_distr_compare(state_original[:, 4][1000:], state_original[:, 5][1000:], state_2500[:, 4], state_2500[:, 5])
@@ -1145,5 +1164,5 @@ largest_std(state_2500[:, 0][:500], seeds)
 #    for elipse in [1, 2, 4, 6, 8]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
-    
+largest_sample(state_2500, seeds)   
 
