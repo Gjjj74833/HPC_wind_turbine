@@ -52,7 +52,6 @@ def psd(time_series, time_step = 0.5, nperseg=256):
 
 def categorize_simulations_by_wind_speed(wind_speed):
     wind_0_10 = []
-    wind_10_20 = []
     wind_20 = []
     
     # Iterate over each simulation index
@@ -90,7 +89,7 @@ def save_psd_percentiles(psd_list, file_name):
 t, state, wind_speed, wave_eta, seeds = load_data("results")
 
 # Categorize simulations
-wind_0_10, wind_10_20, wind_20 = categorize_simulations_by_wind_speed(wind_speed)
+wind_0_10, wind_20 = categorize_simulations_by_wind_speed(wind_speed)
 
 psd_wind_0_10 = []
 psd_wind_20 = []
