@@ -1087,9 +1087,9 @@ def extract_extreme(state, seeds):
     max_state = np.max(state, axis=1)
     max_index = np.argmax(state, axis=1)
     max_seed = []
-    for i in max_state:
+    for i in max_index:
         seed = seeds[:,i]
-        if i > 10 and seed not in max_seed:
+        if max_state[i] > 10 and seed not in max_seed:
             max_seed.append(seed)
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}]')
 
