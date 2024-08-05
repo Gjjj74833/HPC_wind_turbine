@@ -59,14 +59,12 @@ def categorize_simulations_by_wind_speed(wind_speed):
     for i in range(wind_speed.shape[1]):
         avg_wind_speed = np.mean(wind_speed[:, i])
         
-        if avg_wind_speed < 10:
+        if avg_wind_speed < 12:
             wind_0_10.append(i)
-        elif 10 <= avg_wind_speed < 20:
-            wind_10_20.append(i)
         else:
             wind_20.append(i)
     
-    return wind_0_10, wind_10_20, wind_20
+    return wind_0_10, wind_20
 
 def save_psd_percentiles(psd_list, file_name):
     """
@@ -85,7 +83,7 @@ def save_psd_percentiles(psd_list, file_name):
     p37_5 = np.percentile(psd_array, 37.5, axis=0)
     p62_5 = np.percentile(psd_array, 62.5, axis=0)
     
-    np.savez(file_name, median=median, p15_5=p12_5, p87_5=p87_5,
+    np.savez(file_name, median=median, p12_5=p12_5, p87_5=p87_5,
                                        p37_5=p37_5, p62_5=p62_5)
 
 # Load data
@@ -95,15 +93,12 @@ t, state, wind_speed, wave_eta, seeds = load_data("results")
 wind_0_10, wind_10_20, wind_20 = categorize_simulations_by_wind_speed(wind_speed)
 
 psd_wind_0_10 = []
-psd_wind_10_20 = []
 psd_wind_20 = []
 
 psd_wave_0_10 = []
-psd_wave_10_20 = []
 psd_wave_20 = []
 
 psd_surge_0_10 = []
-psd_surge_10_20 = []
 psd_surge_20 = []              
 
 for i in wind_0_10:
@@ -111,11 +106,6 @@ for i in wind_0_10:
     psd_wave_0_10.append(psd(wave_eta[:, i]))
     psd_surge_0_10.append(psd(state[:, 0, i]))
 
-
-for i in wind_10_20:
-    psd_wind_10_20.append(psd(wind_speed[:, i]))
-    psd_wave_10_20.append(psd(wave_eta[:, i]))
-    psd_surge_10_20.append(psd(state[:, 0, i]))
     
 
 for i in wind_20:
@@ -124,16 +114,13 @@ for i in wind_20:
     psd_surge_20.append(psd(state[:, 0, i]))
 
 
-save_psd_percentiles(psd_wind_0_10, "psd_wind_0_10")
-save_psd_percentiles(psd_wind_10_20, "psd_wind_10_20")
-save_psd_percentiles(psd_wind_20, "psd_wind_20")
+save_psd_percentiles(psd_wind_0_10, "psd/wind_0_10")
+save_psd_percentiles(psd_wind_20, "psd/wind_20")
 
-save_psd_percentiles(psd_wave_0_10, "psd_wave_0_10")
-save_psd_percentiles(psd_wave_10_20, "psd_wave_10_20")
-save_psd_percentiles(psd_wave_20, "psd_wave_20")
+save_psd_percentiles(psd_wave_0_10, "psd/wave_0_10")
+save_psd_percentiles(psd_wave_20, "psd/wave_20")
 
-save_psd_percentiles(psd_surge_0_10, "psd_surge_0_10")
-save_psd_percentiles(psd_surge_10_20, "psd_surge_10_20")
-save_psd_percentiles(psd_surge_20, "psd_surge_20")
+save_psd_percentiles(psd_surge_0_10, "psd/surge_0_10")
+save_psd_percentiles(psd_surge_20, "psd/surge_20")
 
 
