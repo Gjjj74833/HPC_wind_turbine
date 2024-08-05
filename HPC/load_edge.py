@@ -1083,15 +1083,18 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
         
 def extract_extreme(state, seeds):
-    
     max_state = np.max(state, axis=1)
     max_index = np.argmax(state, axis=1)
     max_seed = []
+    
     for i in range(max_state.size):
         seed = seeds[:, max_index[i]]
-        if max_state[i] > 10 and seed not in max_seed:
-            max_seed.append(seed)
+        seed_tuple = tuple(seed)
+        if max_state[i] > 10 and seed_tuple not in max_seed:
+            max_seed.append(seed_tuple)
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}]')
+    
+    return max_seed
 
 
 
