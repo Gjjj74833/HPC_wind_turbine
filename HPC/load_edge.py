@@ -1087,8 +1087,8 @@ def extract_extreme(state, seeds):
     max_state = np.max(state, axis=1)
     max_index = np.argmax(state, axis=1)
     max_seed = []
-    for i in max_index:
-        seed = seeds[:,i]
+    for i in range(max_state.size):
+        seed = seeds[:, max_index[i]]
         if max_state[i] > 10 and seed not in max_seed:
             max_seed.append(seed)
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}]')
@@ -1110,4 +1110,4 @@ t, state, wind_speed, wave_eta, seeds = load_data('results')
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-extract_extreme(state, seeds)
+extract_extreme(state[:, 0], seeds)
