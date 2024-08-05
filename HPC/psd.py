@@ -104,7 +104,7 @@ psd_wave_20 = []
 
 psd_surge_0_10 = []
 psd_surge_10_20 = []
-psd_surge_20 = []
+psd_surge_20 = []              
 
 for i in wind_0_10:
     psd_wind_0_10.append(psd(wind_speed[:, i]))

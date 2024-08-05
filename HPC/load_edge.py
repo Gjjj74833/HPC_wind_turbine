@@ -1082,75 +1082,20 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #    seed = seeds[:, i]
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
         
-def largest_sample(state, seeds):
-    # Flatten the state array to a 1D array
-    flattened_state = state.flatten()
-
-    # Get the indices of the 100 largest values
-    largest_indices = np.argpartition(flattened_state, -100)[-100:]
-
-    # Extract the corresponding values
-    largest_values = flattened_state[largest_indices]
-
-    # Convert the 1D indices back to 2D indices
-    original_indices = np.unravel_index(largest_indices, state.shape)
-
-    # Extract the corresponding seeds using the 2D indices
-    corresponding_seeds = seeds[original_indices[0], original_indices[1]]
-
-    # Print the largest values and their corresponding seeds
-    for value, seed in zip(largest_values, corresponding_seeds):
-        print(f"Value: {value}, Seed: {seed}")
+def extract_extreme(state, seeds):
     
-    """
-    Calculate standard deviation and print seeds with standard deviation greater than a threshold.
-
-    Parameters
-    ----------
-    one_state : np.ndarray
-        The state array to calculate standard deviation for.
-    seeds : np.ndarray
-        The array of seeds corresponding to each simulation.
-    threshold : float
-        The threshold for standard deviation.
-    file_name : str
-        The name of the file to save the results to.
-
-    Returns
-    -------
-    None
-    """
-    # Flatten the data and remove NaN values
-    flattened_data = one_state.flatten()
-    cleaned_data = flattened_data[~np.isnan(flattened_data)]
-
-    # Calculate the overall standard deviation
-    overall_std = np.std(cleaned_data)
-    
-    # Open the file for writing
-    with open(file_name, 'w') as file:
-        file.write(f"Overall standard deviation across all simulations: {overall_std}\n")
-
-        # Calculate standard deviations along the second axis
-        std_devs = np.std(one_state, axis=0)
-
-        # Find indices of standard deviations greater than the threshold
-        indices_of_large_stds = np.where(std_devs > threshold)[0]
-
-        # Sort indices by standard deviation in descending order
-        sorted_indices = indices_of_large_stds[np.argsort(std_devs[indices_of_large_stds])[::-1]]
-
-        # Print the count of samples with std greater than the threshold
-        count_above_threshold = len(indices_of_large_stds)
-        file.write(f"Number of samples with standard deviation greater than {threshold}: {count_above_threshold}\n")
-
-        # Print the seeds and their standard deviations
-        for i in sorted_indices:
-            seed = seeds[:, i]
-            file.write(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}\n')
+    max_state = np.max(state, axis=1)
+    max_index = np.argmax(state, axis=1)
+    max_seed = []
+    for i in max_state:
+        seed = seeds[:,i]
+        if i > 10 and seed not in max_seed:
+            max_seed.append(seed)
+            print(f'[{seed[0]}, {seed[1]}, {seed[2]}]')
 
 
-t, state_2500, wind_speed, wave_eta, seeds = load_data('results')
+
+t, state, wind_speed, wave_eta, seeds = load_data('results')
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
@@ -1164,5 +1109,5 @@ t, state_2500, wind_speed, wave_eta, seeds = load_data('results')
 #    for elipse in [1, 2, 4, 6, 8]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
-largest_sample(state_2500, seeds)   
 
+extract_extreme(state, seeds)
