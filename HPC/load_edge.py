@@ -922,7 +922,7 @@ def pitch_distribution(pitch, pitch_rate):
     plot_pdf(pitch_rate, axs[1], 'Pitch Rate (deg/s)')
 
     plt.tight_layout()
-    plt.savefig('./figure/pitch_distr.png')
+    plt.savefig('./figure/surge_distr.png')
     
 def pitch_distr_compare(pitch_or, pitch_rate_or, pitch_lo, pitch_rate_lo):
     """
@@ -1090,7 +1090,7 @@ def extract_extreme(state, seeds):
     for i in range(max_state.size):
         seed = seeds[:, max_index[i]]
         seed_tuple = tuple(seed)
-        if max_state[i] > 10 and seed_tuple not in max_seed:
+        if max_state[i] > 8 and seed_tuple not in max_seed:
             max_seed.append(seed_tuple)
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}]')
     
@@ -1102,7 +1102,7 @@ t, state, wind_speed, wave_eta, seeds = load_data('results')
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
-#pitch_distribution(state_original[:, 0], state_original[:, 1])
+pitch_distribution(state[:, 0], state[:, 1])
 #largest_std(state_2500[:, 0][:500], seeds)
 #largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
