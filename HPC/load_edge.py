@@ -916,10 +916,10 @@ def pitch_distribution(pitch, pitch_rate):
     fig, axs = plt.subplots(1, 2, figsize=(10, 3))
 
     # Plot pitch distributions
-    plot_pdf(pitch, axs[0], 'Pitch (deg)')
+    plot_pdf(pitch, axs[0], 'Surge (m)')
 
     # Plot pitch_rate distributions
-    plot_pdf(pitch_rate, axs[1], 'Pitch Rate (deg/s)')
+    plot_pdf(pitch_rate, axs[1], 'Surge Velocity (m/s)')
 
     plt.tight_layout()
     plt.savefig('./figure/surge_distr.png')
@@ -1113,4 +1113,4 @@ pitch_distribution(state[:, 0], state[:, 1])
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-extract_extreme(state[:, 0], seeds)
+#extract_extreme(state[:, 0], seeds)
