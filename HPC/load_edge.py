@@ -1102,7 +1102,7 @@ t, state, wind_speed, wave_eta, seeds = load_data('results')
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
-pitch_distribution(state[:, 0], state[:, 1])
+pitch_distribution(state[:, 0][:-1000], state[:, 1][:-1000])
 #largest_std(state_2500[:, 0][:500], seeds)
 #largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
@@ -1113,4 +1113,4 @@ pitch_distribution(state[:, 0], state[:, 1])
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-#extract_extreme(state[:, 0], seeds)
+extract_extreme(state[:, 0][:-1000], seeds)
