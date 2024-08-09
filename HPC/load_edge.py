@@ -889,24 +889,24 @@ def pitch_distribution(pitch, pitch_rate):
         pdf = kde(x)
 
         # Calculate the max and min values for each sample (i.e., across all simulations for each time step)
-        max_values = data.max(axis=0)
-        min_values = data.min(axis=0)
+        #max_values = data.max(axis=0)
+        #min_values = data.min(axis=0)
 
         # Calculate the PDFs of the max and min values
-        kde_max = gaussian_kde(max_values)
-        kde_min = gaussian_kde(min_values)
-        x_max = np.linspace(max_values.min(), max_values.max(), 1000)
-        x_min = np.linspace(min_values.min(), min_values.max(), 1000)
-        pdf_max = kde_max(x_max)
-        pdf_min = kde_min(x_min)
+        #kde_max = gaussian_kde(max_values)
+        #kde_min = gaussian_kde(min_values)
+        #x_max = np.linspace(max_values.min(), max_values.max(), 1000)
+        #x_min = np.linspace(min_values.min(), min_values.max(), 1000)
+        #pdf_max = kde_max(x_max)
+        #pdf_min = kde_min(x_min)
 
         # Plot all PDFs on the same axes
-        ax.hist(max_values, bins=100, density=True, alpha=0.5, color='r', label='Max')
-        ax.hist(min_values, bins=100, density=True, alpha=0.5, color='b', label='Min')
+        #ax.hist(max_values, bins=100, density=True, alpha=0.5, color='r', label='Max')
+        #ax.hist(min_values, bins=100, density=True, alpha=0.5, color='b', label='Min')
         ax.hist(flattened_data, bins=100, density=True, alpha=0.5, color='gray', label='All Distribution')
         ax.plot(x, pdf, color='black')
-        ax.plot(x_max, pdf_max, color='red')
-        ax.plot(x_min, pdf_min, color='blue')
+        #ax.plot(x_max, pdf_max, color='red')
+        #ax.plot(x_min, pdf_min, color='blue')
         ax.set_xlabel(f'{label}')
         ax.set_ylabel('Density')
         ax.legend()
@@ -916,13 +916,13 @@ def pitch_distribution(pitch, pitch_rate):
     fig, axs = plt.subplots(1, 2, figsize=(10, 3))
 
     # Plot pitch distributions
-    plot_pdf(pitch, axs[0], 'Surge (m)')
+    plot_pdf(pitch, axs[0], 'Wind Speed (m/s)')
 
     # Plot pitch_rate distributions
-    plot_pdf(pitch_rate, axs[1], 'Surge Velocity (m/s)')
+    plot_pdf(pitch_rate, axs[1], 'Wave Elevation (m)')
 
     plt.tight_layout()
-    plt.savefig('./figure/surge_distr.png')
+    plt.savefig('./figure/wind_wave_distr.png')
     
 def pitch_distr_compare(pitch_or, pitch_rate_or, pitch_lo, pitch_rate_lo):
     """
@@ -1090,7 +1090,7 @@ def extract_extreme(state, seeds):
     for i in range(max_state.size):
         seed = seeds[:, max_index[i]]
         seed_tuple = tuple(seed)
-        if max_state[i] > 8 and seed_tuple not in max_seed:
+        if max_state[i] > 10 and seed_tuple not in max_seed:
             max_seed.append(seed_tuple)
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}]')
     
@@ -1102,7 +1102,7 @@ t, state, wind_speed, wave_eta, seeds = load_data('results')
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
-pitch_distribution(state[:, 0][:-1000], state[:, 1][:-1000])
+pitch_distribution(wind_speed[:-1000], wave_eta[:-1000])
 #largest_std(state_2500[:, 0][:500], seeds)
 #largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
