@@ -1098,9 +1098,9 @@ def extract_extreme(state, seeds):
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
             count += 1
         
-        print(f'Total extreme events: {count}')
+    print(f'Total extreme events: {count}')
         
-        '''
+'''
 def extract_extreme(state, seeds):
     
     upper_bound = 8
