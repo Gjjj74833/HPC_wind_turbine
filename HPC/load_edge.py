@@ -1083,18 +1083,46 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
         
 def extract_extreme(state, seeds):
+    
+    upper_bound = 8
+    
     max_state = np.max(state, axis=1)
     max_index = np.argmax(state, axis=1)
     max_seed = []
     
+    print(f'For max extreme over {upper_bound}')
+    
     for i in range(max_state.size):
         seed = seeds[:, max_index[i]]
         seed_tuple = tuple(seed)
-        if max_state[i] > 10 and seed_tuple not in max_seed:
+        
+        if max_state[i] > upper_bound  and seed_tuple not in max_seed:
             max_seed.append(seed_tuple)
-            print(f'[{seed[0]}, {seed[1]}, {seed[2]}]')
+            
+            max_value = np.max(state[:, max_index[i]])
+            min_value = np.min(state[:, max_index[i]])
+            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
     
-    return max_seed
+    print(f'There are {max_seed.size} samples have max extreme over {upper_bound}')
+    
+    lower_bound = -5
+    
+    min_state = np.min(state, axis=1)
+    min_index = np.argmin(state, axis=1)
+    min_seed = []
+    
+    for i in range(min_state.size):
+        seed = seeds[:, min_index[i]]
+        seed_tuple = tuple(seed)
+        
+        if min_state[i] < lower_bound  and seed_tuple not in min_seed:
+            min_seed.append(seed_tuple)
+            
+            max_value = np.max(state[:, min_index[i]])
+            min_value = np.min(state[:, min_index[i]])
+            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
+    
+    print(f'There are {min_seed.size} samples have min extreme below {lower_bound}')
 
 
 
@@ -1102,7 +1130,7 @@ t, state, wind_speed, wave_eta, seeds = load_data('results')
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
-pitch_distribution(wind_speed[:-1000], wave_eta[:-1000])
+#pitch_distribution(wind_speed[:-1000], wave_eta[:-1000])
 #largest_std(state_2500[:, 0][:500], seeds)
 #largest_std_percentage(temp_state[:, 4], seeds, 0.3259)
 
