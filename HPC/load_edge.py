@@ -1081,7 +1081,26 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #for i in sorted_indices:
     #    seed = seeds[:, i]
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
+    
+def extract_extreme(state, seeds):
+    
+    upper_bound = 8
+    lower_bound = -5
+    
+    count = 0
+    
+    for i in range(state.shape[1]):
+        max_value = np.max(state[:, i])
+        min_value = np.min(state[:, i])
         
+        if max_value > upper_bound or min_value < lower_bound:
+            seed = seeds[:, i]
+            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
+            count += 1
+        
+        print(f'Total extreme events: {count}')
+        
+        '''
 def extract_extreme(state, seeds):
     
     upper_bound = 8
@@ -1090,20 +1109,20 @@ def extract_extreme(state, seeds):
     max_index = np.argmax(state, axis=1)
     max_seed = []
     
-    print(f'For max extreme over {upper_bound}')
+
     
     for i in range(max_state.size):
         seed = seeds[:, max_index[i]]
         seed_tuple = tuple(seed)
         
-        if max_state[i] > upper_bound  and seed_tuple not in max_seed:
+        if max_state[i] > upper_bound:
             max_seed.append(seed_tuple)
             
             max_value = np.max(state[:, max_index[i]])
             min_value = np.min(state[:, max_index[i]])
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
     
-    print(f'There are {max_seed.size} samples have max extreme over {upper_bound}')
+    print(f'There are {len(max_seed)} samples have max extreme over {upper_bound}')
     
     lower_bound = -5
     
@@ -1115,15 +1134,15 @@ def extract_extreme(state, seeds):
         seed = seeds[:, min_index[i]]
         seed_tuple = tuple(seed)
         
-        if min_state[i] < lower_bound  and seed_tuple not in min_seed:
+        if min_state[i] < lower_bound:
             min_seed.append(seed_tuple)
             
             max_value = np.max(state[:, min_index[i]])
             min_value = np.min(state[:, min_index[i]])
             print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
     
-    print(f'There are {min_seed.size} samples have min extreme below {lower_bound}')
-
+    print(f'There are {len(min_seed)} samples have min extreme below {lower_bound}')
+'''
 
 
 t, state, wind_speed, wave_eta, seeds = load_data('results')
