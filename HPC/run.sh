@@ -19,5 +19,6 @@ if [ -n "$1" ]; then
     fi
 fi
 
-module load python/3.9 1 0 $n_simulations
+module load python/3.9 
+python3 gen_seeds.py 1 0 $n_simulations
 sbatch monteCarlo.slurm $n_simulations $2 1 0 4021713

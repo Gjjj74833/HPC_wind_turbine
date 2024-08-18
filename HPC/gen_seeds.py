@@ -23,7 +23,7 @@ def generate_and_save_unique_arrays(n, n_array, seed=None):
         # Get the sub-array for the current set
         sub_array = unique_values[start_idx:end_idx].reshape((rows_per_array, 3))
         
-        filename = f'./seeds_pitch_{sys.argv[1]}_pi{sys.argv[2]}/seeds_{i+1}.npy'
+        filename = f'./seeds_surge_{sys.argv[1]}_pi{sys.argv[2]}/seeds_{i+1}.npy'
         np.save(filename, sub_array)
         print(f"Saved: {filename}")
 
