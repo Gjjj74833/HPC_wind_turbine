@@ -27,7 +27,7 @@ def generate_and_save_unique_arrays(n, n_array, seed=None):
         np.save(filename, sub_array)
         print(f"Saved: {filename}")
 
-generate_and_save_unique_arrays(20000, 50)
+generate_and_save_unique_arrays(int(sys.argv[3]), 50)
 
 
 
