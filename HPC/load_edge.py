@@ -1084,7 +1084,7 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     
 def extract_extreme(state, seeds):
     
-    upper_bound = 8
+    upper_bound = 10
     lower_bound = -5
     
     count = 0

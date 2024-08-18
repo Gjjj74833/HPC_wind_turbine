@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jul 12 13:49:19 2024
-
+Betti model implementation with PID controller
 
 @author: Yihan Liu
 @version (2023-06-24)
@@ -13,8 +12,6 @@ import bisect
 from multiprocessing import Pool
 from datetime import datetime
 from gen_wind_Van_Der_Hoven import generate_wind
-import pickle
-from scipy.interpolate import interp1d
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):
     """
@@ -190,6 +187,7 @@ def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
     [v_x, v_y, a_x, a_y]: list
         The wave velocity and acceleration in x and y direction
     """
+    
     g = 9.81  # gravitational constant
     alpha = 0.0081  # Phillips' constant
 
@@ -580,36 +578,7 @@ def Betti(x, t, beta, T_E, performance, v_w, v_aveg, random_phases):
     return dxdt, h_wave
 
 
-def generate_noise_from_saved_pdf(file_path, size, seed):
-    """
-    Load the PDF data from a file and generate noise samples using a specified seed.
 
-    Parameters:
-    file_path : str
-        Path to the file containing the PDF data.
-    size : int
-        The number of noise samples to generate.
-    seed : int
-        Seed for the random number generator.
-
-    Returns:
-    noise : ndarray
-        The generated noise samples.
-    """
-    state_before = np.random.get_state()
-    np.random.seed(seed)
-
-    with open(file_path, 'rb') as f:
-        xs, pdf_values = pickle.load(f)
-
-    cdf_values = np.cumsum(pdf_values)
-    cdf_values /= cdf_values[-1]  # Normalize to [0, 1]
-    inverse_cdf = interp1d(cdf_values, xs, bounds_error=False, fill_value=(xs[0], xs[-1]))
-    
-    random_values = np.random.rand(size)
-    noise = inverse_cdf(random_values)
-    np.random.set_state(state_before)
-    return noise
 
 def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave, v_ml, T_s1):
     """
@@ -656,9 +625,12 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     x[0] = x0
 
     
-    # generate a noise for wave
-    random_phases = generate_noise_from_saved_pdf('noise_pdfs/wave_pdf_1.pkl', 400, seed_wave)
-    
+    # generate a random seed
+    state_before = np.random.get_state()
+    #wave_seed = np.random.randint(0, high=10**7)
+    np.random.seed(seed_wave)
+    random_phases = 2*np.pi*np.random.rand(400)
+    np.random.set_state(state_before)
     ###########################################################################
     # PI controller
     integral = 0
@@ -836,18 +808,15 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     discard_steps = int(500 / 0.5)
      
 
-    t_sub = t[::steps][discard_steps:]
-    x_sub = x[::steps][discard_steps:]
-    v_wind_sub = v_wind[:len(t)][::steps][discard_steps:]
-    h_wave_sub = np.array(h_waves)[::steps][discard_steps:]
-    betas_sub = betas[::steps][discard_steps:]
-    T_E_list_sub = T_E_list[::steps][discard_steps:]
-    P_A_list_sub = P_A_list[::steps][discard_steps:]
+    t_sub = t[::steps]#[discard_steps:]
+    x_sub = x[::steps]#[discard_steps:]
+    v_wind_sub = v_wind[:len(t)][::steps]#[discard_steps:]
+    h_wave_sub = np.array(h_waves)[::steps]#[discard_steps:]
+    betas_sub = betas[::steps]#[discard_steps:]
+    T_E_list_sub = T_E_list[::steps]#[discard_steps:]
+    P_A_list_sub = P_A_list[::steps]#[discard_steps:]
     
     return t_sub-t_sub[0], x_sub, v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub
-
-
-
 
 def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     """
@@ -875,11 +844,26 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     
     # modify this to change initial condition
     #[zeta, v_zeta, eta, v_eta, alpha, omega, omega_R]
+
     
-    white_noise_ml = generate_noise_from_saved_pdf('noise_pdfs/ml_pdf_1.pkl', 31, seeds[0])
-    white_noise_turb = generate_noise_from_saved_pdf('noise_pdfs/turb_pdf_1.pkl', int(np.ceil(end_time / T_s1) * T_s1), seeds[1])
+    # generate medium long component noise use the first seed
+    if int(sys.argv[6]) == 0:
+        epsilon = 0
+    else:
+        epsilon = np.pi / int(sys.argv[6])
     
-    wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb)
+    state_before = np.random.get_state()                                                                                                                                                                
+    np.random.seed(seeds[0])
+    white_noise_ml = np.random.normal(loc=0, scale=epsilon, size=31)
+    np.random.set_state(state_before)
+    
+    # generate turbulence noise use the second seed
+    state_before = np.random.get_state()
+    np.random.seed(seeds[1])
+    white_noise_turb = np.random.normal(0, 1, int(np.ceil(end_time / T_s1) * T_s1))  # For turbulence component
+    np.random.set_state(state_before)
+    
+    wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb, int(sys.argv[7]))
     v_wind = np.repeat(wind_speeds, int(1/time_step))
 
     # modify this to change run time and step size
@@ -905,7 +889,7 @@ def run_simulations_parallel(n_simulations, params):
     params.append(state)
 
     file_index = list(range(0, n_simulations))
-    seeds_array = np.load(f'./seeds/seeds_{sys.argv[1]}.npy')
+    seeds_array = np.load(f'./seeds_pitch_{sys.argv[5]}_pi{sys.argv[6]}/seeds_{sys.argv[1]}.npy')
    
     
     with Pool(int(sys.argv[3])) as p:
@@ -933,7 +917,7 @@ def save_binaryfile(results):
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  
+    np.savez(f'./results_pitch_{sys.argv[5]}_pi{sys.argv[6]}/results_{sys.argv[1]}_{time}.npz', t=t,  
                                                             state=state, 
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 
