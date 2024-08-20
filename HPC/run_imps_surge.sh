@@ -65,6 +65,37 @@ fi
 module load python/3.9
 ### ./run.sh $1 -> {simulation number}, $2={simulation time}, $3={samping seed ID}, $4={elispe pi/_}, $5={sampling seed}
 ### gen_seeds $3 $4
+mkdir seeds_surge_1_pi1
+mkdir results_surge_1_pi1
+python3 gen_seeds.py 1 1 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 1 1 4021713
+
+mkdir seeds_surge_1_pi2
+mkdir results_surge_1_pi2
+python3 gen_seeds.py 1 2 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 1 2 4021713
+
+mkdir seeds_surge_1_pi4
+mkdir results_surge_1_pi4
+python3 gen_seeds.py 1 4 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 1 4 4021713
+
+mkdir seeds_surge_1_pi6
+mkdir results_surge_1_pi6
+python3 gen_seeds.py 1 6 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 1 6 4021713
+
+mkdir seeds_surge_1_pi8
+mkdir results_surge_1_pi8
+python3 gen_seeds.py 1 8 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 1 8 4021713
+#####################################################
+
+mkdir seeds_surge_2_pi0
+mkdir results_surge_2_pi0
+python3 gen_seeds.py 2 0 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 2 0 8041419
+
 mkdir seeds_surge_2_pi1
 mkdir results_surge_2_pi1
 python3 gen_seeds.py 2 1 $n_simulations
@@ -90,6 +121,10 @@ mkdir results_surge_2_pi8
 python3 gen_seeds.py 2 8 $n_simulations
 sbatch monteCarlo.slurm $n_simulations $2 2 8 8041419
 #####################################################
+mkdir seeds_surge_3_pi0
+mkdir results_surge_3_pi0
+python3 gen_seeds.py 3 0 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 3 0 6488224
 
 mkdir seeds_surge_3_pi1
 mkdir results_surge_3_pi1
@@ -116,6 +151,10 @@ mkdir results_surge_3_pi8
 python3 gen_seeds.py 3 8 $n_simulations
 sbatch monteCarlo.slurm $n_simulations $2 3 8 6488224
 #####################################################
+mkdir seeds_surge_4_pi0
+mkdir results_surge_4_pi0
+python3 gen_seeds.py 4 0 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 4 0 9141186
 
 mkdir seeds_surge_4_pi1
 mkdir results_surge_4_pi1
@@ -142,6 +181,12 @@ mkdir results_surge_4_pi8
 python3 gen_seeds.py 4 8 $n_simulations
 sbatch monteCarlo.slurm $n_simulations $2 4 8 9141186
 #####################################################
+
+mkdir seeds_surge_5_pi0
+mkdir results_surge_5_pi0
+python3 gen_seeds.py 5 0 $n_simulations
+sbatch monteCarlo.slurm $n_simulations $2 5 0 8734247
+
 mkdir seeds_surge_5_pi1
 mkdir results_surge_5_pi1
 python3 gen_seeds.py 5 1 $n_simulations
