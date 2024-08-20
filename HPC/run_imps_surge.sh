@@ -65,15 +65,7 @@ fi
 module load python/3.9
 ### ./run.sh $1 -> {simulation number}, $2={simulation time}, $3={samping seed ID}, $4={elispe pi/_}, $5={sampling seed}
 ### gen_seeds $3 $4
-mkdir seeds_surge_1_pi1
-mkdir results_surge_1_pi1
-python3 gen_seeds.py 1 1 $1
-sbatch monteCarlo.slurm $n_simulations $2 1 1 4021713
 
-mkdir seeds_surge_1_pi2
-mkdir results_surge_1_pi2
-python3 gen_seeds.py 1 2 $1
-sbatch monteCarlo.slurm $n_simulations $2 1 2 4021713
 
 mkdir seeds_surge_1_pi4
 mkdir results_surge_1_pi4
