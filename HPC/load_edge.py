@@ -1166,22 +1166,22 @@ def compare_PDFs(states, state_labels, name, unit):
 
 #extract_extreme(state[:, 0][:-1000], seeds)
 wind_normal = load_data('results')[2]
-wind_pitch_1 = load_data("results_2500")[2]
-wind_pitch_2 = load_data("results_pitch_lo_1")[2]
-wind_pitch_3 = load_data("results_pitch_lo_2")[2]
-wind_pitch_4 = load_data("results_pitch_lo_3")[2]
-wind_pitch_5 = load_data("results_pitch_lo_4")[2]
+wind_surge_1 = load_data("results_surge_1_pi0")[2]
+wind_surge_2 = load_data("results_surge_2_pi0")[2]
+wind_surge_3 = load_data("results_surge_3_pi0")[2]
+wind_surge_4 = load_data("results_surge_4_pi0")[2]
+wind_surge_5 = load_data("results_surge_5_pi0")[2]
 
 compare_PDFs([wind_normal,
-              wind_pitch_1,
-              wind_pitch_2,
-              wind_pitch_3,
-              wind_pitch_4,
-              wind_pitch_5], ["standard MCMC",
+              wind_surge_1,
+              wind_surge_2,
+              wind_surge_3,
+              wind_surge_4,
+              wind_surge_5], ["standard MCMC",
                               "ID = 1",
                               "ID = 2",
                               "ID = 3",
                               "ID = 4",
-                              "ID = 5"], "wind_pitch", "Wind Speed (m/s)")
+                              "ID = 5"], "wind_surge", "Wind Speed (m/s)")
 
 
