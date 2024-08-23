@@ -1084,6 +1084,10 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     
 def extract_extreme(state, seeds):
     
+    """
+    count number of samples exceed threshold
+    """
+    
     upper_bound = 10
     lower_bound = -5
     
@@ -1100,52 +1104,52 @@ def extract_extreme(state, seeds):
         
     print(f'Total extreme events: {count}')
         
-'''
-def extract_extreme(state, seeds):
-    
-    upper_bound = 8
-    
-    max_state = np.max(state, axis=1)
-    max_index = np.argmax(state, axis=1)
-    max_seed = []
-    
 
     
-    for i in range(max_state.size):
-        seed = seeds[:, max_index[i]]
-        seed_tuple = tuple(seed)
-        
-        if max_state[i] > upper_bound:
-            max_seed.append(seed_tuple)
-            
-            max_value = np.max(state[:, max_index[i]])
-            min_value = np.min(state[:, max_index[i]])
-            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
+def compare_PDFs(states, state_labels, name, unit):
+    """
+    Compare the distribution of multiple states in a single figure.
     
-    print(f'There are {len(max_seed)} samples have max extreme over {upper_bound}')
+    Parameters:
+    states (list of np.ndarray): List of 2D arrays where each array is a state.
+    state_labels (list of str): List of labels for each state, corresponding to the state arrays.
+    name (str): used for save figure name
+    unit (str): state name with unit for x label
+    """
     
-    lower_bound = -5
-    
-    min_state = np.min(state, axis=1)
-    min_index = np.argmin(state, axis=1)
-    min_seed = []
-    
-    for i in range(min_state.size):
-        seed = seeds[:, min_index[i]]
-        seed_tuple = tuple(seed)
-        
-        if min_state[i] < lower_bound:
-            min_seed.append(seed_tuple)
-            
-            max_value = np.max(state[:, min_index[i]])
-            min_value = np.min(state[:, min_index[i]])
-            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
-    
-    print(f'There are {len(min_seed)} samples have min extreme below {lower_bound}')
-'''
+    def plot_pdf(data, ax, label, is_first=False):
+        # Flatten the array
+        flattened_data = data.flatten()
 
+        # Calculate the PDFs using KDE
+        kde = gaussian_kde(flattened_data)
+        x = np.linspace(flattened_data.min(), flattened_data.max(), 1000)
+        pdf = kde(x)
 
-t, state, wind_speed, wave_eta, seeds = load_data('results')
+        # Plot the PDFs
+        if is_first:
+            ax.plot(x, pdf, label=label, linestyle='-', color='black', linewidth=2.5)
+        else:
+            ax.plot(x, pdf, label=label, linestyle='-', linewidth=1.5)
+
+        ax.set_xlabel(unit)
+        ax.set_ylabel('Density')
+        ax.grid(True)
+
+    # Create a figure for the combined plots
+    fig, ax = plt.subplots(figsize=(6, 3))
+
+    # Iterate through all states and plot their PDFs on the same axes
+    for i, (data, label) in enumerate(zip(states, state_labels)):
+        plot_pdf(data, ax, label, is_first=(i == 0))
+
+    # Adjust the legend to be outside the plot
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize='small', borderaxespad=0)
+
+    plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust the layout to make space for the legend
+    plt.savefig(f'./figure/{name}_pdf_compare.png', bbox_inches='tight')
+
+#t, state, wind_speed, wave_eta, seeds = load_data('results')
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
@@ -1160,4 +1164,24 @@ t, state, wind_speed, wave_eta, seeds = load_data('results')
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-extract_extreme(state[:, 0][:-1000], seeds)
+#extract_extreme(state[:, 0][:-1000], seeds)
+wind_normal = load_data('results')[2]
+wind_pitch_1 = load_data("results_2500")[2]
+wind_pitch_2 = load_data("results_pitch_lo_1")[2]
+wind_pitch_3 = load_data("results_pitch_lo_2")[2]
+wind_pitch_4 = load_data("results_pitch_lo_3")[2]
+wind_pitch_5 = load_data("results_pitch_lo_4")[2]
+
+compare_PDFs([wind_normal,
+              wind_pitch_1,
+              wind_pitch_2,
+              wind_pitch_3,
+              wind_pitch_4,
+              wind_pitch_5], ["standard MCMC",
+                              "ID = 1",
+                              "ID = 2",
+                              "ID = 3",
+                              "ID = 4",
+                              "ID = 5"], "wind_pitch", "Wind Speed (m/s)")
+
+
