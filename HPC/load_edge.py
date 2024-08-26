@@ -1146,7 +1146,7 @@ def compare_PDFs(states, state_labels, name, unit):
     plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust the layout to make space for the legend
     plt.savefig(f'./figure/{name}_pdf_compare.png', bbox_inches='tight')
 
-t, state, wind_speed, wave_eta, seeds = load_data('results_surge_5_pi1')
+#t, state, wind_speed, wave_eta, seeds = load_data('results_surge_5_pi1')
 
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
@@ -1162,7 +1162,61 @@ t, state, wind_speed, wave_eta, seeds = load_data('results_surge_5_pi1')
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-extract_extreme(state[:, 0], seeds)
+#extract_extreme(state[:, 0], seeds)
+
+wind_pi0 = np.hstack((load_data('results_2500')[2],
+                      load_data('results_pitch_lo_1')[2],
+                      load_data('results_pitch_lo_2')[2],
+                      load_data('results_pitch_lo_3')[2],
+                      load_data('results_pitch_lo_4')[2]))
+
+wind_pi1 = np.hstack((load_data('results_pitch_1_pi1')[2],
+                      load_data('results_pitch_2_pi1')[2],
+                      load_data('results_pitch_3_pi1')[2],
+                      load_data('results_pitch_4_pi1')[2],
+                      load_data('results_pitch_5_pi1')[2],))
+
+wind_pi2 = np.hstack((load_data('results_pitch_1_pi2')[2],
+                      load_data('results_pitch_2_pi2')[2],
+                      load_data('results_pitch_3_pi2')[2],
+                      load_data('results_pitch_4_pi2')[2],
+                      load_data('results_pitch_5_pi2')[2],))
+
+wind_pi4 = np.hstack((load_data('results_pitch_1_pi4')[2],
+                      load_data('results_pitch_2_pi4')[2],
+                      load_data('results_pitch_3_pi4')[2],
+                      load_data('results_pitch_4_pi4')[2],
+                      load_data('results_pitch_5_pi4')[2],))
+
+wind_pi6 = np.hstack((load_data('results_pitch_1_pi6')[2],
+                      load_data('results_pitch_2_pi6')[2],
+                      load_data('results_pitch_3_pi6')[2],
+                      load_data('results_pitch_4_pi6')[2],
+                      load_data('results_pitch_5_pi6')[2],))
+
+wind_pi8 = np.hstack((load_data('results_pitch_1_pi8')[2],
+                      load_data('results_pitch_2_pi8')[2],
+                      load_data('results_pitch_3_pi8')[2],
+                      load_data('results_pitch_4_pi8')[2],
+                      load_data('results_pitch_5_pi8')[2],))
+
+wind_normal = load_data('results')[2]
+
+compare_PDFs([wind_normal,
+              wind_pi0,
+              wind_pi1,
+              wind_pi2,
+              wind_pi4,
+              wind_pi6,
+              wind_pi8],
+             ["standard MCMC",
+              "Epsilon = 0",
+              "Epsilon = pi",
+              "Epsilon = pi/2",
+              "Epsilon = pi/4",
+              "Epsilon = pi/6",
+              "Epsilon = pi/8"], "epsilon_pitch", "Wind Speed (m/s)")
+
 
 '''
 wind_normal = load_data('results')[2]
