@@ -1223,14 +1223,6 @@ def state_PDF_compare(state_or, state_lo):
 
 
 
-state_original = load_data('results')[1]
-
-state_PDF_compare(state_original[:, 0][1000:], np.hstack((load_data('results_surge_1_pi0')[1][565:3065, 0],
-                                           load_data('results_surge_2_pi0')[1][:, 0],
-                                           load_data('results_surge_3_pi0')[1][:, 0],
-                                           load_data('results_surge_4_pi0')[1][:, 0],
-                                           load_data('results_surge_5_pi0')[1][:, 0])))
-
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
 #pitch_distribution(wind_speed[:-1000], wave_eta[:-1000])
@@ -1239,12 +1231,22 @@ state_PDF_compare(state_original[:, 0][1000:], np.hstack((load_data('results_sur
 
 #pitch_distr_compare(state_original[:, 4][1000:], state_original[:, 5][1000:], state_2500[:, 4], state_2500[:, 5])
 
-#for sample_ID in range(2, 6):
-#    for elipse in [1, 2, 4, 6, 8]:
-#        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
-#        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+for sample_ID in range(1, 6):
+    for elipse in [1, 2, 4, 6, 8, 0]:
+        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
+        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
 '''
+#plot pdfs for surge, compare imps and mcmc
+state_original = load_data('results')[1]
+
+state_PDF_compare(state_original[:, 0][1000:], np.hstack((load_data('results_surge_1_pi0')[1][:, 0, 565:3065],
+                                           load_data('results_surge_2_pi0')[1][:, 0],
+                                           load_data('results_surge_3_pi0')[1][:, 0],
+                                           load_data('results_surge_4_pi0')[1][:, 0],
+                                           load_data('results_surge_5_pi0')[1][:, 0])))
+
+#convergence test
 extract_extreme(state[:, 0], seeds, 10, -100)
 extract_extreme(state[:, 0], seeds, 9, -100)
 extract_extreme(state[:, 0], seeds, 8, -100)
@@ -1266,6 +1268,7 @@ extract_extreme(state[:, 0, 11685:13185], seeds, 9, -100)
 extract_extreme(state[:, 0, 11685:13185], seeds, 8, -100)
 
 
+#plot pdfs for wind of different epsilon average all configurations
 wind_pi0 = np.hstack((load_data('results_2500')[2],
                       load_data('results_pitch_lo_1')[2],
                       load_data('results_pitch_lo_2')[2],
@@ -1320,7 +1323,7 @@ compare_PDFs([wind_normal,
               "Epsilon = pi/8"], "epsilon_pitch", "Wind Speed (m/s)")
 
 
-
+#plot pdfs for different configurations with epsilon=0
 wind_normal = load_data('results')[2]
 wind_surge_1 = load_data("results_surge_1_pi0")[2]
 wind_surge_2 = load_data("results_surge_2_pi0")[2]
