@@ -1311,44 +1311,43 @@ extract_extreme(state[:, 0, 11685:13185], seeds, 8, -100)
 
 #plot pdfs for wind of different epsilon average all configurations
 
-wind_pi0 = np.hstack((load_data('results_surge_1_pi0')[2][:, :2500],
-                      load_data('results_surge_2_pi0')[2],
-                      load_data('results_surge_3_pi0')[2],
-                      load_data('results_surge_4_pi0')[2],
-                      load_data('results_surge_5_pi0')[2],))
+wind_pi0 = np.hstack((load_data('results_2500')[2],
+                      load_data('results_pitch_lo_1')[2],
+                      load_data('results_pitch_lo_2')[2],
+                      load_data('results_pitch_lo_3')[2],
+                      load_data('results_pitch_lo_4')[2]))
 
-wind_pi1 = np.hstack((load_data('results_surge_1_pi1')[2],
-                      load_data('results_surge_2_pi1')[2],
-                      load_data('results_surge_3_pi1')[2],
-                      load_data('results_surge_4_pi1')[2],
-                      load_data('results_surge_5_pi1')[2],))
+wind_pi1 = np.hstack((load_data('results_pitch_1_pi1')[2],
+                      load_data('results_pitch_2_pi1')[2],
+                      load_data('results_pitch_3_pi1')[2],
+                      load_data('results_pitch_4_pi1')[2],
+                      load_data('results_pitch_5_pi1')[2],))
 
-wind_pi2 = np.hstack((load_data('results_surge_1_pi2')[2],
-                      load_data('results_surge_2_pi2')[2],
-                      load_data('results_surge_3_pi2')[2],
-                      load_data('results_surge_4_pi2')[2],
-                      load_data('results_surge_5_pi2')[2],))
+wind_pi2 = np.hstack((load_data('results_pitch_1_pi2')[2],
+                      load_data('results_pitch_2_pi2')[2],
+                      load_data('results_pitch_3_pi2')[2],
+                      load_data('results_pitch_4_pi2')[2],
+                      load_data('results_pitch_5_pi2')[2],))
 
-wind_pi4 = np.hstack((load_data('results_surge_1_pi4')[2],
-                      load_data('results_surge_2_pi4')[2],
-                      load_data('results_surge_3_pi4')[2],
-                      load_data('results_surge_4_pi4')[2],
-                      load_data('results_surge_5_pi4')[2],))
+wind_pi4 = np.hstack((load_data('results_pitch_1_pi4')[2],
+                      load_data('results_pitch_2_pi4')[2],
+                      load_data('results_pitch_3_pi4')[2],
+                      load_data('results_pitch_4_pi4')[2],
+                      load_data('results_pitch_5_pi4')[2],))
 
-wind_pi6 = np.hstack((load_data('results_surge_1_pi6')[2],
-                      load_data('results_surge_2_pi6')[2],
-                      load_data('results_surge_3_pi6')[2],
-                      load_data('results_surge_4_pi6')[2],
-                      load_data('results_surge_5_pi6')[2],))
+wind_pi6 = np.hstack((load_data('results_pitch_1_pi6')[2],
+                      load_data('results_pitch_2_pi6')[2],
+                      load_data('results_pitch_3_pi6')[2],
+                      load_data('results_pitch_4_pi6')[2],
+                      load_data('results_pitch_5_pi6')[2],))
 
-wind_pi8 = np.hstack((load_data('results_surge_1_pi8')[2],
-                      load_data('results_surge_2_pi8')[2],
-                      load_data('results_surge_3_pi8')[2],
-                      load_data('results_surge_4_pi8')[2],
-                      load_data('results_surge_5_pi8')[2],))
+wind_pi8 = np.hstack((load_data('results_pitch_1_pi8')[2],
+                      load_data('results_pitch_2_pi8')[2],
+                      load_data('results_pitch_3_pi8')[2],
+                      load_data('results_pitch_4_pi8')[2],
+                      load_data('results_pitch_5_pi8')[2],))
 
 wind_normal = load_data('results')[2]
-
 compare_PDFs([wind_normal,
               wind_pi0,
               wind_pi1,
@@ -1362,7 +1361,7 @@ compare_PDFs([wind_normal,
               r"$\epsilon = \pi/2$",
               r"$\epsilon = \pi/4$",
               r"$\epsilon = \pi/6$",
-              r"$\epsilon = \pi/8$"], "epsilon_surge", "Wind Speed (m/s)")
+              r"$\epsilon = \pi/8$"], "epsilon_pitch", "Wind Speed (m/s)")
 
 '''
 #plot pdfs for different configurations with epsilon=0
