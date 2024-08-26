@@ -1085,8 +1085,6 @@ def extract_extreme(state, seeds, upper_bound, lower_bound):
     count number of samples exceed threshold
     """
     
-    upper_bound = 10
-    lower_bound = -100
     
     count = 0
     
@@ -1145,10 +1143,99 @@ def compare_PDFs(states, state_labels, name, unit):
 
     plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust the layout to make space for the legend
     plt.savefig(f'./figure/{name}_pdf_compare.png', bbox_inches='tight')
+    
+    
+def state_PDF_compare(state_or, state_lo):
+    """
+    Compare pitch distribution for important sampling.
+    
+    Parameters:
+    pitch_or (np.ndarray): 2D array for original pitch where the first dimension is time and the second dimension is simulation index.
+    pitch_rate_or (np.ndarray): 2D array for original pitch rate where the first dimension is time and the second dimension is simulation index.
+    pitch_lo (np.ndarray): 2D array for pitch from importance sampling where the first dimension is time and the second dimension is simulation index.
+    pitch_rate_lo (np.ndarray): 2D array for pitch rate from importance sampling where the first dimension is time and the second dimension is simulation index.
+    """
+    
+    def plot_pdf(data_or, data_lo, ax, xlabel, ylabel):
+        # Flatten the arrays
+        flattened_data_or = data_or.flatten()
+        flattened_data_lo = data_lo.flatten()
 
-t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
+        # Calculate the PDFs using KDE
+        kde_or = gaussian_kde(flattened_data_or)
+        kde_lo = gaussian_kde(flattened_data_lo)
+        x_or = np.linspace(flattened_data_or.min(), flattened_data_or.max(), 1000)
+        x_lo = np.linspace(flattened_data_lo.min(), flattened_data_lo.max(), 1000)
+        pdf_or = kde_or(x_or)
+        pdf_lo = kde_lo(x_lo)
 
-#state_original = load_data('results_all_pitch')[1]
+        # Calculate the max and min values for each sample
+        max_values_or = data_or.max(axis=0)
+        min_values_or = data_or.min(axis=0)
+        max_values_lo = data_lo.max(axis=0)
+        min_values_lo = data_lo.min(axis=0)
+
+        # Calculate the PDFs of the max and min values
+        kde_max_or = gaussian_kde(max_values_or)
+        kde_min_or = gaussian_kde(min_values_or)
+        kde_max_lo = gaussian_kde(max_values_lo)
+        kde_min_lo = gaussian_kde(min_values_lo)
+        x_max_or = np.linspace(max_values_or.min(), max_values_or.max(), 1000)
+        x_min_or = np.linspace(min_values_or.min(), min_values_or.max(), 1000)
+        x_max_lo = np.linspace(max_values_lo.min(), max_values_lo.max(), 1000)
+        x_min_lo = np.linspace(min_values_lo.min(), min_values_lo.max(), 1000)
+        pdf_max_or = kde_max_or(x_max_or)
+        pdf_min_or = kde_min_or(x_min_or)
+        pdf_max_lo = kde_max_lo(x_max_lo)
+        pdf_min_lo = kde_min_lo(x_min_lo)
+
+        # Plot all PDFs on the same axes
+        ax.hist(max_values_or, bins=50, density=True, alpha=0.5, color='gray', label='Original MCMC Distribution', histtype='stepfilled')
+        ax.hist(min_values_or, bins=50, density=True, alpha=0.5, color='gray', histtype='stepfilled')
+        ax.hist(flattened_data_or, bins=50, density=True, alpha=0.5, color='gray', histtype='stepfilled')
+        ax.plot(x_or, pdf_or, color='black')
+        ax.plot(x_max_or, pdf_max_or, color='black')
+        ax.plot(x_min_or, pdf_min_or, color='black')
+
+        ax.hist(max_values_lo, bins=50, density=True, alpha=0.5, color='red', label='Importance Sampling Distribution', histtype='stepfilled')
+        ax.hist(min_values_lo, bins=50, density=True, alpha=0.5, color='red', histtype='stepfilled')
+        ax.hist(flattened_data_lo, bins=50, density=True, alpha=0.5, color='red', histtype='stepfilled')
+        ax.plot(x_lo, pdf_lo, color='red')
+        ax.plot(x_max_lo, pdf_max_lo, color='red')
+        ax.plot(x_min_lo, pdf_min_lo, color='red')
+
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.legend()
+        ax.grid(True)
+
+    # Create a figure with two subplots
+    fig, axs = plt.subplots(figsize=(5, 3))
+
+    # Plot pitch distributions
+    plot_pdf(state_or, state_lo, axs, 'Surge (m)', 'Density')
+
+
+    plt.tight_layout()
+    plt.savefig('./figure/surge_distr_compare_pi0.png')
+
+#t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
+
+np.hstack((load_data('results_surge_1_pi0')[1],
+           load_data('results_surge_2_pi0')[1],
+           load_data('results_surge_3_pi0')[1],
+           load_data('results_surge_4_pi0')[1],
+           load_data('results_surge_5_pi0')[1]))
+
+
+state_original = load_data('results')[1]
+
+state_PDF_compare(state_original[:, 0][1000:], np.hstack((load_data('results_surge_1_pi0')[1],
+                                           load_data('results_surge_2_pi0')[1],
+                                           load_data('results_surge_3_pi0')[1],
+                                           load_data('results_surge_4_pi0')[1],
+                                           load_data('results_surge_5_pi0')[1]))[:, 0])
+
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
 #pitch_distribution(wind_speed[:-1000], wave_eta[:-1000])
@@ -1162,7 +1249,7 @@ t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-
+'''
 extract_extreme(state[:, 0], seeds, 10, -100)
 extract_extreme(state[:, 0], seeds, 9, -100)
 extract_extreme(state[:, 0], seeds, 8, -100)
@@ -1183,7 +1270,7 @@ extract_extreme(state[:, 0, 11685:13185], seeds, 10, -100)
 extract_extreme(state[:, 0, 11685:13185], seeds, 9, -100)
 extract_extreme(state[:, 0, 11685:13185], seeds, 8, -100)
 
-'''
+
 wind_pi0 = np.hstack((load_data('results_2500')[2],
                       load_data('results_pitch_lo_1')[2],
                       load_data('results_pitch_lo_2')[2],
