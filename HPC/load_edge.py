@@ -1221,11 +1221,6 @@ def state_PDF_compare(state_or, state_lo):
 
 #t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 
-np.hstack((load_data('results_surge_1_pi0')[1],
-           load_data('results_surge_2_pi0')[1],
-           load_data('results_surge_3_pi0')[1],
-           load_data('results_surge_4_pi0')[1],
-           load_data('results_surge_5_pi0')[1]))
 
 
 state_original = load_data('results')[1]
