@@ -1219,7 +1219,7 @@ def state_PDF_compare(state_or, state_lo):
     plt.tight_layout()
     plt.savefig('./figure/surge_distr_compare_pi0.png')
 
-#t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
+t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 
 
 
@@ -1231,10 +1231,37 @@ def state_PDF_compare(state_or, state_lo):
 
 #pitch_distr_compare(state_original[:, 4][1000:], state_original[:, 5][1000:], state_2500[:, 4], state_2500[:, 5])
 
-for sample_ID in range(1, 6):
-    for elipse in [1, 2, 4, 6, 8, 0]:
-        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
-        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+#for sample_ID in range(1, 6):
+#    for elipse in [1, 2, 4, 6, 8, 0]:
+#        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
+#        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+
+
+#compare results for surge of all configurations with epsilon = 0
+state_2 = load_data('results_surge_2_pi0')[1][:,0]
+state_3 = load_data('results_surge_3_pi0')[1][:,0]
+state_4 = load_data('results_surge_4_pi0')[1][:,0]
+state_5 = load_data('results_surge_5_pi0')[1][:,0]
+
+print('ID=2')
+extract_extreme(state_2, seeds, 8, -100)
+extract_extreme(state_2, seeds, 9, -100)
+extract_extreme(state_2, seeds, 10, -100)
+
+print('ID=3')
+extract_extreme(state_3, seeds, 8, -100)
+extract_extreme(state_3, seeds, 9, -100)
+extract_extreme(state_3, seeds, 10, -100)
+
+print('ID=4')
+extract_extreme(state_4, seeds, 8, -100)
+extract_extreme(state_4, seeds, 9, -100)
+extract_extreme(state_4, seeds, 10, -100)
+
+print('ID=5')
+extract_extreme(state_5, seeds, 8, -100)
+extract_extreme(state_5, seeds, 9, -100)
+extract_extreme(state_5, seeds, 10, -100)
 
 '''
 #plot pdfs for surge, compare imps and mcmc
