@@ -1307,7 +1307,7 @@ extract_extreme(state[:, 0, 9784:12284], seeds, 8, -100)
 extract_extreme(state[:, 0, 11685:13185], seeds, 10, -100)
 extract_extreme(state[:, 0, 11685:13185], seeds, 9, -100)
 extract_extreme(state[:, 0, 11685:13185], seeds, 8, -100)
-'''
+
 
 #plot pdfs for wind of different epsilon average all configurations
 
@@ -1346,6 +1346,14 @@ wind_pi8 = np.hstack((load_data('results_pitch_1_pi8')[2],
                       load_data('results_pitch_3_pi8')[2],
                       load_data('results_pitch_4_pi8')[2],
                       load_data('results_pitch_5_pi8')[2],))
+'''
+    #just see config 2
+wind_pi0 = load_data('results_surge_2_pi0')[2]
+wind_pi1 = load_data('results_surge_2_pi1')[2]
+wind_pi2 = load_data('results_surge_2_pi2')[2]
+wind_pi4 = load_data('results_surge_2_pi4')[2]
+wind_pi6 = load_data('results_surge_2_pi6')[2]
+wind_pi8 = load_data('results_surge_2_pi8')[2]
 
 wind_normal = load_data('results')[2]
 compare_PDFs([wind_normal,
@@ -1361,7 +1369,7 @@ compare_PDFs([wind_normal,
               r"$\epsilon = \pi/2$",
               r"$\epsilon = \pi/4$",
               r"$\epsilon = \pi/6$",
-              r"$\epsilon = \pi/8$"], "epsilon_pitch", "Wind Speed (m/s)")
+              r"$\epsilon = \pi/8$"], "epsilon_surge_config2", "Wind Speed (m/s)")
 
 '''
 #plot pdfs for different configurations with epsilon=0
