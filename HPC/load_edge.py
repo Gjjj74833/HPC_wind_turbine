@@ -1230,11 +1230,11 @@ np.hstack((load_data('results_surge_1_pi0')[1],
 
 state_original = load_data('results')[1]
 
-state_PDF_compare(state_original[:, 0][1000:], np.hstack((load_data('results_surge_1_pi0')[1],
-                                           load_data('results_surge_2_pi0')[1],
-                                           load_data('results_surge_3_pi0')[1],
-                                           load_data('results_surge_4_pi0')[1],
-                                           load_data('results_surge_5_pi0')[1]))[:, 0])
+state_PDF_compare(state_original[:, 0][1000:], np.hstack((load_data('results_surge_1_pi0')[1][565:3065, 0],
+                                           load_data('results_surge_2_pi0')[1][:, 0],
+                                           load_data('results_surge_3_pi0')[1][:, 0],
+                                           load_data('results_surge_4_pi0')[1][:, 0],
+                                           load_data('results_surge_5_pi0')[1][:, 0])))
 
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
