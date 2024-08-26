@@ -1149,7 +1149,7 @@ def compare_PDFs(states, state_labels, name, unit):
     plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust the layout to make space for the legend
     plt.savefig(f'./figure/{name}_pdf_compare.png', bbox_inches='tight')
 
-#t, state, wind_speed, wave_eta, seeds = load_data('results')
+t, state, wind_speed, wave_eta, seeds = load_data('results_surge_5_pi1')
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
@@ -1164,7 +1164,9 @@ def compare_PDFs(states, state_labels, name, unit):
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-#extract_extreme(state[:, 0][:-1000], seeds)
+extract_extreme(state[:, 0], seeds)
+
+'''
 wind_normal = load_data('results')[2]
 wind_surge_1 = load_data("results_surge_1_pi0")[2]
 wind_surge_2 = load_data("results_surge_2_pi0")[2]
@@ -1185,3 +1187,4 @@ compare_PDFs([wind_normal,
                               "ID = 5"], "wind_surge", "Wind Speed (m/s)")
 
 
+'''
