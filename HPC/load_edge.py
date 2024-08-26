@@ -1079,7 +1079,8 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #    seed = seeds[:, i]
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
     
-def extract_extreme(state, seeds, upper_bound, lower_bound):
+
+def extract_extreme(state, seeds, upper_bound, lower_bound, config_ID, epsilon):
     
     """
     count number of samples exceed threshold
@@ -1097,7 +1098,7 @@ def extract_extreme(state, seeds, upper_bound, lower_bound):
             #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
             count += 1
         
-    print(f'Total extreme events exceed {upper_bound} for {state.shape[1]} samples: {count}')
+    print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]}')
         
 
     
@@ -1236,10 +1237,19 @@ t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
+for config_ID in range(1, 6):
+    for epsilon in [1, 2, 4, 6, 8, 0]:
+        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{config_ID}_pi{epsilon}')
+        extract_extreme(state[:,0], seeds, 10, -100, config_ID, epsilon)
+        extract_extreme(state[:,0], seeds, 9, -100, config_ID, epsilon)
+        extract_extreme(state[:,0], seeds, 8, -100, config_ID, epsilon)
+
+'''
+#conpare configuration 3
 state_original = load_data('results')[1]
 state_PDF_compare(state_original[:, 0][1000:], load_data('results_surge_3_pi0')[1][:, 0])
 
-'''
+
 #compare results for surge of all configurations with epsilon = 0
 state_2 = load_data('results_surge_2_pi0')[1][:,0]
 state_3 = load_data('results_surge_3_pi0')[1][:,0]
