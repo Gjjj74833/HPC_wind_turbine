@@ -69,7 +69,11 @@ base_directory = './'  # Change this to your base directory path
 slices_to_remove = [1, 3, 5]
 
 # Run the function to update all relevant directories
-remove_slices_from_npz('./results_surge_5_pi1', slices_to_remove)
+remove_slices_from_npz('./results_surge_4_pi8', slices_to_remove)
+remove_slices_from_npz('./results_surge_5_pi8', slices_to_remove)
+remove_slices_from_npz('./results_surge_5_pi6', slices_to_remove)
+remove_slices_from_npz('./results_surge_5_pi4', slices_to_remove)
+remove_slices_from_npz('./results_surge_5_pi2', slices_to_remove)
 #process_all_results_directories(base_directory, slices_to_remove)
 
 
