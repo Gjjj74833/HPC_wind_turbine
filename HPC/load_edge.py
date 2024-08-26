@@ -1236,7 +1236,10 @@ t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
+state_original = load_data('results')[1]
+state_PDF_compare(state_original[:, 0][1000:], load_data('results_surge_3_pi0')[1][:, 0])
 
+'''
 #compare results for surge of all configurations with epsilon = 0
 state_2 = load_data('results_surge_2_pi0')[1][:,0]
 state_3 = load_data('results_surge_3_pi0')[1][:,0]
@@ -1263,7 +1266,7 @@ extract_extreme(state_5, seeds, 8, -100)
 extract_extreme(state_5, seeds, 9, -100)
 extract_extreme(state_5, seeds, 10, -100)
 
-'''
+
 #plot pdfs for surge, compare imps and mcmc
 state_original = load_data('results')[1]
 
