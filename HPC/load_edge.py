@@ -1079,14 +1079,14 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #    seed = seeds[:, i]
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
     
-def extract_extreme(state, seeds):
+def extract_extreme(state, seeds, upper_bound, lower_bound):
     
     """
     count number of samples exceed threshold
     """
     
     upper_bound = 10
-    lower_bound = -5
+    lower_bound = -100
     
     count = 0
     
@@ -1096,10 +1096,10 @@ def extract_extreme(state, seeds):
         
         if max_value > upper_bound or min_value < lower_bound:
             seed = seeds[:, i]
-            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
+            #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
             count += 1
         
-    print(f'Total extreme events: {count}')
+    print(f'Total extreme events exceed {upper_bound} for {state.shape[1]} samples: {count}')
         
 
     
@@ -1146,7 +1146,7 @@ def compare_PDFs(states, state_labels, name, unit):
     plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust the layout to make space for the legend
     plt.savefig(f'./figure/{name}_pdf_compare.png', bbox_inches='tight')
 
-#t, state, wind_speed, wave_eta, seeds = load_data('results_surge_5_pi1')
+t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
@@ -1162,8 +1162,28 @@ def compare_PDFs(states, state_labels, name, unit):
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_pitch_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 
-#extract_extreme(state[:, 0], seeds)
 
+extract_extreme(state[:, 0], seeds, 10, -100)
+extract_extreme(state[:, 0], seeds, 9, -100)
+extract_extreme(state[:, 0], seeds, 8, -100)
+
+extract_extreme(state[:, 0, 4589:14589], seeds, 10, -100)
+extract_extreme(state[:, 0, 4589:14589], seeds, 9, -100)
+extract_extreme(state[:, 0, 4589:14589], seeds, 8, -100)
+
+extract_extreme(state[:, 0, 2321:7321], seeds, 10, -100)
+extract_extreme(state[:, 0, 2321:7321], seeds, 9, -100)
+extract_extreme(state[:, 0, 2321:7321], seeds, 8, -100)
+
+extract_extreme(state[:, 0, 9784:12284], seeds, 10, -100)
+extract_extreme(state[:, 0, 9784:12284], seeds, 9, -100)
+extract_extreme(state[:, 0, 9784:12284], seeds, 8, -100)
+
+extract_extreme(state[:, 0, 11685:13185], seeds, 10, -100)
+extract_extreme(state[:, 0, 11685:13185], seeds, 9, -100)
+extract_extreme(state[:, 0, 11685:13185], seeds, 8, -100)
+
+'''
 wind_pi0 = np.hstack((load_data('results_2500')[2],
                       load_data('results_pitch_lo_1')[2],
                       load_data('results_pitch_lo_2')[2],
@@ -1218,7 +1238,7 @@ compare_PDFs([wind_normal,
               "Epsilon = pi/8"], "epsilon_pitch", "Wind Speed (m/s)")
 
 
-'''
+
 wind_normal = load_data('results')[2]
 wind_surge_1 = load_data("results_surge_1_pi0")[2]
 wind_surge_2 = load_data("results_surge_2_pi0")[2]
