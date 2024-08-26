@@ -11,9 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 import pickle
 from matplotlib.lines import Line2D
-import seaborn as sns
-import binsreg
-import pandas as pd
+
 
 
 
@@ -26,7 +24,6 @@ def load_data(directory):
     datas = [np.load(file) for file in data_files]
     
     t = datas[0]['t']
-    
     states = [data['state'] for data in datas]
     wind_speeds = [data['wind_speed'] for data in datas]
     wave_etas = [data['wave_eta'] for data in datas]
@@ -1150,6 +1147,7 @@ def compare_PDFs(states, state_labels, name, unit):
     plt.savefig(f'./figure/{name}_pdf_compare.png', bbox_inches='tight')
 
 t, state, wind_speed, wave_eta, seeds = load_data('results_surge_5_pi1')
+
 #state_original = load_data('results_all_pitch')[1]
 #state = merge_pitch_acc(temp_state)
 #save_percentile_extreme(t[1000:], temp_state[1000:], wind_speed[1000:], wave_eta[1000:])
