@@ -1095,7 +1095,7 @@ def extract_extreme(state, seeds, upper_bound, lower_bound, config_ID, epsilon):
         
         if max_value > upper_bound or min_value < lower_bound:
             seed = seeds[:, i]
-            #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
+            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value}, min = {min_value}')
             count += 1
         
     print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]}')
@@ -1220,7 +1220,7 @@ def state_PDF_compare(state_or, state_lo):
     plt.tight_layout()
     plt.savefig('./figure/surge_distr_compare_pi0.png')
 
-t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
+#t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 
 
 
@@ -1236,6 +1236,14 @@ t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+
+#Extract surge events happening before 800s
+for config_ID in range(1, 6):
+    for epsilon in (1, 2, 4, 6, 8, 0):
+        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{config_ID}_pi{epsilon}')
+        extract_extreme(state[:1600, 0], seeds, 10, -100, config_ID, epsilon)
+        print()
+
 '''
 #compare epsilon for surge events
 for config_ID in range(1, 6):
@@ -1346,7 +1354,7 @@ wind_pi8 = np.hstack((load_data('results_pitch_1_pi8')[2],
                       load_data('results_pitch_3_pi8')[2],
                       load_data('results_pitch_4_pi8')[2],
                       load_data('results_pitch_5_pi8')[2],))
-'''
+
     #just see config 2
 wind_pi0 = load_data('results_surge_2_pi0')[2]
 wind_pi1 = load_data('results_surge_2_pi1')[2]
@@ -1371,7 +1379,7 @@ compare_PDFs([wind_normal,
               r"$\epsilon = \pi/6$",
               r"$\epsilon = \pi/8$"], "epsilon_surge_config2", "Wind Speed (m/s)")
 
-'''
+
 #plot pdfs for different configurations with epsilon=0
 wind_normal = load_data('results')[2]
 wind_surge_1 = load_data("results_surge_1_pi0")[2]
