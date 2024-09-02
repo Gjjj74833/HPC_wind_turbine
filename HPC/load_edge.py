@@ -1079,7 +1079,7 @@ def largest_std_percentage(one_state, seeds, threshold, file_name):
     #    seed = seeds[:, i]
     #    print(f'[{seed[0]}, {seed[1]}, {seed[2]}] std: {std_devs[i]}') 
     
-
+'''
 def extract_extreme(state, seeds, upper_bound, lower_bound, config_ID, epsilon):
     
     """
@@ -1100,7 +1100,22 @@ def extract_extreme(state, seeds, upper_bound, lower_bound, config_ID, epsilon):
         
     print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]}')
         
-
+'''
+def extract_extreme(state, seeds, upper_bound, config_ID, epsilon):
+    """
+    Count the number of samples that exceed the upper bound.
+    """
+    count = 0
+    
+    for i in range(state.shape[1]):
+        max_value = np.max(state[:, i])
+        
+        if max_value > upper_bound:
+            seed = seeds[:, i]
+            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
+            count += 1
+        
+    print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1221,6 +1236,8 @@ def state_PDF_compare(state_or, state_lo):
     plt.savefig('./figure/surge_distr_compare_pi0.png')
 
 t, state, wind_speed, wave_eta, seeds = load_data('results')
+print("state shape: ", state.shape)
+print("seeds shape: ", seeds.shape)
 extract_extreme(state, seeds, 10, -100, 0, 0)
 
 
