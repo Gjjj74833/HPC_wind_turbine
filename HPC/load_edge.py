@@ -1112,7 +1112,7 @@ def extract_extreme(state, seeds, upper_bound, config_ID, epsilon):
         
         if max_value > upper_bound:
             seed = seeds[:, i]
-            print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
+            #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
         
     print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
@@ -1235,10 +1235,10 @@ def state_PDF_compare(state_or, state_lo):
     plt.tight_layout()
     plt.savefig('./figure/surge_distr_compare_pi0.png')
 
-t, state, wind_speed, wave_eta, seeds = load_data('results')
-print("state shape: ", state.shape)
-print("seeds shape: ", seeds.shape)
-extract_extreme(state[:1800, 0], seeds, 10, 0, 0)
+#t, state, wind_speed, wave_eta, seeds = load_data('results')
+#print("state shape: ", state.shape)
+#print("seeds shape: ", seeds.shape)
+#extract_extreme(state[:1800, 0], seeds, 10, 0, 0)
 
 
 #state = merge_pitch_acc(temp_state)
@@ -1253,6 +1253,24 @@ extract_extreme(state[:1800, 0], seeds, 10, 0, 0)
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+seeds=1
+#Analysis n=15 imps
+for epsilon in (1, 2, 4, 6, 8, 0):
+    state = load_data(f'results_surge_n15_pi{epsilon}')[2]
+    print('For epsilon =', epsilon)
+    extract_extreme(state[:, 0], seeds, 8, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 8.5, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 9, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 9.5, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 10, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 10.5, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 11, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 11.5, 15, epsilon)
+    extract_extreme(state[:, 0], seeds, 12, 15, epsilon)
+    print()
+    print()
+
+
 '''
 #Extract surge events happening before 800s
 for config_ID in range(1, 6):
