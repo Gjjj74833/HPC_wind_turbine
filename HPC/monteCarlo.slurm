@@ -33,4 +33,4 @@
 
 module load python/3.9
 
-python3 Betti_2024_pitch_1_pi.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4 $5
+python3 Betti_2024_imps_n.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4 

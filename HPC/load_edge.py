@@ -1238,7 +1238,7 @@ def state_PDF_compare(state_or, state_lo):
 t, state, wind_speed, wave_eta, seeds = load_data('results')
 print("state shape: ", state.shape)
 print("seeds shape: ", seeds.shape)
-extract_extreme(state, seeds, 10, -100, 0, 0)
+extract_extreme(state[:1800, 0], seeds, 10, 0, 0)
 
 
 #state = merge_pitch_acc(temp_state)
