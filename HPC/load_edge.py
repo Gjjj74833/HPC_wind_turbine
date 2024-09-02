@@ -1220,8 +1220,8 @@ def state_PDF_compare(state_or, state_lo):
     plt.tight_layout()
     plt.savefig('./figure/surge_distr_compare_pi0.png')
 
-#t, state, wind_speed, wave_eta, seeds = load_data('results_surge_1_pi0')
-
+t, state, wind_speed, wave_eta, seeds = load_data('results')
+extract_extreme(state, seeds, 10, -100, 0, 0)
 
 
 #state = merge_pitch_acc(temp_state)
@@ -1236,7 +1236,7 @@ def state_PDF_compare(state_or, state_lo):
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
-
+'''
 #Extract surge events happening before 800s
 for config_ID in range(1, 6):
     for epsilon in (1, 2, 4, 6, 8, 0):
@@ -1244,7 +1244,7 @@ for config_ID in range(1, 6):
         extract_extreme(state[:1600, 0], seeds, 10, -100, config_ID, epsilon)
         print()
 
-'''
+
 #compare epsilon for surge events
 for config_ID in range(1, 6):
     for epsilon in [1, 2, 4, 6, 8, 0]:
