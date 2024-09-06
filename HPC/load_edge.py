@@ -1111,7 +1111,7 @@ def extract_extreme(state, seeds, upper_bound, config_ID, epsilon):
         max_value = np.max(state[:, i])
         
         if max_value > upper_bound:
-            seed = seeds[:, i]
+            #seed = seeds[:, i]
             #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
         
@@ -1253,10 +1253,34 @@ def state_PDF_compare(state_or, state_lo):
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+
+# plot wind pdf for n=15 at different epsilon
+wind = load_data('results')[2]
+wind_pi0 = load_data('results_surge_n15_pi0')[2]
+wind_pi8 = load_data('results_surge_n15_pi8')[2]
+wind_pi6 = load_data('results_surge_n15_pi6')[2]
+wind_pi4 = load_data('results_surge_n15_pi4')[2]
+wind_pi2 = load_data('results_surge_n15_pi2')[2]
+wind_pi1 = load_data('results_surge_n15_pi1')[2]
+compare_PDFs([wind,
+              wind_pi0,
+              wind_pi8,
+              wind_pi6,
+              wind_pi4,
+              wind_pi2,
+              wind_pi1], 
+             ["standard MCMC",
+              r"$\epsilon = 0$",
+              r"$\epsilon = \pi/8$",
+              r"$\epsilon = \pi/6$",
+              r"$\epsilon = \pi/4$",
+              r"$\epsilon = \pi/2$",
+              r"$\epsilon = \pi$"], "epsilon_surge_n15", "Wind Speed (m/s)")
+'''
 seeds=1
 #Analysis n=15 imps
 for epsilon in (1, 2, 4, 6, 8, 0):
-    state = load_data(f'results_surge_n15_pi{epsilon}')[2]
+    state = load_data(f'results_surge_n15_pi{epsilon}')[1]
     print('For epsilon =', epsilon)
     extract_extreme(state[:, 0], seeds, 8, 15, epsilon)
     extract_extreme(state[:, 0], seeds, 8.5, 15, epsilon)
@@ -1271,7 +1295,7 @@ for epsilon in (1, 2, 4, 6, 8, 0):
     print()
 
 
-'''
+
 #Extract surge events happening before 800s
 for config_ID in range(1, 6):
     for epsilon in (1, 2, 4, 6, 8, 0):
