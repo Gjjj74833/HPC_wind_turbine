@@ -70,7 +70,7 @@ def categorize_extreme_surge(surge, upper_bound):
     extreme_index = []
     
     for i in range(surge.shape[1]):
-        max_value = np.max(state[:, i])
+        max_value = np.max(surge[:, i])
         if max_value > upper_bound:
             extreme_index.append(i)
     
