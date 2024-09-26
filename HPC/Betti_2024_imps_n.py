@@ -10,11 +10,10 @@ Betti model implementation with PID controller
 """
 import sys
 import numpy as np
-import subprocess
 import bisect
 from multiprocessing import Pool
 from datetime import datetime
-from gen_wind_Van_Der_Hoven import generate_wind
+from gen_wind_imps_n import generate_wind
 
 def process_rotor_performance(input_file = "Cp_Ct.NREL5MW.txt"):
     """
@@ -819,8 +818,10 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     T_E_list_sub = T_E_list[::steps]#[discard_steps:]
     P_A_list_sub = P_A_list[::steps]#[discard_steps:]
     
+    t_final = t_sub-t_sub[0]
+    t_free = np.array([t_final[1], t_final[-1]])
     
-    return t_sub-t_sub[0], np.delete(x_sub, [1, 3, 5], axis=1), v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub
+    return t_free, np.delete(x_sub, [1, 3, 5], axis=1), v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub
 
 def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     """
@@ -856,11 +857,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     else:
         epsilon = np.pi / int(sys.argv[6])
     
-    state_before = np.random.get_state()                                                                                                                                                                
-    np.random.seed(seeds[0])
-    white_noise_ml = np.random.normal(loc=0, scale=epsilon, size=31)
-    np.random.set_state(state_before)
-    
+
     # generate turbulence noise use the second seed
     state_before = np.random.get_state()
     np.random.seed(seeds[1])
@@ -870,14 +867,25 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     seeds_list = np.array([8696505, 2514970, 8041419, 8734247, 563415, 8722005, 8086850, 8399725, 1106191, 1991645, 830830, 1885232, 9141186, 2876421, 1860654])
     sample_seed = np.random.choice(seeds_list)
     
-    wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb, sample_seed)
+    state_before = np.random.get_state()
+    np.random.seed(sample_seed)
+    sampling_source = np.random.uniform(-np.pi, np.pi, 31) 
+    np.random.set_state(state_before)
+    
+    # generate large-scale, build normal distribution around
+    state_before = np.random.get_state()                                                                                                                                                                
+    np.random.seed(seeds[0])
+    white_noise_ml = np.random.normal(loc=0, scale=epsilon, size=31) + sampling_source
+    np.random.set_state(state_before)
+    
+    wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb)
     v_wind = np.repeat(wind_speeds, int(1/time_step))
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
     t, x, v_wind, wave_eta, betas, T_E, P_A = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
 
-    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A
+    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, white_noise_ml
 
 def run_simulation(params):
     return main(*params)
@@ -896,7 +904,7 @@ def run_simulations_parallel(n_simulations, params):
     params.append(state)
 
     file_index = list(range(0, n_simulations))
-    seeds_array = np.load(f'./seeds_surge_{sys.argv[5]}_pi{sys.argv[6]}/seeds_{sys.argv[1]}.npy')
+    seeds_array = np.load(f'./seeds_{sys.argv[5]}/seeds_{sys.argv[1]}.npy')
    
     
     with Pool(int(sys.argv[3])) as p:
@@ -919,19 +927,21 @@ def save_binaryfile(results):
     betas = np.stack([s[4] for s in results], axis=1)
     seeds = np.stack([s[5] for s in results], axis=1)
     T_E = np.stack([s[6] for s in results], axis=1)
-    P_A = np.stack([s[7] for s in results], axis=1)
+    P_A = np.stack([s[7] for s in results], axis=1)  
+    white_noise_ml = np.stack([s[8] for s in results], axis=1)  
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results_surge_{sys.argv[5]}_pi{sys.argv[6]}/results_{sys.argv[1]}_{time}.npz', t=t,  
+    np.savez(f'./results_{sys.argv[5]}/results_{sys.argv[1]}_{time}.npz', t=t,  
                                                             state=state, 
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 
                                                             betas=betas, 
                                                             seeds=seeds, 
                                                             T_E=T_E,
-                                                            P_A=P_A)
+                                                            P_A=P_A,
+                                                            white_noise_ml=white_noise_ml)
    
 
 ###############################################################################

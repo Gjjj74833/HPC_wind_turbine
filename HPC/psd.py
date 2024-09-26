@@ -141,7 +141,7 @@ save_psd_percentiles(psd_wind_MCMC, "psd/wind_MCMC")
 save_psd_percentiles(psd_wind_pi0, "psd/wind_pi0")
 save_psd_percentiles(psd_wind_extreme, "psd/wind_extreme")
 
-save_psd_percentiles(psd_wave_MCMC, "psd/wind_MCMC")
+save_psd_percentiles(psd_wave_MCMC, "psd/wave_MCMC")
 save_psd_percentiles(psd_wave_pi0, "psd/wave_pi0")
 save_psd_percentiles(psd_wave_extreme, "psd/wave_extreme")
 
