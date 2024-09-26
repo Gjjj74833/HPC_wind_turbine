@@ -864,6 +864,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     white_noise_turb = np.random.normal(0, 1, int(np.ceil(end_time / T_s1) * T_s1))  # For turbulence component
     np.random.set_state(state_before)
     
+    # for large scale component, load the configuration
     seeds_list = np.array([8696505, 2514970, 8041419, 8734247, 563415, 8722005, 8086850, 8399725, 1106191, 1991645, 830830, 1885232, 9141186, 2876421, 1860654])
     sample_seed = np.random.choice(seeds_list)
     
@@ -872,7 +873,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     sampling_source = np.random.uniform(-np.pi, np.pi, 31) 
     np.random.set_state(state_before)
     
-    # generate large-scale, build normal distribution around
+    # generate large-scale, build normal distribution around the loaded configuration
     state_before = np.random.get_state()                                                                                                                                                                
     np.random.seed(seeds[0])
     white_noise_ml = np.random.normal(loc=0, scale=epsilon, size=31) + sampling_source
