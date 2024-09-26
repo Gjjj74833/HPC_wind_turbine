@@ -865,7 +865,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     np.random.set_state(state_before)
     
     # for large scale component, load the configuration
-    random_index = np.random.randint(1, 16)
+    random_index = np.random.randint(0, 15)
     
     sampling_source = np.load("imps_ite/imps_surge_ml_pi0_ite0.npy")[:, random_index]
     
