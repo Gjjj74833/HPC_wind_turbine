@@ -29,14 +29,16 @@ def load_data(directory):
     wave_etas = [data['wave_eta'] for data in datas]
     betas = [data['betas'] for data in datas]
     seeds = [data['seeds'] for data in datas]
+    white_noise_ml = [data['white_noise_ml'] for data in datas] 
     
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
     wind_speed = np.hstack(wind_speeds)
     wave_eta = np.hstack(wave_etas)
     seeds = np.hstack(seeds)
+    white_noise_ml = np.hstack(white_noise_ml)
     
-    return t, state, wind_speed, wave_eta, seeds
+    return t, state, wind_speed, wave_eta, seeds, white_noise_ml
 
 def merge_pitch_acc(states):
     """
@@ -1234,6 +1236,33 @@ def state_PDF_compare(state_or, state_lo):
 
     plt.tight_layout()
     plt.savefig('./figure/surge_distr_compare_pi0.png')
+    
+    
+def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
+    """
+    Extract the samples with the top N largest values, and save the corresponding white noise
+    """
+    
+    # Get the maximum value in each sample (column)
+    max_values = np.max(state, axis=0)
+    
+    # Get the indices of the top N largest values, largest first
+    top_indices = np.argsort(max_values)[n:][::-1]
+    
+    print(f'Top {n} extreme events')
+    for i in top_indices:
+        max_value = max_values[i]
+        seed = seeds[:, i]
+        print(f'Seed: [{seed[0]}, {seed[1]}, {seed[2]}], max value = {max_value}')
+        
+    # Extract the corresponding white noise using top_indices
+    top_white_noise = white_noise_list[:, top_indices]
+    
+    # Save the top N white noise samples
+    np.save(save_path, top_white_noise)
+    print(f'White noise for top {n} extreme events saved to {save_path}')
+    
+
 
 #t, state, wind_speed, wave_eta, seeds = load_data('results')
 #print("state shape: ", state.shape)
@@ -1253,7 +1282,10 @@ def state_PDF_compare(state_or, state_lo):
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
+t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0')
+extract_top15_saveConfig(state, white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
 
+'''
 # plot wind pdf for n=15 at different epsilon
 wind = load_data('results')[2]
 wind_pi0 = load_data('results_surge_n15_pi0')[2]
@@ -1276,7 +1308,7 @@ compare_PDFs([wind,
               r"$\epsilon = \pi/4$",
               r"$\epsilon = \pi/2$",
               r"$\epsilon = \pi$"], "epsilon_surge_n15", "Wind Speed (m/s)")
-'''
+
 seeds=1
 #Analysis n=15 imps
 for epsilon in (1, 2, 4, 6, 8, 0):
