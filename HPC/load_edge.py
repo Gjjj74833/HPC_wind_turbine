@@ -1247,7 +1247,7 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
     max_values = np.max(state, axis=0)
     
     # Get the indices of the top N largest values, largest first
-    top_indices = np.argsort(max_values)[n:][::-1]
+    top_indices = np.argsort(max_values)[-n:][::-1]
     
     print(f'Top {n} extreme events')
     for i in top_indices:
@@ -1261,6 +1261,7 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
     # Save the top N white noise samples
     np.save(save_path, top_white_noise)
     print(f'White noise for top {n} extreme events saved to {save_path}')
+    print(top_white_noise.shape)
     
 
 
@@ -1283,7 +1284,7 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
 t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0')
-extract_top15_saveConfig(state, white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
+extract_top15_saveConfig(state[:, 0], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
 
 '''
 # plot wind pdf for n=15 at different epsilon
