@@ -29,7 +29,7 @@ def load_data(directory):
     wave_etas = [data['wave_eta'] for data in datas]
     betas = [data['betas'] for data in datas]
     seeds = [data['seeds'] for data in datas]
-    white_noise_ml = [data['white_noise_ml'] for data in datas] 
+    #white_noise_ml = [data['white_noise_ml'] for data in datas] 
     
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
