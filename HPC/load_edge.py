@@ -1103,7 +1103,7 @@ def extract_extreme(state, seeds, upper_bound, lower_bound, config_ID, epsilon):
     print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]}')
         
 '''
-def extract_extreme(state, seeds, upper_bound, config_ID, epsilon):
+def extract_extreme(state, upper_bound, ite, epsilon):
     """
     Count the number of samples that exceed the upper bound.
     """
@@ -1117,7 +1117,7 @@ def extract_extreme(state, seeds, upper_bound, config_ID, epsilon):
             #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
         
-    print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
+    print(f'Extreme events exceed {upper_bound} for iteration {ite}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1283,8 +1283,72 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
-t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0')
-extract_top15_saveConfig(state[:, 0], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
+#t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0')
+#extract_top15_saveConfig(state[:, 0], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
+
+#print output for iterations
+print("Standard MCMC (iteration 0)")
+state = load_data('results')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+print()
+
+print("Iteration 1")
+state = load_data('results_surge_n15_pi0_ite0')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
+print("Iteration 2")
+state = load_data('results_surge_n15_pi0_ite1')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
+print("Iteration 3")
+state = load_data('results_surge_n15_pi0_ite2')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
+print("Iteration 4")
+state = load_data('results_surge_n15_pi0_ite3')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
+
+print("Iteration 5")
+state = load_data('results_surge_n15_pi0_ite4')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
 
 '''
 # plot wind pdf for n=15 at different epsilon
