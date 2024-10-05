@@ -1283,13 +1283,15 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
-#t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0')
-#extract_top15_saveConfig(state[:, 0], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
+t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0_conv')
+extract_top15_saveConfig(state[:, 0, :5000], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
 
+
+'''
 #convergence test for iteration
 state = load_data('results_surge_n15_pi0_ite0_conv')[1]
 
-for count in [2500, 3000, 4000, 5000, 10000]:
+for count in [2500, 3000, 4000, 5000, 7500, 10000, 15000, 20000]:
     print("For", count)
     for i in range(20000//count):
         extract_extreme(state[:, 0, i*count:count*(i+1)], 8, 0, 0)
@@ -1302,15 +1304,7 @@ for count in [2500, 3000, 4000, 5000, 10000]:
     print("____________________________________________________")
     print()
 
-print("For", 20000)
-extract_extreme(state[:, 0], 8, 0, 0)
-extract_extreme(state[:, 0], 9, 0, 0)
-extract_extreme(state[:, 0], 10, 0, 0)
-extract_extreme(state[:, 0], 11, 0, 0)
-extract_extreme(state[:, 0], 12, 0, 0)
-extract_extreme(state[:, 0], 13, 0, 0)
 
-'''
 #print output for iterations
 print("Standard MCMC (iteration 0)")
 state = load_data('results')[1]
