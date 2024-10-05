@@ -1291,13 +1291,13 @@ state = load_data('results_surge_n15_pi0_ite0_conv')[1]
 
 for count in [2500, 3000, 4000, 5000, 10000]:
     print("For", count)
-    for i in range(10):
-        extract_extreme(state[:, 0, i*2500:2500*(i+1)], 8, 0, 0)
-        extract_extreme(state[:, 0, i*2500:2500*(i+1)], 9, 0, 0)
-        extract_extreme(state[:, 0, i*2500:2500*(i+1)], 10, 0, 0)
-        extract_extreme(state[:, 0, i*2500:2500*(i+1)], 11, 0, 0)
-        extract_extreme(state[:, 0, i*2500:2500*(i+1)], 12, 0, 0)
-        extract_extreme(state[:, 0, i*2500:2500*(i+1)], 13, 0, 0)
+    for i in range(20000//count):
+        extract_extreme(state[:, 0, i*count:count*(i+1)], 8, 0, 0)
+        extract_extreme(state[:, 0, i*count:count*(i+1)], 9, 0, 0)
+        extract_extreme(state[:, 0, i*count:count*(i+1)], 10, 0, 0)
+        extract_extreme(state[:, 0, i*count:count*(i+1)], 11, 0, 0)
+        extract_extreme(state[:, 0, i*count:count*(i+1)], 12, 0, 0)
+        extract_extreme(state[:, 0, i*count:count*(i+1)], 13, 0, 0)
         print()
     print("____________________________________________________")
     print()
