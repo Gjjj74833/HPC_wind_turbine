@@ -29,7 +29,7 @@ def load_data(directory):
     wave_etas = [data['wave_eta'] for data in datas]
     betas = [data['betas'] for data in datas]
     seeds = [data['seeds'] for data in datas]
-    #white_noise_ml = [data['white_noise_ml'] for data in datas] 
+    white_noise_ml = [data['white_noise_ml'] for data in datas] 
     
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
@@ -1117,7 +1117,7 @@ def extract_extreme(state, upper_bound, ite, epsilon):
             #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
         
-    print(f'Extreme events exceed {upper_bound} for iteration {ite}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
+    print(f'Extreme events exceed {upper_bound} for iteration {ite} of {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1286,6 +1286,32 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
 #t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0')
 #extract_top15_saveConfig(state[:, 0], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
 
+#convergence test for iteration
+state = load_data('results_surge_n15_pi0_ite0_conv')[1]
+
+for count in [2500, 3000, 4000, 5000, 10000]:
+    print("For", count)
+    for i in range(10):
+        index = np.random.randint(0, 20000-count)
+        extract_extreme(state[:, 0, index:index+count], 8, 0, 0)
+        extract_extreme(state[:, 0, index:index+count], 9, 0, 0)
+        extract_extreme(state[:, 0, index:index+count], 10, 0, 0)
+        extract_extreme(state[:, 0, index:index+count], 11, 0, 0)
+        extract_extreme(state[:, 0, index:index+count], 12, 0, 0)
+        extract_extreme(state[:, 0, index:index+count], 13, 0, 0)
+        print()
+    print("____________________________________________________")
+    print()
+
+print("For", 20000)
+extract_extreme(state[:, 0], 8, 0, 0)
+extract_extreme(state[:, 0], 9, 0, 0)
+extract_extreme(state[:, 0], 10, 0, 0)
+extract_extreme(state[:, 0], 11, 0, 0)
+extract_extreme(state[:, 0], 12, 0, 0)
+extract_extreme(state[:, 0], 13, 0, 0)
+
+'''
 #print output for iterations
 print("Standard MCMC (iteration 0)")
 state = load_data('results')[1]
@@ -1350,7 +1376,7 @@ extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
 
 
-'''
+
 # plot wind pdf for n=15 at different epsilon
 wind = load_data('results')[2]
 wind_pi0 = load_data('results_surge_n15_pi0')[2]
