@@ -1429,6 +1429,28 @@ extract_extreme(state[:, 0], 12, 0)
 extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
 
+print("Iteration 11")
+state = load_data('results_surge_n15_pi0_ite11')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
+
+print("Iteration 12")
+state = load_data('results_surge_n15_pi0_ite12')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
+
 
 '''
 # plot wind pdf for n=15 at different epsilon
