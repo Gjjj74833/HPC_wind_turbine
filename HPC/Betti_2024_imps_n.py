@@ -866,7 +866,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     
     # for large scale component, load the configuration
     random_index = np.random.randint(0, 15)
-    sampling_source = np.load("imps_ite/imps_surge_ml_pi0_ite1.npy")[:, random_index]
+    sampling_source = np.load(f"imps_ite/imps_surge_ml_pi{sys.argv[6]}_ite{int(sys.argv[7])-1}.npy")[:, random_index]
     
     # generate large-scale, build normal distribution around the loaded configuration
     state_before = np.random.get_state()                                                                                                                                                                
