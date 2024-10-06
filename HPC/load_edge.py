@@ -1103,7 +1103,7 @@ def extract_extreme(state, seeds, upper_bound, lower_bound, config_ID, epsilon):
     print(f'Extreme events exceed {upper_bound} for Configuration {config_ID}, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]}')
         
 '''
-def extract_extreme(state, upper_bound, ite, epsilon):
+def extract_extreme(state, upper_bound, epsilon):
     """
     Count the number of samples that exceed the upper bound.
     """
@@ -1117,7 +1117,7 @@ def extract_extreme(state, upper_bound, ite, epsilon):
             #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
         
-    print(f'Extreme events exceed {upper_bound} for iteration {ite} of {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
+    print(f'Extreme events exceed {upper_bound} for iteration of {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1328,7 +1328,7 @@ extract_extreme(state[:, 0], 12, 0)
 extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
 '''
-print("Iteration 2")
+print("Iteration 1")
 state = load_data('results_surge_n15_pi0_ite1')[1]
 extract_extreme(state[:, 0], 8, 0)
 extract_extreme(state[:, 0], 9, 0)
@@ -1338,7 +1338,7 @@ extract_extreme(state[:, 0], 12, 0)
 extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
 
-print("Iteration 3")
+print("Iteration 2")
 state = load_data('results_surge_n15_pi0_ite2')[1]
 extract_extreme(state[:, 0], 8, 0)
 extract_extreme(state[:, 0], 9, 0)
@@ -1348,7 +1348,7 @@ extract_extreme(state[:, 0], 12, 0)
 extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
 
-print("Iteration 4")
+print("Iteration 3")
 state = load_data('results_surge_n15_pi0_ite3')[1]
 extract_extreme(state[:, 0], 8, 0)
 extract_extreme(state[:, 0], 9, 0)
@@ -1359,8 +1359,18 @@ extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
 
 
-print("Iteration 5")
+print("Iteration 4")
 state = load_data('results_surge_n15_pi0_ite4')[1]
+extract_extreme(state[:, 0], 8, 0)
+extract_extreme(state[:, 0], 9, 0)
+extract_extreme(state[:, 0], 10, 0)
+extract_extreme(state[:, 0], 11, 0)
+extract_extreme(state[:, 0], 12, 0)
+extract_extreme(state[:, 0], 13, 0)
+print("The largest value observed is:", np.max(state[:, 0]))
+
+print("Iteration 5")
+state = load_data('results_surge_n15_pi0_ite5')[1]
 extract_extreme(state[:, 0], 8, 0)
 extract_extreme(state[:, 0], 9, 0)
 extract_extreme(state[:, 0], 10, 0)
