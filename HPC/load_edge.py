@@ -1283,8 +1283,8 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
 #    for elipse in [1, 2, 4, 6, 8, 0]:
 #        t, state, wind_speed, wave_eta, seeds = load_data(f'results_surge_{sample_ID}_pi{elipse}')
 #        largest_std_percentage(state, seeds, 0.3259, f'pitch_compare_{sample_ID}_pi{elipse}.txt')
-t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0_conv')
-extract_top15_saveConfig(state[:, 0, :5000], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
+#t, state, wind_speed, wave_eta, seeds, white_noise_ml = load_data('results_surge_n15_pi0_ite0_conv')
+#extract_top15_saveConfig(state[:, 0, :5000], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
 
 
 '''
@@ -1317,7 +1317,7 @@ extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
 print()
 
-'''
+
 print("Iteration 1")
 state = load_data('results_surge_n15_pi0_ite0')[1]
 extract_extreme(state[:, 0], 8, 0)
@@ -1327,7 +1327,7 @@ extract_extreme(state[:, 0], 11, 0)
 extract_extreme(state[:, 0], 12, 0)
 extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
-
+'''
 print("Iteration 2")
 state = load_data('results_surge_n15_pi0_ite1')[1]
 extract_extreme(state[:, 0], 8, 0)
