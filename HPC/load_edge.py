@@ -30,9 +30,8 @@ def load_data(directory):
     betas = [data['betas'] for data in datas]
     seeds = [data['seeds'] for data in datas]
     #white_noise_ml = [data['white_noise_ml'] for data in datas] 
-    rope_tension = [data['rope_tension'] for data in datas] 
-    print(rope_tension.shape)
-    print(rope_tension[0, :, 0])
+    rope_tensions = [data['rope_tension'] for data in datas] 
+
     
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
@@ -40,6 +39,9 @@ def load_data(directory):
     wave_eta = np.hstack(wave_etas)
     seeds = np.hstack(seeds)
     #white_noise_ml = np.hstack(white_noise_ml)
+    rope_tension = np.concatenate(states, axis=2)
+    print(rope_tension.shape)
+    print(rope_tension[0, :, 0])
     
     return t, state, wind_speed, wave_eta, seeds, rope_tension#, white_noise_ml
 
