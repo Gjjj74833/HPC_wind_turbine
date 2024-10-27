@@ -29,16 +29,21 @@ def load_data(directory):
     wave_etas = [data['wave_eta'] for data in datas]
     betas = [data['betas'] for data in datas]
     seeds = [data['seeds'] for data in datas]
-    white_noise_ml = [data['white_noise_ml'] for data in datas] 
+    #white_noise_ml = [data['white_noise_ml'] for data in datas] 
+    rope_tension = [data['rope_tension'] for data in datas] 
+    print(rope_tension.shape)
+    print(rope_tension[0, :, 0])
     
     # Concatenate all the collected data (only one concatenation operation per field)
     state = np.concatenate(states, axis=2)
     wind_speed = np.hstack(wind_speeds)
     wave_eta = np.hstack(wave_etas)
     seeds = np.hstack(seeds)
-    white_noise_ml = np.hstack(white_noise_ml)
+    #white_noise_ml = np.hstack(white_noise_ml)
     
-    return t, state, wind_speed, wave_eta, seeds, white_noise_ml
+    return t, state, wind_speed, wave_eta, seeds, rope_tension#, white_noise_ml
+
+t, state, wind_speed, wave_eta, seeds, rope_tension = load_data('results_ropeMCMC')
 
 def merge_pitch_acc(states):
     """
@@ -1327,7 +1332,7 @@ extract_extreme(state[:, 0], 11, 0)
 extract_extreme(state[:, 0], 12, 0)
 extract_extreme(state[:, 0], 13, 0)
 print("The largest value observed is:", np.max(state[:, 0]))
-'''
+
 print("Iteration 1")
 state = load_data('results_surge_n15_pi0_ite1')[1]
 extract_extreme(state[:, 0], 8, 0)
@@ -1452,7 +1457,6 @@ print("The largest value observed is:", np.max(state[:, 0]))
 
 
 
-'''
 # plot wind pdf for n=15 at different epsilon
 wind = load_data('results')[2]
 wind_pi0 = load_data('results_surge_n15_pi0')[2]

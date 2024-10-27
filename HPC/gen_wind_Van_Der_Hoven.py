@@ -189,7 +189,8 @@ def gen_turbulence(v_bar, L, k_sigma_v, T_s, N_t, white_noise,
     
     return v_bar + sigma_v * v_t
     
-def generate_wind(v_bar, L, k_sigma_v, T_s, T_s1, T_F, white_noise_ml, white_noise_turb, sampling_seed):
+
+def generate_wind(v_bar, L, k_sigma_v, T_s, T_s1, T_F, white_noise_ml, white_noise_turb):
     """
     Generate wind speed with turbulence for each average wind speed in the array.
 
