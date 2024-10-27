@@ -32,5 +32,6 @@
 ### Load required modules/libraries if needed
 
 module load python/3.9
-# $1={global task ID}, $2={simulation number}, $3={local task ID}, $4={simulation time} $5={directory name} $6={epsilon}
-python3 Betti_2024_imps_n.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4
+### $1={global task ID}, $2={simulation number}, $3={local task ID}, $4={simulation time} $5={directory name} $6={epsilon}
+###python3 Betti_2024_imps_n.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4
+python3 Betti_2024.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2

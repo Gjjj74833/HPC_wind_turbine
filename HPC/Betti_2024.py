@@ -490,7 +490,7 @@ def structure(x_1, beta, omega_R, t, performance, v_w, v_aveg, random_phases):
                   Q_alpha])
     
 
-    return np.linalg.inv(E) @ F, v_in, Cp, h_wave - h
+    return np.linalg.inv(E) @ F, v_in, Cp, h_wave - h, [f_1, f_2, f_3/2]
 
 
 def WindTurbine(omega_R, v_in, beta, T_E, t, Cp):
@@ -571,11 +571,11 @@ def Betti(x, t, beta, T_E, performance, v_w, v_aveg, random_phases):
     x1 = x[:6]
     omega_R = x[6]
     
-    dx1dt, v_in, Cp, h_wave = structure(x1, beta, omega_R, t, performance, v_w, v_aveg, random_phases)
+    dx1dt, v_in, Cp, h_wave, rope_tension = structure(x1, beta, omega_R, t, performance, v_w, v_aveg, random_phases)
     dx2dt = WindTurbine(omega_R, v_in, beta, T_E, t, Cp)
     dxdt = np.append(dx1dt, dx2dt)
     
-    return dxdt, h_wave
+    return dxdt, h_wave, rope_tension
 
 
 
@@ -774,10 +774,11 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     h_waves = []
     T_E_list = []
     P_A_list = []
+    rope_tension_list = []
     for i in range(n - 1):
         betas.append(beta)
         v_average_ml = v_ml[i // int((T_s1 / dt))]
-        k1, h_wave = Betti(x[i], t[i], beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)
+        k1, h_wave, rope_tension = Betti(x[i], t[i], beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)
         k2 = Betti(x[i] + 0.5 * dt * k1, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)[0]
         k3 = Betti(x[i] + 0.5 * dt * k2, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)[0]
         k4 = Betti(x[i] + dt * k3, t[i] + dt, beta, T_E, performance, v_wind[i],  v_average_ml, random_phases)[0]
@@ -789,10 +790,11 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
         h_waves.append(h_wave)
         T_E_list.append(T_E)
         P_A_list.append(T_E*97*x[i][6])
+        rope_tension_list.append(rope_tension)
         
     T_E_list.append(T_E_list[-1])
     P_A_list.append(P_A_list[-1])
-    
+    rope_tension_list.append(rope_tension_list[-1])
     
     x[:, 4] = -np.rad2deg(x[:, 4])
     x[:, 5] = -np.rad2deg(x[:, 5])
@@ -815,8 +817,9 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     betas_sub = betas[::steps]#[discard_steps:]
     T_E_list_sub = T_E_list[::steps]#[discard_steps:]
     P_A_list_sub = P_A_list[::steps]#[discard_steps:]
+    rope_tension_list_sub =  rope_tension_list[::steps]
     
-    return t_sub-t_sub[0], x_sub, v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub
+    return t_sub-t_sub[0], x_sub, v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub, rope_tension_list_sub
 
 def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     """
@@ -863,9 +866,9 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, T_E, P_A = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
+    t, x, v_wind, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
 
-    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A
+    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, rope_tension
 
 def run_simulation(params):
     return main(*params)
@@ -884,7 +887,7 @@ def run_simulations_parallel(n_simulations, params):
     params.append(state)
 
     file_index = list(range(0, n_simulations))
-    seeds_array = np.load(f'./seeds/seeds_{sys.argv[1]}.npy')
+    seeds_array = np.load(f'./seeds_ropeMCMC/seeds_{sys.argv[1]}.npy')
    
     
     with Pool(int(sys.argv[3])) as p:
@@ -908,18 +911,20 @@ def save_binaryfile(results):
     seeds = np.stack([s[5] for s in results], axis=1)
     T_E = np.stack([s[6] for s in results], axis=1)
     P_A = np.stack([s[7] for s in results], axis=1)
+    rope_tension = np.stack([s[8] for s in results], axis=1)  
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
 
-    np.savez(f'./results/results_{sys.argv[1]}_{time}.npz', t=t,  
+    np.savez(f'./results_ropeMCMC/results_{sys.argv[1]}_{time}.npz', t=t,  
                                                             state=state, 
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 
                                                             betas=betas, 
                                                             seeds=seeds, 
                                                             T_E=T_E,
-                                                            P_A=P_A)
+                                                            P_A=P_A,
+                                                            rope_tension=rope_tension)
    
 
 ###############################################################################

@@ -18,7 +18,8 @@ if [ -n "$1" ]; then
         exit 1
     fi
 fi
-
+mkdir results_ropeMCMC
+mkdir seeds_ropeMCMC
 module load python/3.9 
-python3 gen_seeds.py 1 0 $n_simulations
-sbatch monteCarlo.slurm $n_simulations $2 1 0 4021713
+python3 gen_seeds.py seeds_ropeMCMC $1 
+sbatch monteCarlo.slurm $n_simulations $2 
