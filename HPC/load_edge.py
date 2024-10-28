@@ -1306,10 +1306,44 @@ def largest_rope_tension(rope_tension, seeds, n=15):
 
         print(f"Seed: [{seed[0]}, {seed[1]}, {seed[2]}], Tension = {tension}, Location = {rope_loc} (Component {rope_loc})")
 
+def calculate_3sigma_range(rope_tension):
+    """
+    Calculate the 3σ range for windward and leeward tensions in the rope_tension data.
+    
+    Parameters:
+    ----------
+    rope_tension : np.array
+        Array of shape (time_steps, 3, simulation_index) with tension forces for each component:
+        [windward, leeward, middle].
+    
+    Returns:
+    -------
+    dict
+        A dictionary with the 3σ range for windward and leeward tensions.
+    """
+    # Extract windward and leeward tensions
+    windward_tension = rope_tension[:, 0, :].flatten()  # Flatten to 1D for all time steps and simulations
+    leeward_tension = rope_tension[:, 1, :].flatten()
+
+    # Calculate mean and standard deviation
+    windward_mean = np.mean(windward_tension)
+    windward_std = np.std(windward_tension)
+    leeward_mean = np.mean(leeward_tension)
+    leeward_std = np.std(leeward_tension)
+
+    # Calculate 3σ range
+    windward_3sigma = (windward_mean - 3 * windward_std, windward_mean + 3 * windward_std)
+    leeward_3sigma = (leeward_mean - 3 * leeward_std, leeward_mean + 3 * leeward_std)
+
+    # Print results
+    print(f"Windward 3σ range: {windward_3sigma}")
+    print(f"Leeward 3σ range: {leeward_3sigma}")
+
 
 
 t, state, wind_speed, wave_eta, seeds, rope_tension = load_data("results_ropeMCMC")
-largest_rope_tension(rope_tension, seeds)
+#largest_rope_tension(rope_tension, seeds)
+calculate_3sigma_range(rope_tension)
 #t, state, wind_speed, wave_eta, seeds = load_data('results')
 #print("state shape: ", state.shape)
 #print("seeds shape: ", seeds.shape)
