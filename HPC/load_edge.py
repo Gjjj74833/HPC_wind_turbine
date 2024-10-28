@@ -1332,12 +1332,12 @@ def calculate_3sigma_range(rope_tension):
     leeward_std = np.std(leeward_tension)
 
     # Calculate 3σ range
-    windward_3sigma = (windward_mean - 3 * windward_std, windward_mean + 3 * windward_std)
-    leeward_3sigma = (leeward_mean - 3 * leeward_std, leeward_mean + 3 * leeward_std)
+    windward_3sigma = ((windward_mean - 3 * windward_std)/2000, (windward_mean + 3 * windward_std)/2000)
+    leeward_3sigma = ((leeward_mean - 3 * leeward_std)/2000, (leeward_mean + 3 * leeward_std)/2000)
 
     # Print results
-    print(f"Windward 3σ range: {windward_3sigma/2000} kN")
-    print(f"Leeward 3σ range: {leeward_3sigma/2000} kN")
+    print(f"Windward 3σ range: {windward_3sigma} kN")
+    print(f"Leeward 3σ range: {leeward_3sigma} kN")
 
 
 
