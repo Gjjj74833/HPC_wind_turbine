@@ -39,13 +39,11 @@ def load_data(directory):
     wave_eta = np.hstack(wave_etas)
     seeds = np.hstack(seeds)
     #white_noise_ml = np.hstack(white_noise_ml)
-    rope_tension = np.concatenate(states, axis=2)
+    rope_tension = np.concatenate(rope_tensions, axis=2)
     print(rope_tension.shape)
     print(rope_tension[0, :, 0])
     
     return t, state, wind_speed, wave_eta, seeds, rope_tension#, white_noise_ml
-
-t, state, wind_speed, wave_eta, seeds, rope_tension = load_data('results_ropeMCMC')
 
 def merge_pitch_acc(states):
     """
@@ -1270,8 +1268,48 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
     print(f'White noise for top {n} extreme events saved to {save_path}')
     print(top_white_noise.shape)
     
+def largest_rope_tension(rope_tension, seeds, n=15):
+    """
+    Display the top n largest rope tension events along with their locations and corresponding seeds.
+
+    Parameters:
+    ----------
+    rope_tension : np.array
+        Array of shape (time_steps, 3, simulation_index) with tension forces for each component.
+    seeds : np.array
+        Array of shape (3, simulation_index) with seed information for each simulation.
+    n : int
+        The number of top largest tension events to display.
+    """
+    
+    # Find the maximum tension for each time step and simulation, along with the location
+    large_tension = np.max(rope_tension, axis=1)  # Shape: (time_steps, simulation_index)
+    large_tension_loc = np.argmax(rope_tension, axis=1)  # Shape: (time_steps, simulation_index)
+
+    # Get the largest tension per sample (across all time steps for each simulation)
+    large_tension_per_sample = np.max(large_tension, axis=0)  # Shape: (simulation_index,)
+    top_indices = np.argsort(large_tension_per_sample)[-n:][::-1]  # Top n indices in descending order
+
+    # Calculate overall mean and standard deviation
+    mean_tension = np.mean(rope_tension)
+    std_tension = np.std(rope_tension)
+    
+    # Print results
+    print(f"Overall Rope Tension Mean: {mean_tension}")
+    print(f"Overall Rope Tension Standard Deviation: {std_tension}")
+    print(f"Top {n} extreme events:")
+    for i in top_indices:
+        tension = large_tension_per_sample[i]
+        max_time_step = np.argmax(large_tension[:, i])  # Time step of max tension for this simulation
+        rope_loc = large_tension_loc[max_time_step, i] + 1  # Add 1 to convert to 1, 2, or 3
+        seed = seeds[:, i]  # Seed for this simulation
+
+        print(f"Seed: [{seed[0]}, {seed[1]}, {seed[2]}], Tension = {tension}, Location = {rope_loc} (Component {rope_loc})")
 
 
+
+t, state, wind_speed, wave_eta, seeds, rope_tension = load_data("results_ropeMCMC")
+largest_rope_tension(rope_tension, seeds)
 #t, state, wind_speed, wave_eta, seeds = load_data('results')
 #print("state shape: ", state.shape)
 #print("seeds shape: ", seeds.shape)

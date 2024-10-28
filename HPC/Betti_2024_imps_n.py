@@ -929,7 +929,7 @@ def save_binaryfile(results):
     T_E = np.stack([s[6] for s in results], axis=1)
     P_A = np.stack([s[7] for s in results], axis=1)  
     white_noise_ml = np.stack([s[8] for s in results], axis=1)  
-    rope_tension = np.stack([s[9] for s in results], axis=1)  
+    rope_tension = np.stack([s[9] for s in results], axis=2)  
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
