@@ -29,7 +29,7 @@ def load_data(directory):
     wave_etas = [data['wave_eta'] for data in datas]
     betas = [data['betas'] for data in datas]
     seeds = [data['seeds'] for data in datas]
-    #white_noise_ml = [data['white_noise_ml'] for data in datas] 
+    white_noise_ml = [data['white_noise_ml'] for data in datas] 
     rope_tensions = [data['rope_tension'] for data in datas] 
 
     
@@ -38,12 +38,11 @@ def load_data(directory):
     wind_speed = np.hstack(wind_speeds)
     wave_eta = np.hstack(wave_etas)
     seeds = np.hstack(seeds)
-    #white_noise_ml = np.hstack(white_noise_ml)
+    white_noise_ml = np.hstack(white_noise_ml)
     rope_tension = np.concatenate(rope_tensions, axis=2)
-    print(rope_tension.shape)
-    print(rope_tension[0, :, 0])
+
     
-    return t, state, wind_speed, wave_eta, seeds, rope_tension#, white_noise_ml
+    return t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml
 
 def merge_pitch_acc(states):
     """
@@ -1268,7 +1267,7 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
     print(f'White noise for top {n} extreme events saved to {save_path}')
     print(top_white_noise.shape)
     
-def largest_rope_tension(rope_tension, seeds, n=15):
+def largest_rope_tension(rope_tension, seeds, white_noise_ml, save_path, n=15):
     """
     Display the top n largest rope tension events along with their locations and corresponding seeds.
 
@@ -1305,8 +1304,12 @@ def largest_rope_tension(rope_tension, seeds, n=15):
         seed = seeds[:, i]  # Seed for this simulation
 
         print(f"Seed: [{seed[0]}, {seed[1]}, {seed[2]}], Tension = {tension}, Location = {rope_loc} (Component {rope_loc})")
-
-    return top_indices
+    
+    top_white_noise = white_noise_ml[:, top_indices]
+    np.save(save_path, top_white_noise)
+    print(f'White noise for top {n} extreme events saved to {save_path}')
+    print(top_white_noise.shape)
+    #return top_indices
 
 def calculate_3sigma_range(rope_tension):
     """
@@ -1343,16 +1346,9 @@ def calculate_3sigma_range(rope_tension):
 
 
 
-t, state, wind_speed, wave_eta, seeds, rope_tension = load_data("results_ropeMCMC")
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_ropeMCMC")
+largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
-top_indices = largest_rope_tension(rope_tension, seeds)
-top_state = state[:, :, top_indices]
-top_wind_speed = wind_speed[:, top_indices]
-top_wave_eta = wave_eta[:, top_indices]
-top_seeds = seeds[:, top_indices]
-top_rope_tension = rope_tension[:, :, top_indices]
-np.savez("top_tension.npz", t=t, state=top_state, wind_speed=top_wind_speed, 
-             wave_eta=top_wave_eta, seeds=top_seeds, rope_tension=top_rope_tension)
 #calculate_3sigma_range(rope_tension)
 #t, state, wind_speed, wave_eta, seeds = load_data('results')
 #print("state shape: ", state.shape)
@@ -1377,6 +1373,16 @@ np.savez("top_tension.npz", t=t, state=top_state, wind_speed=top_wind_speed,
 
 
 '''
+#save selected samples
+top_indices = largest_rope_tension(rope_tension, seeds)
+top_state = state[:, :, top_indices]
+top_wind_speed = wind_speed[:, top_indices]
+top_wave_eta = wave_eta[:, top_indices]
+top_seeds = seeds[:, top_indices]
+top_rope_tension = rope_tension[:, :, top_indices]
+np.savez("top_tension.npz", t=t, state=top_state, wind_speed=top_wind_speed, 
+             wave_eta=top_wave_eta, seeds=top_seeds, rope_tension=top_rope_tension)
+
 #convergence test for iteration
 state = load_data('results_surge_n15_pi0_ite0_conv')[1]
 
