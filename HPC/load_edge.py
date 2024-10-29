@@ -1306,6 +1306,8 @@ def largest_rope_tension(rope_tension, seeds, n=15):
 
         print(f"Seed: [{seed[0]}, {seed[1]}, {seed[2]}], Tension = {tension}, Location = {rope_loc} (Component {rope_loc})")
 
+    return top_indices
+
 def calculate_3sigma_range(rope_tension):
     """
     Calculate the 3σ range for windward and leeward tensions in the rope_tension data.
@@ -1342,8 +1344,16 @@ def calculate_3sigma_range(rope_tension):
 
 
 t, state, wind_speed, wave_eta, seeds, rope_tension = load_data("results_ropeMCMC")
-#largest_rope_tension(rope_tension, seeds)
-calculate_3sigma_range(rope_tension)
+
+top_indices = largest_rope_tension(rope_tension, seeds)
+top_state = state[:, :, top_indices]
+top_wind_speed = wind_speed[:, top_indices]
+top_wave_eta = wave_eta[:, top_indices]
+top_seeds = seeds[:, top_indices]
+top_rope_tension = rope_tension[:, :, top_indices]
+np.savez("top_tension.npz", t=t, state=top_state, wind_speed=top_wind_speed, 
+             wave_eta=top_wave_eta, seeds=top_seeds, rope_tension=top_rope_tension)
+#calculate_3sigma_range(rope_tension)
 #t, state, wind_speed, wave_eta, seeds = load_data('results')
 #print("state shape: ", state.shape)
 #print("seeds shape: ", seeds.shape)
