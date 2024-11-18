@@ -65,33 +65,27 @@ fi
 module load python/3.9
 ### ./run.sh $1 -> {simulation number}, $2={simulation time}, $3={samping seed ID}, $4={elispe pi/_}, $5={sampling seed}
 ### gen_seeds $3 $4
+module load python/3.9
+mkdir seeds_surge_1_005
+mkdir results_surge_1_005
+python3 gen_seeds.py seeds_surge_1_005 $1
+
+### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_}, $5={Iteration number}
+sbatch monteCarlo.slurm $n_simulations $2 surge_1_005 0.05 $3
 
 
+mkdir seeds_surge_1_01
+mkdir results_surge_1_01
+python3 gen_seeds.py seeds_surge_1_01 $1
 
-mkdir seeds_surge_4_pi8
-mkdir results_surge_4_pi8
-python3 gen_seeds.py 4 8 $1
-sbatch monteCarlo.slurm $n_simulations $2 4 8 9141186
-#####################################################
-### redo all
+### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_}, $5={Iteration number}
+sbatch monteCarlo.slurm $n_simulations $2 surge_1_01 0.1 $3
+
+mkdir seeds_surge_1_02
+mkdir results_surge_1_02
+python3 gen_seeds.py seeds_surge_1_02 $1
+
+### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_}, $5={Iteration number}
+sbatch monteCarlo.slurm $n_simulations $2 surge_1_02 0.2 $3
 
 
-mkdir seeds_surge_5_pi2
-mkdir results_surge_5_pi2
-python3 gen_seeds.py 5 2 $1
-sbatch monteCarlo.slurm $n_simulations $2 5 2 8734247
-
-mkdir seeds_surge_5_pi4
-mkdir results_surge_5_pi4
-python3 gen_seeds.py 5 4 $1
-sbatch monteCarlo.slurm $n_simulations $2 5 4 8734247
-
-mkdir seeds_surge_5_pi6
-mkdir results_surge_5_pi6
-python3 gen_seeds.py 5 6 $1
-sbatch monteCarlo.slurm $n_simulations $2 5 6 8734247
-
-mkdir seeds_surge_5_pi8
-mkdir results_surge_5_pi8
-python3 gen_seeds.py 5 8 $1
-sbatch monteCarlo.slurm $n_simulations $2 5 8 8734247

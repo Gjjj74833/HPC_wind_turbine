@@ -856,11 +856,11 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
 
     
     # generate medium long component noise use the first seed
-    if int(sys.argv[6]) == 0:
-        epsilon = 0
-    else:
-        epsilon = np.pi / int(sys.argv[6])
-    
+    #if int(sys.argv[6]) == 0:
+    #    epsilon = 0
+    #else:
+    #    epsilon = np.pi / int(sys.argv[6])
+    epsilon = int(sys.argv[6])
 
     # generate turbulence noise use the second seed
     state_before = np.random.get_state()
@@ -869,8 +869,17 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     np.random.set_state(state_before)
     
     # for large scale component, load the configuration
-    random_index = np.random.randint(0, 15)
-    sampling_source = np.load(f"imps_ite/imps_tension_ml_pi{sys.argv[6]}_ite{int(sys.argv[7])-1}.npy")[:, random_index]
+    #for iterations
+    #random_index = np.random.randint(0, 15)
+    #sampling_source = np.load(f"imps_ite/imps_tension_ml_pi{sys.argv[6]}_ite{int(sys.argv[7])-1}.npy")[:, random_index]
+    
+    #seeds_list = np.array([8696505, 2514970, 8041419, 8734247, 563415, 8722005, 8086850, 8399725, 1106191, 1991645, 830830, 1885232, 9141186, 2876421, 1860654])
+    #sample_seed = np.random.choice(seeds_list)
+    sample_seed = 4021713
+    state_before = np.random.get_state()
+    np.random.seed(sample_seed)
+    sampling_source = np.random.uniform(-np.pi, np.pi, 31) 
+    np.random.set_state(state_before)
     
     # generate large-scale, build normal distribution around the loaded configuration
     state_before = np.random.get_state()                                                                                                                                                                
