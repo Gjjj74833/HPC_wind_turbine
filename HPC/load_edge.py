@@ -1121,7 +1121,7 @@ def extract_extreme(state, upper_bound, epsilon):
             #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
         
-    print(f'Extreme events exceed {upper_bound} for iteration of {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
+    print(f'Extreme events exceed {upper_bound} for {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1346,8 +1346,22 @@ def calculate_3sigma_range(rope_tension):
 
 
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_ropeMCMC")
-largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_005")
+np.save("white_noise_ml.npy", white_noise_ml)
+for upper_bound in [8, 9, 10, 11]:
+    extract_extreme(state[:, 0], upper_bound, 0.05)
+    
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_01")
+np.save("white_noise_ml.npy", white_noise_ml)
+for upper_bound in [8, 9, 10, 11]:
+    extract_extreme(state[:, 0], upper_bound, 0.01)
+    
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_02")
+np.save("white_noise_ml.npy", white_noise_ml)
+for upper_bound in [8, 9, 10, 11]:
+    extract_extreme(state[:, 0], upper_bound, 0.02)
+
+#largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
 #calculate_3sigma_range(rope_tension)
 #t, state, wind_speed, wave_eta, seeds = load_data('results')

@@ -860,7 +860,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     #    epsilon = 0
     #else:
     #    epsilon = np.pi / int(sys.argv[6])
-    epsilon = int(sys.argv[6])
+    epsilon = float(sys.argv[6])
 
     # generate turbulence noise use the second seed
     state_before = np.random.get_state()
