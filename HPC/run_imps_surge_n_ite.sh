@@ -20,10 +20,10 @@ if [ -n "$1" ]; then
 fi
 
 module load python/3.9
-mkdir seeds_surge_n15_pi0_ite2
-mkdir results_surge_n15_pi0_ite2
-python3 gen_seeds.py seeds_surge_n15_pi0_ite2 $1 
+mkdir seeds_tension_n15_pi0_ite$3
+mkdir results_tension_n15_pi0_ite$3
+python3 gen_seeds.py seeds_tension_n15_pi0_ite$3 $1 
 
-### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_} 
-sbatch monteCarlo.slurm $n_simulations $2 surge_n15_pi0_ite2 0 
+### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_}, $5={Iteration number} 
+sbatch monteCarlo.slurm $n_simulations $2 tension_n15_pi0_ite$3 0 $3
 

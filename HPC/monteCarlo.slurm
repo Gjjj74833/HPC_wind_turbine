@@ -4,7 +4,7 @@
 ### PART 1: Requests resources to run your job.
 # --------------------------------------------------------------
 ### Optional. Set the job name
-#SBATCH --job-name=imps_pitch_${3}_pi${4}
+#SBATCH --job-name=run_imps_surge_iteration_$5_pi$6
 ### Optional. Set the output filename.
 ### SLURM reads %x as the job name and %j as the job ID
 #SBATCH --output=%x-%j.out
@@ -21,7 +21,7 @@
 ### REQUIRED. Set the number of nodes
 #SBATCH --nodes=1
 ### REQUIRED. Set the memory required for this job.
-#SBATCH --mem=20gb
+#SBATCH --mem=6gb
 ### REQUIRED. Specify the time required for this job, hhh:mm:ss
 #SBATCH --time=08:00:00
 
@@ -32,6 +32,6 @@
 ### Load required modules/libraries if needed
 
 module load python/3.9
-### $1={global task ID}, $2={simulation number}, $3={local task ID}, $4={simulation time} $5={directory name} $6={epsilon}
-###python3 Betti_2024_imps_n.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4
-python3 Betti_2024.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
+### $1={global task ID}, $2={simulation number}, $3={local task ID}, $4={simulation time} $5={directory name} $6={epsilon} $7={iteration number}
+python3 Betti_2024_imps_n.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4 $5
+###python3 Betti_2024.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
