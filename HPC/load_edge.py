@@ -1345,22 +1345,82 @@ def calculate_3sigma_range(rope_tension):
     print(f"Leeward 3σ range: {leeward_3sigma} kN")
 
 
+def event_indicator_surge(state, threshold):
+    """
+    Return 1 if extreme event is detacted. When surge exceed the threshold
+
+    Parameters
+    ----------
+    state : numpy.array
+        Time serie for state, one sample
+    threshold : float
+        threshold
+
+    Returns
+    -------
+    1 if extreme event is detacted, else return 0
+
+    """
+    return np.any(state > threshold)
+
+def compute_R(state, white_noise_ml, epsilon, threshold):
+    """
+    Compute the true probability with Importance Sampling weight
+    This is for single configuration
+    Parameters
+    ----------
+    state : numpy.array
+        MCMC results for one state. Shape: (time_step, sample_index)
+    white_noise_ml : numpy.array
+        Random phase correspond to each sample. Shape: (random_phase, sample_index)
+    epsilon : std
+        
+
+    Returns
+    -------
+    the true probability
+
+    """
+    weight_sum = 0
+    event_count = 0
+    for i in range(state.shape[1]):
+        if np.any(state[:, i] > threshold): # event is detacted
+            event_count += 1
+            phase_length = 31 # there are 31 phases, this is fixed
+            # find the original sampling source
+            sample_seed = 4021713
+            state_before = np.random.get_state()
+            np.random.seed(sample_seed)
+            sampling_source = np.random.uniform(-np.pi, np.pi, phase_length) 
+            np.random.set_state(state_before)
+            # for each random phase, Compute IS weight and find the product
+            IS_weight = 1
+            for phase in range(phase_length): 
+                exponent = - ((white_noise_ml[phase, i] - sampling_source[phase]) ** 2) / (2 * epsilon ** 2)
+                normal_density = (1 / (epsilon * np.sqrt(2 * np.pi))) * np.exp(exponent)
+                uniform_density = 1 / (2 * np.pi)
+                weight = uniform_density / normal_density
+                IS_weight *= weight
+            weight_sum += IS_weight
+    
+    True_exp = weight_sum / state.shape[1]
+    print(f"{event_count} events detacted. The true probability for threshold exceed {threshold}m, epsilon={epsilon}, for {state.shape[1]} samples is {True_exp}")
+            
+    
+
 
 t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_005")
-np.save("white_noise_ml.npy", white_noise_ml)
 for upper_bound in [8, 9, 10, 11]:
-    extract_extreme(state[:, 0], upper_bound, 0.05)
+    compute_R(state[:, 0], white_noise_ml, 0.05, upper_bound)
     
 t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_01")
-np.save("white_noise_ml.npy", white_noise_ml)
 for upper_bound in [8, 9, 10, 11]:
-    extract_extreme(state[:, 0], upper_bound, 0.01)
-    
+    compute_R(state[:, 0], white_noise_ml, 0.1, upper_bound)
+     
 t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_02")
-np.save("white_noise_ml.npy", white_noise_ml)
 for upper_bound in [8, 9, 10, 11]:
-    extract_extreme(state[:, 0], upper_bound, 0.02)
-
+    compute_R(state[:, 0], white_noise_ml, 0.2, upper_bound)
+    
 #largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
 #calculate_3sigma_range(rope_tension)
