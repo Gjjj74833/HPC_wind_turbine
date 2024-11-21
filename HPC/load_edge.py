@@ -1394,18 +1394,21 @@ def compute_R(state, white_noise_ml, epsilon, threshold):
             sampling_source = np.random.uniform(-np.pi, np.pi, phase_length) 
             np.random.set_state(state_before)
             # for each random phase, Compute IS weight and find the product
-            IS_weight = 1
+            #IS_weight = 1
+            IS_weight = 0
             for phase in range(phase_length): 
                 exponent = - ((white_noise_ml[phase, i] - sampling_source[phase]) ** 2) / (2 * epsilon ** 2)
                 normal_density = (1 / (epsilon * np.sqrt(2 * np.pi))) * np.exp(exponent)
                 uniform_density = 1 / (2 * np.pi)
                 weight = uniform_density / normal_density
                 
-                #print("      weight = {uniform_density}/{normal_density} = {wight}")
+                #print("      weight = {uniform_density}/{normal_density} = {weight}")
                 
-                IS_weight *= weight
+                #IS_weight *= weight
+                IS_weight += weight
+            IS_weight /= phase_length
             #print("Weight for this sample is {IS_weight}")
-        weight_sum += IS_weight
+            weight_sum += IS_weight
             
     #print("Total weight is {weight_sum}")
     
