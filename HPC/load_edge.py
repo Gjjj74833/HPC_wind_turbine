@@ -1404,9 +1404,9 @@ def compute_R(state, white_noise_ml, epsilon, threshold):
                 
                 #print("      weight = {uniform_density}/{normal_density} = {weight}")
                 
-                #IS_weight *= weight
-                IS_weight += weight
-            IS_weight /= phase_length
+                IS_weight *= weight
+                #IS_weight += weight
+            IS_weight = IS_weight**(1/31)
             #print("Weight for this sample is {IS_weight}")
             weight_sum += IS_weight
             
