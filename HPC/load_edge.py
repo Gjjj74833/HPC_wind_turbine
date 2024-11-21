@@ -1400,11 +1400,17 @@ def compute_R(state, white_noise_ml, epsilon, threshold):
                 normal_density = (1 / (epsilon * np.sqrt(2 * np.pi))) * np.exp(exponent)
                 uniform_density = 1 / (2 * np.pi)
                 weight = uniform_density / normal_density
+                
+                #print("      weight = {uniform_density}/{normal_density} = {wight}")
+                
                 IS_weight *= weight
-            weight_sum += IS_weight
+            #print("Weight for this sample is {IS_weight}")
+        weight_sum += IS_weight
+            
+    #print("Total weight is {weight_sum}")
     
     True_exp = weight_sum / state.shape[1]
-    print(f"{event_count} events detacted. The true probability for threshold exceed {threshold}m, epsilon={epsilon}, for {state.shape[1]} samples is {True_exp}")
+    print(f"{event_count} events detacted, percentatge = {event_count/state.shape[1]}. The true probability for threshold exceed {threshold}m, epsilon={epsilon}, for {state.shape[1]} samples is {True_exp}")
             
     
 
