@@ -873,9 +873,9 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     #random_index = np.random.randint(0, 15)
     #sampling_source = np.load(f"imps_ite/imps_tension_ml_pi{sys.argv[6]}_ite{int(sys.argv[7])-1}.npy")[:, random_index]
     
-    #seeds_list = np.array([8696505, 2514970, 8041419, 8734247, 563415, 8722005, 8086850, 8399725, 1106191, 1991645, 830830, 1885232, 9141186, 2876421, 1860654])
-    #sample_seed = np.random.choice(seeds_list)
-    sample_seed = 4021713
+    seeds_list = np.array([8696505, 2514970, 8041419, 8734247, 563415, 8722005, 8086850, 8399725, 1106191, 1991645, 830830, 1885232, 9141186, 2876421, 1860654])
+    sample_seed = np.random.choice(seeds_list)
+    #sample_seed = 4021713
     state_before = np.random.get_state()
     np.random.seed(sample_seed)
     sampling_source = np.random.uniform(-np.pi, np.pi, 31) 
@@ -893,8 +893,10 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
     t, x, v_wind, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
-
-    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, white_noise_ml, rope_tension
+    
+    white_noise = np.append(white_noise_ml, sample_seed)
+    
+    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, white_noise, rope_tension
 
 def run_simulation(params):
     return main(*params)
