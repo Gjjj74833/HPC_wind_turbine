@@ -1112,7 +1112,7 @@ def extract_extreme(state, upper_bound, epsilon):
     Count the number of samples that exceed the upper bound.
     """
     count = 0
-    
+    index = []
     for i in range(state.shape[1]):
         max_value = np.max(state[:, i])
         
@@ -1120,8 +1120,10 @@ def extract_extreme(state, upper_bound, epsilon):
             #seed = seeds[:, i]
             #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
+            index.append(i)
         
     print(f'Extreme events exceed {upper_bound} for {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
+    return index
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1415,20 +1417,25 @@ def compute_R(state, white_noise_ml, epsilon, threshold):
     True_exp = weight_sum / state.shape[1]
     print(f"{event_count} events detacted, percentatge = {event_count/state.shape[1]}. The true probability for threshold exceed {threshold}m, epsilon={epsilon}, for {state.shape[1]} samples is {True_exp}")
             
+
+def save_large_phase(index, white_noise_ml):
+    """
+    Saves the white noise values for the specified simulation indices.
+
+    Parameters:
+        index (list): List of simulation indices to extract and save.
+        white_noise_ml (np.ndarray): A numpy array with shape [31, simulation_index].
+    """
+    extracted_data = white_noise_ml[:, index]
+    # Save the extracted data to a file
+    np.save("extracted_white_noise.npy", extracted_data)
+    print("Data successfully saved to 'extracted_white_noise.npy' with shape", extracted_data.shape)
     
 
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_005")
-for upper_bound in [8, 9, 10, 11]:
-    compute_R(state[:, 0], white_noise_ml, 0.05, upper_bound)
-    
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_01")
-for upper_bound in [8, 9, 10, 11]:
-    compute_R(state[:, 0], white_noise_ml, 0.1, upper_bound)
-     
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_02")
-for upper_bound in [8, 9, 10, 11]:
-    compute_R(state[:, 0], white_noise_ml, 0.2, upper_bound)
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results")
+index = extract_extreme(state[:, 0], 8, 0)
+save_large_phase(index, white_noise_ml)
     
 #largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
