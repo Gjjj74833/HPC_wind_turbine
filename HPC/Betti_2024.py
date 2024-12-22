@@ -868,7 +868,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
     t, x, v_wind, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
 
-    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, rope_tension
+    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, rope_tension, white_noise_ml
 
 def run_simulation(params):
     return main(*params)
@@ -911,7 +911,8 @@ def save_binaryfile(results):
     seeds = np.stack([s[5] for s in results], axis=1)
     T_E = np.stack([s[6] for s in results], axis=1)
     P_A = np.stack([s[7] for s in results], axis=1)
-    rope_tension = np.stack([s[8] for s in results], axis=2)  
+    white_noise_ml = np.stack([s[8] for s in results], axis=1)  
+    rope_tension = np.stack([s[9] for s in results], axis=2)  
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
@@ -924,6 +925,7 @@ def save_binaryfile(results):
                                                             seeds=seeds, 
                                                             T_E=T_E,
                                                             P_A=P_A,
+                                                            white_noise_ml=white_noise_ml,
                                                             rope_tension=rope_tension)
    
 

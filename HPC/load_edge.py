@@ -1428,8 +1428,8 @@ def save_large_phase(index, white_noise_ml):
     """
     extracted_data = white_noise_ml[:, index]
     # Save the extracted data to a file
-    np.save("extracted_white_noise.npy", extracted_data)
-    print("Data successfully saved to 'extracted_white_noise.npy' with shape", extracted_data.shape)
+    np.save("large_noise/extreme_large_noise_MCMC.npy", extracted_data)
+    print("Data successfully saved to 'extreme_large_noise_MCMC.npy' with shape", extracted_data.shape)
     
 
 
