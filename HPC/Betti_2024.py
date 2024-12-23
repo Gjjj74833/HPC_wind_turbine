@@ -868,7 +868,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
     t, x, v_wind, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
 
-    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, rope_tension, white_noise_ml
+    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, white_noise_ml, rope_tension
 
 def run_simulation(params):
     return main(*params)
