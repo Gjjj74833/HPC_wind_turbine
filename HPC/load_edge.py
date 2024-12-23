@@ -1433,7 +1433,7 @@ def save_large_phase(index, white_noise_ml):
     
 
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results")
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_ropeMCMC")
 index = extract_extreme(state[:, 0], 8, 0)
 save_large_phase(index, white_noise_ml)
     
