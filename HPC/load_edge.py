@@ -1433,19 +1433,19 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 
     
     # Save the extracted data to a file
-    for i in range(extracted_data[0]):
+    for i in range(extracted_data.shape[0]):
 
         # KDE for PDF estimation
-        kde = gaussian_kde(extracted_data[0])
+        kde = gaussian_kde(extracted_data[i])
         save_path = f"{output_dir}/kde_{i}.pkl" 
         with open(save_path, "wb") as f:
             pickle.dump(kde, f)
 
 
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_ropeMCMC")
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_MCMC")
 index = extract_extreme(state[:, 0], 8, 0)
-save_large_phase(index, white_noise_ml, 0)
+save_large_phase_pdf(index, white_noise_ml, 0)
     
 #largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
