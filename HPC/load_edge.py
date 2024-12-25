@@ -1418,7 +1418,7 @@ def compute_R(state, white_noise_ml, epsilon, threshold):
     print(f"{event_count} events detacted, percentatge = {event_count/state.shape[1]}. The true probability for threshold exceed {threshold}m, epsilon={epsilon}, for {state.shape[1]} samples is {True_exp}")
             
 
-def save_large_phase(index, white_noise_ml):
+def save_large_phase_pdf(index, white_noise_ml, iteration):
     """
     Saves the white noise values for the specified simulation indices.
 
@@ -1427,15 +1427,25 @@ def save_large_phase(index, white_noise_ml):
         white_noise_ml (np.ndarray): A numpy array with shape [31, simulation_index].
     """
     extracted_data = white_noise_ml[:, index]
-    # Save the extracted data to a file
-    np.save("large_noise/extreme_large_noise_MCMC.npy", extracted_data)
-    print("Data successfully saved to 'extreme_large_noise_MCMC.npy' with shape", extracted_data.shape)
     
+    output_dir = f"large_random_phase_kde/iteration_{iteration}"
+    os.makedirs(output_dir, exist_ok=True)
+
+    
+    # Save the extracted data to a file
+    for i in range(extracted_data[0]):
+
+        # KDE for PDF estimation
+        kde = gaussian_kde(extracted_data[0])
+        save_path = f"{output_dir}/kde_{i}.pkl" 
+        with open(save_path, "wb") as f:
+            pickle.dump(kde, f)
+
 
 
 t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_ropeMCMC")
 index = extract_extreme(state[:, 0], 8, 0)
-save_large_phase(index, white_noise_ml)
+save_large_phase(index, white_noise_ml, 0)
     
 #largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
