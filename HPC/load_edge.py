@@ -1427,7 +1427,8 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
         white_noise_ml (np.ndarray): A numpy array with shape [31, simulation_index].
     """
     extracted_data = white_noise_ml[:, index]
-    
+    np.save(f"large_noise/extreme_large_noise_MCMC_ite{iteration}.npy", extracted_data)
+    '''
     output_dir = f"large_random_phase_kde/iteration_{iteration}"
     os.makedirs(output_dir, exist_ok=True)
 
@@ -1440,12 +1441,12 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
         save_path = f"{output_dir}/kde_{i}.pkl" 
         with open(save_path, "wb") as f:
             pickle.dump(kde, f)
+    '''
 
 
-
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_MCMC")
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_adaptive_imps_surge_ite1")
 index = extract_extreme(state[:, 0], 8, 0)
-save_large_phase_pdf(index, white_noise_ml, 0)
+save_large_phase_pdf(index, white_noise_ml, 1)
     
 #largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
