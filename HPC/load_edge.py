@@ -1444,10 +1444,15 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
     '''
 
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_adaptive_imps_surge_ite1")
-index = extract_extreme(state[:, 0], 8, 0)
-save_large_phase_pdf(index, white_noise_ml, 1)
-    
+#t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_adaptive_imps_surge_ite1")
+#index = extract_extreme(state[:, 0], 8, 0)
+#save_large_phase_pdf(index, white_noise_ml, 1)
+
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_02")
+index = extract_extreme(state[:, 0], 8, 0.2)
+np.savez("noise_ml_02.npz", white_noise_ml=white_noise_ml, index=index)
+
+
 #largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
 #calculate_3sigma_range(rope_tension)
