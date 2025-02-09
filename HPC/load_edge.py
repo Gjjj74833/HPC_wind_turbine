@@ -1122,8 +1122,8 @@ def extract_extreme(state, upper_bound, epsilon):
             count += 1
             index.append(i)
         
-    print(f'Extreme events exceed {upper_bound} for {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
-    return index
+    #print(f'Extreme events exceed {upper_bound} for {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
+    return count, state.shape[1]
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1448,11 +1448,17 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0)
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_02")
-index = extract_extreme(state[:, 0], 8, 0.2)
-np.savez("large_noise/noise_ml_02.npz", white_noise_ml=white_noise_ml, index=index)
+#t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_02")
+#index = extract_extreme(state[:, 0], 8, 0.2)
+#np.savez("large_noise/noise_ml_02.npz", white_noise_ml=white_noise_ml, index=index)
 
 
+#Ablation test (o and pi, all phases)
+for i in range(31):
+    t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_ablation_surge_{i}_pi")
+    count, total = extract_extreme(state[:, 0], 8, np.pi)
+    print(f"Phase {i}: Extreme events exceed 8 for {total} samples, epsilon={np.pi}: {count}, percentage: {count/total:.2%}")
+    
 #largest_rope_tension(rope_tension, seeds, white_noise_ml, "imps_ite/imps_tension_ml_pi0_ite1.npy")
 
 #calculate_3sigma_range(rope_tension)
