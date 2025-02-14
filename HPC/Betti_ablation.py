@@ -865,7 +865,8 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
 
     # generate turbulence noise use the second seed
     state_before = np.random.get_state()
-    np.random.seed(seeds[1])
+    np.random.seed(int(seeds[1]))
+    #np.random.seed(438654)
     white_noise_turb = np.random.normal(0, 1, int(np.ceil(end_time / T_s1) * T_s1))  # For turbulence component
     np.random.set_state(state_before)
     
@@ -904,7 +905,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
+    t, x, v_wind, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, int(seeds[2]), v_ml, T_s1)
     
     white_noise = np.append(white_noise_ml, sample_seed)
     
