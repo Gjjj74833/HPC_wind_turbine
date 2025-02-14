@@ -26,14 +26,14 @@ for special_phase in {0..30}; do
     echo "Running for special_phase=${special_phase}"
 
     # Create necessary directories
-    mkdir -p seeds_ablation_surge_${special_phase}_pi
-    mkdir -p results_ablation_surge_${special_phase}_pi
+    mkdir -p seeds_ablation_${special_phase}
+    mkdir -p results_ablation_${special_phase}
 
     # Generate seeds
-    python3 gen_seeds.py seeds_ablation_surge_${special_phase}_pi $1 
+    python3 gen_seeds_ablation.py seeds_ablation_${special_phase} $1 
 
     ### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={epsilon}, $5={iteration number}, $6={special phase index}
-    sbatch monteCarlo.slurm $n_simulations $2 ablation_surge_${special_phase}_pi 0 0 $special_phase
+    sbatch monteCarlo.slurm $n_simulations $2 ablation_${special_phase} 0 0 $special_phase
 
 done
 

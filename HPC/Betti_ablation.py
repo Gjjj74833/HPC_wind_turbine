@@ -861,6 +861,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     #else:
     #    epsilon = np.pi / int(sys.argv[6])
     epsilon = float(sys.argv[6])
+    
 
     # generate turbulence noise use the second seed
     state_before = np.random.get_state()
@@ -881,6 +882,11 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     sampling_source = np.random.uniform(-np.pi, np.pi, 31) 
     np.random.set_state(state_before)
     
+    sampling_source[int(sys.argv[8])] = seeds[0]
+    
+    white_noise_ml = sampling_source
+    
+    '''
     epsilon_list = np.full(31, epsilon)
     epsilon_list[int(sys.argv[8])] = np.pi  # Assign different epsilon to the specified phase
 
@@ -890,7 +896,7 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     white_noise_ml = np.random.normal(loc=0, scale=epsilon_list, size=31) + sampling_source
 
     np.random.set_state(state_before)
-    
+    '''
     
     
     wind_speeds, v_ml = generate_wind(v_w, 180, 0.13, 1, T_s1, end_time, white_noise_ml, white_noise_turb)
