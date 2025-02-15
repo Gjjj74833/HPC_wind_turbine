@@ -1452,7 +1452,23 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0.2)
 #np.savez("large_noise/noise_ml_02.npz", white_noise_ml=white_noise_ml, index=index)
 
+# Ablation study, max value vs epsilon
 
+
+for i in range(31):
+    t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_ablation_{i}")
+    epsilon_list = white_noise_ml[i]
+    max_surge_list = np.max(state[:, 0], axis=0)
+    
+    print("For phase", i)
+    print(epsilon_list)
+    print(max_surge_list)
+    print("----------------------------------------------------")
+    print()
+    
+    
+
+'''
 #Ablation test (o and pi, all phases)
 for i in range(31):
     t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_ablation_surge_{i}_pi")
@@ -1484,7 +1500,7 @@ for i in range(31):
 #extract_top15_saveConfig(state[:, 0, :5000], white_noise_ml, seeds, "imps_ite/imps_surge_ml_pi0_ite0.npy", n=15)
 
 
-'''
+
 #save selected samples
 top_indices = largest_rope_tension(rope_tension, seeds)
 top_state = state[:, :, top_indices]
