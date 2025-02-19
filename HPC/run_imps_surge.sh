@@ -66,26 +66,12 @@ module load python/3.9
 ### ./run.sh $1 -> {simulation number}, $2={simulation time}, $3={samping seed ID}, $4={elispe pi/_}, $5={sampling seed}
 ### gen_seeds $3 $4
 module load python/3.9
-mkdir seeds_surge_1_005
-mkdir results_surge_1_005
-python3 gen_seeds.py seeds_surge_1_005 $1
+
+
+mkdir seeds_surge_aveg15
+mkdir results_surge_aveg15
+python3 gen_seeds.py seeds_surge_aveg15 $1
 
 ### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_}, $5={Iteration number}
-sbatch monteCarlo.slurm $n_simulations $2 surge_1_005 0.05 $3
-
-
-mkdir seeds_surge_1_01
-mkdir results_surge_1_01
-python3 gen_seeds.py seeds_surge_1_01 $1
-
-### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_}, $5={Iteration number}
-sbatch monteCarlo.slurm $n_simulations $2 surge_1_01 0.1 $3
-
-mkdir seeds_surge_1_02
-mkdir results_surge_1_02
-python3 gen_seeds.py seeds_surge_1_02 $1
-
-### ./run.sh $1={simulation number}, $2={simulation time}, $3={directory name}, $4={elispe pi/_}, $5={Iteration number}
-sbatch monteCarlo.slurm $n_simulations $2 surge_1_02 0.2 $3
-
+sbatch monteCarlo.slurm $n_simulations $2 surge_aveg15 0 0
 
