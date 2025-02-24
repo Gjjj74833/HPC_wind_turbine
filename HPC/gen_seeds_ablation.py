@@ -27,9 +27,9 @@ def generate_and_save_unique_arrays(n, n_array, seed=None):
         
         
         # Fixed values for the second and third components
-        first_component = first_component_list[i]
+        first_component = 4021713
         second_component = 438654
-        third_component = 7364167
+        third_component = first_component_list[i]
         
         seed_array = np.column_stack((first_component, second_component, third_component))
         

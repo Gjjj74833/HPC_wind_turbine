@@ -864,7 +864,8 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
 
     # generate turbulence noise use the second seed
     state_before = np.random.get_state()
-    np.random.seed(seeds[1])
+    #np.random.seed(seeds[1])
+    np.random.seed(438654)
     white_noise_turb = np.random.normal(0, 1, int(np.ceil(end_time / T_s1) * T_s1))  # For turbulence component
     np.random.set_state(state_before)
     
@@ -873,9 +874,9 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     #random_index = np.random.randint(0, 15)
     #sampling_source = np.load(f"imps_ite/imps_tension_ml_pi{sys.argv[6]}_ite{int(sys.argv[7])-1}.npy")[:, random_index]
     
-    seeds_list = np.array([8696505, 2514970, 8041419, 8734247, 563415, 8722005, 8086850, 8399725, 1106191, 1991645, 830830, 1885232, 9141186, 2876421, 1860654])
-    sample_seed = np.random.choice(seeds_list)
-    #sample_seed = 4021713
+    #seeds_list = np.array([8696505, 2514970, 8041419, 8734247, 563415, 8722005, 8086850, 8399725, 1106191, 1991645, 830830, 1885232, 9141186, 2876421, 1860654])
+    #sample_seed = np.random.choice(seeds_list)
+    sample_seed = 4021713
     state_before = np.random.get_state()
     np.random.seed(sample_seed)
     sampling_source = np.random.uniform(-np.pi, np.pi, 31) 
