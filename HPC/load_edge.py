@@ -1452,9 +1452,12 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0.2)
 #np.savez("large_noise/noise_ml_02.npz", white_noise_ml=white_noise_ml, index=index)
 
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_surge_samplewave")
+count, total = extract_extreme(state[:, 0], 8, np.pi)
+print(f"Extreme events exceed 8 for {total} samples, epsilon={np.pi}: {count}, percentage: {count/total:.2%}")
+
+'''
 # Ablation study, max value vs epsilon
-
-
 for i in range(31):
     t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_ablation_{i}")
     epsilon_list = white_noise_ml[i]
@@ -1468,7 +1471,7 @@ for i in range(31):
     
     
 
-'''
+
 #Ablation test (o and pi, all phases)
 for i in range(31):
     t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_ablation_surge_{i}_pi")
