@@ -1451,7 +1451,13 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 
 t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_MCMC")
 index = extract_extreme(state[:, 0], 8, 0.2)
-np.savez("large_noise/wind_speed_MCMC.npz", wind_speed=wind_speed, index=index)
+np.save("large_noise/wind_speed_MCMC_index.npy", index)
+segment = int(wind_speed.shape[1]/4)
+
+for i in range(4):
+    np.save(f"large_noise/wind_speed_MCMC_part{i+1}", wind_speed[:, i*segment:segment*(i+1)])
+
+#np.savez("large_noise/wind_speed_MCMC.npz", wind_speed=wind_speed, index=index)
 
 #t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_surge_samplewave")
 
