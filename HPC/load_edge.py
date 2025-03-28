@@ -1123,7 +1123,8 @@ def extract_extreme(state, upper_bound, epsilon):
             index.append(i)
         
     #print(f'Extreme events exceed {upper_bound} for {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
-    return count, state.shape[1]
+    #return count, state.shape[1]
+    return index
     
 def compare_PDFs(states, state_labels, name, unit):
     """
@@ -1448,13 +1449,17 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0)
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
-#t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_surge_1_02")
-#index = extract_extreme(state[:, 0], 8, 0.2)
-#np.savez("large_noise/noise_ml_02.npz", white_noise_ml=white_noise_ml, index=index)
+t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_MCMC")
+index = extract_extreme(state[:, 0], 8, 0.2)
+np.savez("large_noise/wind_speed_MCMC.npz", wind_speed=wind_speed, index=index)
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_surge_samplewave")
-count, total = extract_extreme(state[:, 0], 8, np.pi)
-print(f"Extreme events exceed 8 for {total} samples, epsilon={np.pi}: {count}, percentage: {count/total:.2%}")
+#t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_surge_samplewave")
+
+
+
+
+#count, total = extract_extreme(state[:, 0], 8, np.pi)
+#print(f"Extreme events exceed 8 for {total} samples, epsilon={np.pi}: {count}, percentage: {count/total:.2%}")
 
 '''
 # Ablation study, max value vs epsilon

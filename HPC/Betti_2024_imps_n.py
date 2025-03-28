@@ -815,7 +815,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
 
     t_sub = t[::steps]#[discard_steps:]
     x_sub = x[::steps]#[discard_steps:]
-    v_wind_sub = v_wind[:len(t)][::steps]#[discard_steps:]
+    #v_wind_sub = v_wind[:len(t)][::steps]#[discard_steps:]
     h_wave_sub = np.array(h_waves)[::steps]#[discard_steps:]
     betas_sub = betas[::steps]#[discard_steps:]
     T_E_list_sub = T_E_list[::steps]#[discard_steps:]
@@ -825,7 +825,7 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     t_final = t_sub-t_sub[0]
     t_free = np.array([t_final[1], t_final[-1]])
     
-    return t_free, np.delete(x_sub, [1, 3, 5], axis=1), v_wind_sub, h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub, rope_tension_list_sub
+    return t_free, np.delete(x_sub, [1, 3, 5], axis=1), h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub, rope_tension_list_sub
 
 def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
     """
@@ -893,11 +893,11 @@ def main(end_time, v_w, x0, file_index, seeds, time_step = 0.05, T_s1 = 180):
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, v_wind, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
+    t, x, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, seeds[2], v_ml, T_s1)
     
     white_noise = np.append(white_noise_ml, sample_seed)
     
-    return t, x, v_wind, wave_eta, betas, seeds, T_E, P_A, white_noise, rope_tension
+    return t, x, wind_speeds, wave_eta, betas, seeds, T_E, P_A, white_noise, rope_tension
 
 def run_simulation(params):
     return main(*params)
