@@ -36,10 +36,14 @@ module load python/3.9
 ###python3 Betti_2024_adaptive_imps.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4
 ###python3 Betti_2024.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2
 ### $1={global task ID}, $2={simulation number}, $3={local task ID}, $4={simulation time} $5={directory name} $6={epsilon} $7={iteration number}
-python3 Betti_2024_imps_n.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4 $5
+###python3 Betti_2024_imps_n.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4 $5
 
 ### ablation study
 ### $1={global task ID}, $2={simulation number}, $3={local task ID}, $4={simulation time} $5={directory name} $6={epsilon} $7={iteration number}, $8={spacial phase index}
 ###python3 Betti_ablation.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4 $5 $6
 
+
+### python Betti_GMM_KDE.py $1={global task ID}, $2={simulation number}, $3={local task ID},
+###                         $4={simulation time}, $5={method: kde or gmm}, $6={iteration index},
+python3 Betti_GMM_KDE.py ${SLURM_ARRAY_TASK_ID} $1 ${SLURM_NTASKS} $2 $3 $4
 
