@@ -59,6 +59,7 @@ for i in range(n_array):
     start_idx = i * rows_per_array
     end_idx = start_idx + rows_per_array
     sub_array = sample_wind_speed[start_idx:end_idx]
+    sub_array = np.clip(sub_array, 3.0, 35.0)
     
     sub_ids = unique_ids[start_idx:end_idx].reshape(-1, 1)
     sub_array_with_ids = np.hstack([sub_array, sub_ids])
