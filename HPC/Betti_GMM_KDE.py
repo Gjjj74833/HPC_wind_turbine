@@ -861,7 +861,7 @@ def main(end_time, v_w, x0, file_index, wind_speeds_wave_seed, time_step = 0.05,
     t, x, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, wave_seed, T_s1)
     
     
-    return t, x, wind_speeds, wave_eta, betas, wave_seed, T_E, P_A, rope_tension
+    return t, x, wind_speeds, wave_eta, betas, T_E, P_A, rope_tension
 
 def run_simulation(params):
     return main(*params)
@@ -900,10 +900,9 @@ def save_binaryfile(results):
     wind_speed = np.stack([s[2] for s in results], axis=1)
     wave_eta = np.stack([s[3] for s in results], axis=1)
     betas = np.stack([s[4] for s in results], axis=1)
-    seeds = np.stack([s[5] for s in results], axis=1)
-    T_E = np.stack([s[6] for s in results], axis=1)
-    P_A = np.stack([s[7] for s in results], axis=1)  
-    rope_tension = np.stack([s[8] for s in results], axis=2)  
+    T_E = np.stack([s[5] for s in results], axis=1)
+    P_A = np.stack([s[6] for s in results], axis=1)  
+    rope_tension = np.stack([s[7] for s in results], axis=2)  
     
     now = datetime.now()
     time = now.strftime('%Y-%m-%d_%H-%M-%S')   
@@ -913,7 +912,6 @@ def save_binaryfile(results):
                                                             wind_speed=wind_speed, 
                                                             wave_eta=wave_eta, 
                                                             betas=betas, 
-                                                            seeds=seeds, 
                                                             T_E=T_E,
                                                             P_A=P_A,
                                                             rope_tension=rope_tension)
