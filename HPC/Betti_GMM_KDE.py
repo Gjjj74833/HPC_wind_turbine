@@ -851,7 +851,7 @@ def main(end_time, v_w, x0, file_index, wind_speeds_wave_seed, time_step = 0.05,
     
     start_time = 0
     
-    wave_seed = wind_speeds_wave_seed[-1]
+    wave_seed = int(wind_speeds_wave_seed[-1])
     wind_speeds = wind_speeds_wave_seed[:-1]
 
     v_wind = np.repeat(wind_speeds, int(1/time_step))
