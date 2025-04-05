@@ -1118,7 +1118,7 @@ def extract_extreme(state, upper_bound, epsilon):
         
         if max_value > upper_bound:
             #seed = seeds[:, i]
-            #print(f'[{seed[0]}, {seed[1]}, {seed[2]}], max = {max_value} exceeds upper bound {upper_bound}')
+            print(f'max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
             index.append(i)
         
@@ -1246,7 +1246,7 @@ def state_PDF_compare(state_or, state_lo):
     plt.savefig('./figure/surge_distr_compare_pi0.png')
     
     
-def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
+def extract_top15_saveConfig(state, n=15):
     """
     Extract the samples with the top N largest values, and save the corresponding white noise
     """
@@ -1260,16 +1260,16 @@ def extract_top15_saveConfig(state, white_noise_list, seeds, save_path, n=15):
     print(f'Top {n} extreme events')
     for i in top_indices:
         max_value = max_values[i]
-        seed = seeds[:, i]
-        print(f'Seed: [{seed[0]}, {seed[1]}, {seed[2]}], max value = {max_value}')
+        #seed = seeds[:, i]
+        print(f'max value = {max_value}')
         
     # Extract the corresponding white noise using top_indices
-    top_white_noise = white_noise_list[:, top_indices]
+    #top_white_noise = white_noise_list[:, top_indices]
     
     # Save the top N white noise samples
-    np.save(save_path, top_white_noise)
-    print(f'White noise for top {n} extreme events saved to {save_path}')
-    print(top_white_noise.shape)
+    #np.save(save_path, top_white_noise)
+    #print(f'White noise for top {n} extreme events saved to {save_path}')
+    #print(top_white_noise.shape)
     
 def largest_rope_tension(rope_tension, seeds, white_noise_ml, save_path, n=15):
     """
@@ -1451,11 +1451,12 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
 t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_0")
-index = extract_extreme(state[:, 0], 8, 0.2)
+#index = extract_extreme(state[:, 0], 8, 0.2)
+extract_top15_saveConfig(state[:,0])
 
 t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_0")
-index = extract_extreme(state[:, 0], 8, 0.2)
-
+#index = extract_extreme(state[:, 0], 8, 0.2)
+extract_top15_saveConfig(state[:,0])
 
 '''
 # save wind speed
