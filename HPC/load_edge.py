@@ -28,8 +28,8 @@ def load_data(directory):
     wind_speeds = [data['wind_speed'] for data in datas]
     wave_etas = [data['wave_eta'] for data in datas]
     betas = [data['betas'] for data in datas]
-    seeds = [data['seeds'] for data in datas]
-    white_noise_ml = [data['white_noise_ml'] for data in datas] 
+    #seeds = [data['seeds'] for data in datas]
+    #white_noise_ml = [data['white_noise_ml'] for data in datas] 
     rope_tensions = [data['rope_tension'] for data in datas] 
 
     
@@ -37,12 +37,12 @@ def load_data(directory):
     state = np.concatenate(states, axis=2)
     wind_speed = np.hstack(wind_speeds)
     wave_eta = np.hstack(wave_etas)
-    seeds = np.hstack(seeds)
-    white_noise_ml = np.hstack(white_noise_ml)
+    #seeds = np.hstack(seeds)
+    #white_noise_ml = np.hstack(white_noise_ml)
     rope_tension = np.concatenate(rope_tensions, axis=2)
 
     
-    return t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml
+    return t, state, wind_speed, wave_eta, rope_tension
 
 def merge_pitch_acc(states):
     """
@@ -1124,6 +1124,7 @@ def extract_extreme(state, upper_bound, epsilon):
         
     #print(f'Extreme events exceed {upper_bound} for {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
     #return count, state.shape[1]
+    print(count, state.shape[1]/count)
     return index
     
 def compare_PDFs(states, state_labels, name, unit):
@@ -1449,8 +1450,15 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0)
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
-t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data("results_MCMC")
+t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_0")
 index = extract_extreme(state[:, 0], 8, 0.2)
+
+t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_0")
+index = extract_extreme(state[:, 0], 8, 0.2)
+
+
+'''
+# save wind speed
 np.save("large_noise/wind_speed_MCMC_index.npy", index)
 segment = int(wind_speed.shape[1]/4)
 
@@ -1458,6 +1466,7 @@ for i in range(4):
     np.save(f"large_noise/wind_speed_MCMC_part{i+1}", wind_speed[:, i*segment:segment*(i+1)])
 
 #np.savez("large_noise/wind_speed_MCMC.npz", wind_speed=wind_speed, index=index)
+
 
 #t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_surge_samplewave")
 
@@ -1467,7 +1476,7 @@ for i in range(4):
 #count, total = extract_extreme(state[:, 0], 8, np.pi)
 #print(f"Extreme events exceed 8 for {total} samples, epsilon={np.pi}: {count}, percentage: {count/total:.2%}")
 
-'''
+
 # Ablation study, max value vs epsilon
 for i in range(31):
     t, state, wind_speed, wave_eta, seeds, rope_tension, white_noise_ml = load_data(f"results_ablation_{i}")
