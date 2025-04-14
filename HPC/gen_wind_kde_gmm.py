@@ -15,7 +15,7 @@ import os
 # generate wind signals use kde or gmm, with last element of each row as the seed to generate wave
 
 # Load models
-pca = joblib.load('model_artifacts/pca_ite_0.pkl')
+#pca = joblib.load('model_artifacts/pca_ite_0.pkl')
 
 # Settings
 num_samples = 1000
@@ -32,15 +32,15 @@ ite = sys.argv[3]
 samples = np.zeros((n, 750))
 
 if  method == "kde":
-    kde = joblib.load('model_artifacts/kde_ite_0.pkl')
+    kde = joblib.load('model_artifacts/kde_MCMC.pkl')
     samples = kde.resample(n).T
     
 elif method == "gmm":
-    gmm = joblib.load('model_artifacts/gmm_ite_0.pkl')
+    gmm = joblib.load('model_artifacts/gmm_MCMC.pkl')
     samples = gmm.sample(n)[0] 
     
-samples_log = pca.inverse_transform(samples)
-samples = 10**(samples_log + eps)
+#samples_log = pca.inverse_transform(samples)
+samples = 10**(samples + eps)
 
 original_phase = np.load('model_artifacts/original_phase.npy')
 
