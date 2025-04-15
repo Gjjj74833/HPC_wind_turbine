@@ -20,7 +20,7 @@ import os
 # Settings
 num_samples = 1000
 eps = 1e-12
-T = 1502
+T = 1600
 dt = 1.0
 N = T // 2 
 
