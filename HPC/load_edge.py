@@ -1246,7 +1246,7 @@ def state_PDF_compare(state_or, state_lo):
     plt.savefig('./figure/surge_distr_compare_pi0.png')
     
     
-def extract_top15_saveConfig(state, n=15):
+def extract_top15_saveConfig(state, wind, method, n=15):
     """
     Extract the samples with the top N largest values, and save the corresponding white noise
     """
@@ -1256,6 +1256,8 @@ def extract_top15_saveConfig(state, n=15):
     
     # Get the indices of the top N largest values, largest first
     top_indices = np.argsort(max_values)[-n:][::-1]
+    
+    np.save(f"wind_top_{method}.npy", wind[:, top_indices])
     
     print(f'Top {n} extreme events')
     for i in top_indices:
@@ -1451,12 +1453,12 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
 t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_0")
-#index = extract_extreme(state[:, 0], 8, 0.2)
-extract_top15_saveConfig(state[:,0])
+index = extract_extreme(state[:, 0], 8, 0.2)
+extract_top15_saveConfig(state[:,0], wind_speed, "kde")
 
 t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_0")
-#index = extract_extreme(state[:, 0], 8, 0.2)
-extract_top15_saveConfig(state[:,0])
+index = extract_extreme(state[:, 0], 8, 0.2)
+extract_top15_saveConfig(state[:,0], wind_speed, "gmm")
 
 '''
 # save wind speed
