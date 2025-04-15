@@ -1118,7 +1118,7 @@ def extract_extreme(state, upper_bound, epsilon):
         
         if max_value > upper_bound:
             #seed = seeds[:, i]
-            print(f'max = {max_value} exceeds upper bound {upper_bound}')
+            #print(f'max = {max_value} exceeds upper bound {upper_bound}')
             count += 1
             index.append(i)
         
@@ -1452,11 +1452,11 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0)
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
-t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_0")
+t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_1")
 index = extract_extreme(state[:, 0], 8, 0.2)
 extract_top15_saveConfig(state[:,0], wind_speed, "kde")
 
-t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_0")
+t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_1")
 index = extract_extreme(state[:, 0], 8, 0.2)
 extract_top15_saveConfig(state[:,0], wind_speed, "gmm")
 
