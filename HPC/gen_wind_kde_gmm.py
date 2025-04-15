@@ -18,7 +18,6 @@ import os
 #pca = joblib.load('model_artifacts/pca_ite_0.pkl')
 
 # Settings
-num_samples = 1000
 eps = 1e-12
 T = 1600
 dt = 1.0
