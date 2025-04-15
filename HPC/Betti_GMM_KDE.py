@@ -227,7 +227,7 @@ def pierson_moskowitz_spectrum(U19_5, zeta, eta, t, random_phases):
     return wave_eta, [v_x, v_y, a_x, a_y]
     
 
-def structure(x_1, beta, omega_R, t, performance, v_w, random_phases):
+def structure(x_1, beta, omega_R, t, performance, v_w, v_aveg, random_phases):
     """
     The structure of the Betti model
 
@@ -348,9 +348,9 @@ def structure(x_1, beta, omega_R, t, performance, v_w, random_phases):
     Qwe_alpha = ((M_N*d_Nv + M_P*d_Pv)*np.sin(alpha) + (M_N*d_Nh + M_P*d_Ph )*np.cos(alpha))*g
 
     # Buoyancy Forces
-    h_wave = pierson_moskowitz_spectrum(v_w, zeta, 0, t, random_phases)[0] + h
-    h_p_rg = pierson_moskowitz_spectrum(v_w, zeta + r_g, 0, t, random_phases)[0] + h
-    h_n_rg = pierson_moskowitz_spectrum(v_w, zeta - r_g, 0, t, random_phases)[0] + h
+    h_wave = pierson_moskowitz_spectrum(v_aveg, zeta, 0, t, random_phases)[0] + h
+    h_p_rg = pierson_moskowitz_spectrum(v_aveg, zeta + r_g, 0, t, random_phases)[0] + h
+    h_n_rg = pierson_moskowitz_spectrum(v_aveg, zeta - r_g, 0, t, random_phases)[0] + h
     
     h_w = (h_wave + h_p_rg + h_n_rg)/3
     h_sub = min(h_w - h + eta + d_Sbott, h_pt)
@@ -445,7 +445,7 @@ def structure(x_1, beta, omega_R, t, performance, v_w, random_phases):
         h_pg[i] = (i + 1 - 0.5)*h_sub/n_dg
         height[i] = -(h_sub - h_pg[i])
         
-        wave = pierson_moskowitz_spectrum(v_w, zeta, height[i], t, random_phases)[1]
+        wave = pierson_moskowitz_spectrum(v_aveg , zeta, height[i], t, random_phases)[1]
         
         v_x[i] = wave[0]
         v_y[i] = wave[1]
@@ -541,7 +541,7 @@ def WindTurbine(omega_R, v_in, beta, T_E, t, Cp):
     return domega_R
     
 
-def Betti(x, t, beta, T_E, performance, v_w, random_phases):
+def Betti(x, t, beta, T_E, performance, v_w, v_aveg, random_phases):
     """
     Combine the WindTurbine model and structure model
     
@@ -573,7 +573,7 @@ def Betti(x, t, beta, T_E, performance, v_w, random_phases):
     x1 = x[:6]
     omega_R = x[6]
     
-    dx1dt, v_in, Cp, h_wave, rope_tension = structure(x1, beta, omega_R, t, performance, v_w, random_phases)
+    dx1dt, v_in, Cp, h_wave, rope_tension = structure(x1, beta, omega_R, t, performance, v_w, v_aveg, random_phases)
     dx2dt = WindTurbine(omega_R, v_in, beta, T_E, t, Cp)
     dxdt = np.append(dx1dt, dx2dt)
     
@@ -582,7 +582,7 @@ def Betti(x, t, beta, T_E, performance, v_w, random_phases):
 
 
 
-def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave, T_s1):
+def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_ml, v_wind, seed_wave, T_s1):
     """
     Solve the system of ODEs dx/dt = Betti(x, t) using the fourth-order Runge-Kutta method.
 
@@ -779,11 +779,11 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     rope_tension_list = []
     for i in range(n - 1):
         betas.append(beta)
-        #v_average_ml = v_ml[i // int((T_s1 / dt))]
-        k1, h_wave, rope_tension = Betti(x[i], t[i], beta, T_E, performance, v_wind[i], random_phases)
-        k2 = Betti(x[i] + 0.5 * dt * k1, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i], random_phases)[0]
-        k3 = Betti(x[i] + 0.5 * dt * k2, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i], random_phases)[0]
-        k4 = Betti(x[i] + dt * k3, t[i] + dt, beta, T_E, performance, v_wind[i], random_phases)[0]
+        v_average_ml = v_ml[i // int((T_s1 / dt))]
+        k1, h_wave, rope_tension = Betti(x[i], t[i], beta, T_E, performance, v_wind[i], v_average_ml, random_phases)
+        k2 = Betti(x[i] + 0.5 * dt * k1, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i], v_average_ml, random_phases)[0]
+        k3 = Betti(x[i] + 0.5 * dt * k2, t[i] + 0.5 * dt, beta, T_E, performance, v_wind[i], v_average_ml, random_phases)[0]
+        k4 = Betti(x[i] + dt * k3, t[i] + dt, beta, T_E, performance, v_wind[i], v_average_ml, random_phases)[0]
         x[i + 1] = x[i] + dt * (k1 + 2*k2 + 2*k3 + k4) / 6
         
         current_region = find_region(x[i][6], beta, current_region)
@@ -827,6 +827,17 @@ def rk4(Betti, x0, t0, tf, dt, beta_0, T_E, performance, v_w, v_wind, seed_wave,
     
     return t_free, np.delete(x_sub, [1, 3, 5], axis=1), h_wave_sub, betas_sub, T_E_list_sub, P_A_list_sub, rope_tension_list_sub
 
+def gen_v_ml_60_seconds(wind_speeds):
+    n = len(wind_speeds)
+    # Trim the array to make it divisible by 60
+    trimmed_length = n - (n % 60)
+    trimmed = wind_speeds[:trimmed_length]
+    # Reshape to (-1, 60), where each row is a 60-second chunk
+    reshaped = trimmed.reshape(-1, 60)
+    # Compute the mean for each 60-second chunk
+    averaged = reshaped.mean(axis=1)
+    return averaged
+
 def main(end_time, v_w, x0, file_index, wind_speeds_wave_seed, time_step = 0.05, T_s1 = 180):
     """
     Cp computation method
@@ -853,12 +864,14 @@ def main(end_time, v_w, x0, file_index, wind_speeds_wave_seed, time_step = 0.05,
     
     wave_seed = int(wind_speeds_wave_seed[-1])
     wind_speeds = wind_speeds_wave_seed[:-1]
+    
+    v_ml = gen_v_ml_60_seconds(wind_speeds)
 
     v_wind = np.repeat(wind_speeds, int(1/time_step))
 
     # modify this to change run time and step size
     #[Betti, x0 (initial condition), start time, end time, time step, beta, T_E]
-    t, x, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_w, v_wind, wave_seed, T_s1)
+    t, x, wave_eta, betas, T_E, P_A, rope_tension = rk4(Betti, x0, start_time, end_time, time_step, 0.32, 43093.55, performance, v_ml, v_wind, wave_seed, T_s1)
     
     
     return t, x, wind_speeds, wave_eta, betas, T_E, P_A, rope_tension
