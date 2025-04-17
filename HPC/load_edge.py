@@ -1124,7 +1124,7 @@ def extract_extreme(state, upper_bound, epsilon):
         
     #print(f'Extreme events exceed {upper_bound} for {state.shape[1]} samples, epsilon={epsilon}: {count}, percentage: {count/state.shape[1]:.2%}')
     #return count, state.shape[1]
-    print(count, state.shape[1]/count)
+    print(count, count/state.shape[1])
     return index
     
 def compare_PDFs(states, state_labels, name, unit):
@@ -1452,11 +1452,11 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0)
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
-t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_1")
+t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_0")
 index = extract_extreme(state[:, 0], 8, 0.2)
 extract_top15_saveConfig(state[:,0], wind_speed, "kde")
 
-t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_1")
+t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_0")
 index = extract_extreme(state[:, 0], 8, 0.2)
 extract_top15_saveConfig(state[:,0], wind_speed, "gmm")
 

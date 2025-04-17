@@ -39,7 +39,7 @@ elif method == "gmm":
     samples = gmm.sample(n)[0] 
     
 samples_log = pca.inverse_transform(samples)
-samples = 10**(samples + eps)
+samples = 10**(samples_log + eps)
 
 original_phase = np.load('model_artifacts/original_phase.npy')
 
