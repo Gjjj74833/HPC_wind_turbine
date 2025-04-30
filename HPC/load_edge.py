@@ -1452,21 +1452,28 @@ def save_large_phase_pdf(index, white_noise_ml, iteration):
 #index = extract_extreme(state[:, 0], 8, 0)
 #save_large_phase_pdf(index, white_noise_ml, 1)
 
-t, state, wind_speed, wave_eta, rope_tension = load_data("results_kde_ite_0")
-index = extract_extreme(state[:, 0], 8, 0.2)
-extract_top15_saveConfig(state[:,0], wind_speed, "kde")
+t, state, wind_speed_kde, wave_eta, rope_tension = load_data("results_kde_ite_0")
+index_kde = extract_extreme(state[:, 0], 8, 0.2)
+#extract_top15_saveConfig(state[:,0], wind_speed, "kde")
 
-t, state, wind_speed, wave_eta, rope_tension = load_data("results_gmm_ite_0")
-index = extract_extreme(state[:, 0], 8, 0.2)
-extract_top15_saveConfig(state[:,0], wind_speed, "gmm")
+t, state, wind_speed_gmm, wave_eta, rope_tension = load_data("results_gmm_ite_0")
+index_gmm = extract_extreme(state[:, 0], 8, 0.2)
+#extract_top15_saveConfig(state[:,0], wind_speed, "gmm")
 
-'''
+
 # save wind speed
-np.save("large_noise/wind_speed_MCMC_index.npy", index)
-segment = int(wind_speed.shape[1]/4)
+np.save("large_noise/wind_speed_kde_index.npy", index_kde)
+segment = int(wind_speed_kde.shape[1]/4)
 
 for i in range(4):
-    np.save(f"large_noise/wind_speed_MCMC_part{i+1}", wind_speed[:, i*segment:segment*(i+1)])
+    np.save(f"large_noise/wind_speed_kde_part{i+1}", wind_speed_kde[:, i*segment:segment*(i+1)])
+    
+
+np.save("large_noise/wind_speed_gmm_index.npy", index_gmm)
+segment = int(wind_speed_gmm.shape[1]/4)
+
+for i in range(4):
+    np.save(f"large_noise/wind_speed_gmm_part{i+1}", wind_speed_gmm[:, i*segment:segment*(i+1)])
 
 #np.savez("large_noise/wind_speed_MCMC.npz", wind_speed=wind_speed, index=index)
 
@@ -1475,7 +1482,7 @@ for i in range(4):
 
 
 
-
+'''
 #count, total = extract_extreme(state[:, 0], 8, np.pi)
 #print(f"Extreme events exceed 8 for {total} samples, epsilon={np.pi}: {count}, percentage: {count/total:.2%}")
 
